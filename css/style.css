@@ -239,12 +239,12 @@ footer{background:var(--bg3);border-top:1px solid var(--cb);padding:56px 4% 36px
 .az-sample-btn{padding:5px 14px;background:rgba(255,255,255,.06);border:1px solid var(--cb);border-radius:7px;color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;transition:all .18s;font-family:var(--font)}
 .az-sample-btn:hover{background:rgba(255,255,255,.12);border-color:rgba(0,180,255,.4);color:var(--blue)}
 
-/* Workspace */
-.az-workspace{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:start}
-@media(max-width:860px){.az-workspace{grid-template-columns:1fr}}
+/* Workspace — overridden by new rules below, kept for fallback */
+.az-workspace{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;align-items:start}
+@media(max-width:900px){.az-workspace{grid-template-columns:1fr}}
 
-/* Canvas side */
-.az-canvas-side{display:flex;flex-direction:column;gap:0;border-radius:20px;overflow:hidden;border:1px solid var(--cb);background:#04070F}
+/* Canvas side (legacy alias → now az-gcam-panel) */
+.az-canvas-side,.az-gcam-panel{display:flex;flex-direction:column;gap:0;border-radius:20px;overflow:hidden;border:1px solid var(--cb);background:#04070F}
 .az-img-wrap{position:relative;width:100%;min-height:240px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:crosshair;background:#04070F}
 #az-canvas{display:block;max-width:100%;cursor:crosshair;touch-action:none}
 .az-toolbar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(0,0,0,.55);border-top:1px solid var(--cb);flex-wrap:wrap}
@@ -309,6 +309,69 @@ footer{background:var(--bg3);border-top:1px solid var(--cb);padding:56px 4% 36px
 
 @media(max-width:640px){.rpt-summary{grid-template-columns:1fr 1fr}.rpt-summary .rpt-sum-item:last-child{grid-column:1/-1;border-right:none;border-top:1px solid var(--cb)}.rpt-body{padding:20px 18px}.rpt-header{padding:20px 18px}.rpt-actions{padding:16px 18px}.rpt-disclaimer{margin:0 18px 16px}}
 @media print{#nav,#loader,#detail-modal,.az-upload-zone,.az-workspace,.section:not(#analyze),footer{display:none!important}.az-report{border:none}.rpt-actions{display:none}}
+
+/* ── New Workspace Layout ────────────────────────────── */
+.az-pred-panel{background:var(--card);border:1px solid var(--cb);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;gap:12px;padding-bottom:4px}
+
+.az-panel-hdr{display:flex;align-items:center;gap:10px;padding:14px 18px;background:rgba(255,255,255,.025);border-bottom:1px solid var(--cb);font-size:13px;font-weight:700;letter-spacing:-.2px}
+.az-ph-num{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
+
+/* Model bar */
+.az-model-bar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(0,0,0,.35);border-top:1px solid var(--cb);flex-wrap:wrap}
+.az-model-sel{flex:1;min-width:160px;background:rgba(255,255,255,.06);border:1px solid var(--cb);border-radius:8px;color:var(--text2);padding:7px 10px;font-size:11px;font-family:var(--font);cursor:pointer;outline:none}
+.az-model-sel option{background:#0B0F1E}
+.az-tta-label{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3);cursor:pointer;white-space:nowrap}
+.az-tta-chk{accent-color:var(--teal);width:14px;height:14px;cursor:pointer}
+.az-tta-badge{font-size:9px;padding:1px 5px;background:rgba(0,229,200,.15);color:var(--teal);border-radius:4px;border:1px solid rgba(0,229,200,.3)}
+
+/* Predict buttons */
+.az-pred-btns{display:flex;gap:8px;padding:10px 14px;background:rgba(0,0,0,.2);border-top:1px solid var(--cb)}
+.az-predict-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:11px;background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:800;cursor:pointer;transition:opacity .18s,transform .18s;font-family:var(--font)}
+.az-predict-btn:hover{opacity:.88;transform:translateY(-1px)}
+.az-predict-btn:active{transform:scale(.97)}
+.az-predict-btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.az-compare-btn{padding:11px 14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:10px;color:var(--text2);font-size:12px;font-weight:700;cursor:pointer;transition:background .15s;font-family:var(--font);white-space:nowrap}
+.az-compare-btn:hover{background:rgba(255,255,255,.13)}
+
+/* TOP-1 Card */
+.az-top1-card{margin:16px 16px 0;padding:16px 20px;background:linear-gradient(135deg,rgba(0,180,255,.08),rgba(155,95,255,.08));border:1px solid rgba(0,180,255,.25);border-radius:14px;text-align:center}
+.az-top1-rank{font-size:10px;font-weight:800;letter-spacing:2px;color:var(--blue);text-transform:uppercase;margin-bottom:6px}
+.az-top1-name{font-size:20px;font-weight:900;letter-spacing:-.4px;margin-bottom:4px}
+.az-top1-pct{font-size:13px;color:var(--text3);font-weight:600}
+.az-top1-pct strong{color:var(--teal);font-size:15px}
+
+/* Probability bars */
+.az-prob-list{padding:14px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+.az-prob-ph{font-size:12px;color:var(--text4);text-align:center;padding:20px 0;font-style:italic}
+.az-prob-row{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:7px;transition:background .15s}
+.az-prob-row:hover{background:rgba(255,255,255,.04)}
+.az-prob-row.top1{background:rgba(0,180,255,.05);border:1px solid rgba(0,180,255,.15)}
+.az-prob-name{font-size:11px;color:var(--text2);width:88px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.az-prob-track{flex:1;height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden}
+.az-prob-fill{height:100%;border-radius:3px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.az-prob-pct{font-size:11px;font-weight:700;width:38px;text-align:right;color:var(--text3);font-variant-numeric:tabular-nums}
+.az-prob-row.top1 .az-prob-pct{color:var(--blue)}
+
+/* Model info */
+.az-model-info{margin:0 16px 12px;padding:12px 14px;background:rgba(255,255,255,.025);border:1px solid var(--cb);border-radius:10px}
+.az-mi-name{font-size:11px;font-weight:700;color:var(--text2);margin-bottom:7px}
+.az-mi-row2{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.az-mi-tag{font-size:10px;padding:2px 7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:4px;color:var(--text4)}
+.az-mi-stats{display:flex;gap:0}
+.az-mi-stat{flex:1;text-align:center;padding:8px 0;border-right:1px solid var(--cb)}
+.az-mi-stat:last-child{border-right:none}
+.az-mi-sv{font-size:16px;font-weight:900;color:var(--teal);margin-bottom:2px}
+.az-mi-sk{font-size:10px;color:var(--text4);font-weight:600;letter-spacing:.5px}
+
+/* Divider */
+.az-divider{display:flex;align-items:center;gap:10px;margin:12px 16px 4px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text4)}
+.az-divider::before,.az-divider::after{content:'';flex:1;height:1px;background:var(--cb)}
+
+/* Pred panel form padding */
+.az-pred-panel .az-field{margin:0 16px}
+.az-pred-panel .az-ai-btn,.az-pred-panel .az-generate-btn{margin:0 16px}
+.az-pred-panel .az-ai-result{margin:0 16px}
+.az-pred-panel .az-tips{margin:8px 16px 16px}
 
 /* ── Enhancement Bar ─────────────────────────────────── */
 .az-enhance-bar{display:flex;align-items:center;gap:10px;padding:9px 14px;background:rgba(0,0,0,.5);border-top:1px solid var(--cb);flex-wrap:wrap}

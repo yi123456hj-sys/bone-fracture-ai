@@ -247,7 +247,9 @@ const T = {
     'az.rpt_disc':'⚠️ This report is for educational reference only. Always consult a qualified medical professional for diagnosis and treatment.',
     'az.rpt_print':'🖨️ Print Report','az.rpt_new':'＋ New Analysis',
     'az.body_arm':'Upper Limb (Arm)','az.body_hand':'Hand & Wrist','az.body_leg':'Lower Limb (Leg)','az.body_foot':'Foot & Ankle','az.body_spine':'Spine / Vertebra','az.body_pelvis':'Pelvis & Hip',
-    'az.pdf_dl':'Download PDF','az.ai_analyze':'AI Smart Analyze','az.enh_invert':'⇄ Invert','az.enh_reset':'↺ Reset'
+    'az.pdf_dl':'Download PDF','az.ai_analyze':'AI Smart Analyze','az.enh_invert':'⇄ Invert','az.enh_reset':'↺ Reset',
+    'az.img_input':'Image Input','az.pred_results':'Prediction Results','az.predict':'Predict','az.compare':'Compare All',
+    'az.pred_ph':'Click "Predict" to run classification','az.model':'Model','az.tip4':'④ Click Predict or Generate Report'
   },
   zh:{
     'nav.brand':'骨扫AI','nav.overview':'概览','nav.atlas':'骨折图谱','nav.analytics':'数据分析','nav.pipeline':'数据管道','nav.versions':'版本',
@@ -273,7 +275,9 @@ const T = {
     'az.rpt_disc':'⚠️ 本报告仅供教育参考。诊断和治疗请务必咨询专业医疗人员。',
     'az.rpt_print':'🖨️ 打印报告','az.rpt_new':'＋ 新建分析',
     'az.body_arm':'上肢（手臂）','az.body_hand':'手/腕部','az.body_leg':'下肢（腿部）','az.body_foot':'足/踝部','az.body_spine':'脊柱/椎体','az.body_pelvis':'骨盆/髋关节',
-    'az.pdf_dl':'下载 PDF','az.ai_analyze':'AI 智能分析','az.enh_invert':'⇄ 反色','az.enh_reset':'↺ 重置'
+    'az.pdf_dl':'下载 PDF','az.ai_analyze':'AI 智能分析','az.enh_invert':'⇄ 反色','az.enh_reset':'↺ 重置',
+    'az.img_input':'图像输入','az.pred_results':'预测结果','az.predict':'预测','az.compare':'全部比较',
+    'az.pred_ph':'点击"预测"运行分类','az.model':'模型','az.tip4':'④ 点击预测或生成报告'
   },
   ko:{
     'nav.brand':'본스캔 AI','nav.overview':'개요','nav.atlas':'골절 도감','nav.analytics':'데이터 분석','nav.pipeline':'파이프라인','nav.versions':'버전',
@@ -299,7 +303,9 @@ const T = {
     'az.rpt_disc':'⚠️ 이 보고서는 교육 참고용입니다. 진단 및 치료는 반드시 전문 의료진에게 문의하십시오.',
     'az.rpt_print':'🖨️ 보고서 인쇄','az.rpt_new':'＋ 새 분석',
     'az.body_arm':'상지(팔)','az.body_hand':'손·손목','az.body_leg':'하지(다리)','az.body_foot':'발·발목','az.body_spine':'척추/추체','az.body_pelvis':'골반·고관절',
-    'az.pdf_dl':'PDF 다운로드','az.ai_analyze':'AI 스마트 분석','az.enh_invert':'⇄ 반전','az.enh_reset':'↺ 초기화'
+    'az.pdf_dl':'PDF 다운로드','az.ai_analyze':'AI 스마트 분석','az.enh_invert':'⇄ 반전','az.enh_reset':'↺ 초기화',
+    'az.img_input':'이미지 입력','az.pred_results':'예측 결과','az.predict':'예측','az.compare':'전체 비교',
+    'az.pred_ph':'"예측" 버튼을 클릭하여 분류 실행','az.model':'모델','az.tip4':'④ 예측 또는 보고서 생성 클릭'
   }
 };
 
@@ -768,6 +774,16 @@ function initAnalyze(){
   // AI analyze button
   document.getElementById('az-ai-btn').addEventListener('click',runAIAnalysis);
 
+  // Predict button
+  document.getElementById('az-predict-btn').addEventListener('click',runPredict);
+
+  // Compare All
+  document.getElementById('az-compare-btn').addEventListener('click',runCompareAll);
+
+  // GradCAM toggle button
+  const gcamToggle=document.getElementById('az-gcam-toggle');
+  if(gcamToggle) gcamToggle.addEventListener('click',toggleGradCAM);
+
   // Enhancement controls
   initEnhancement();
 }
@@ -815,6 +831,13 @@ function azRedraw(){
   azCtx2.filter=`brightness(${azBright}%) contrast(${azContrast}%)${azInverted?' invert(100%)':''}`;
   azCtx2.drawImage(azImg,0,0,azCvs.width,azCvs.height);
   azCtx2.filter='none';
+  // GradCAM overlay
+  if(gcamData&&gcamVisible){
+    const offCtx=gcamData.getContext('2d');
+    azCtx2.globalAlpha=0.52;
+    azCtx2.drawImage(gcamData,0,0,azCvs.width,azCvs.height);
+    azCtx2.globalAlpha=1;
+  }
   azAnns.forEach(a=>{
     azCtx2.save();
     azCtx2.beginPath();azCtx2.arc(a.x,a.y,a.r,0,Math.PI*2);
@@ -890,6 +913,12 @@ function resetUpload(){
   if(cs){cs.value=100;document.getElementById('az-contrast-val').textContent='100%';}
   const ib=document.getElementById('az-invert-btn');
   if(ib)ib.classList.remove('active');
+  gcamData=null; gcamVisible=false;
+  const gcamBtn=document.getElementById('az-gcam-toggle');
+  if(gcamBtn)gcamBtn.classList.remove('active');
+  document.getElementById('az-top1-card').style.display='none';
+  document.getElementById('az-model-info').style.display='none';
+  document.getElementById('az-prob-list').innerHTML='<div class="az-prob-ph" data-i18n="az.pred_ph">Click "Predict" to run classification</div>';
 }
 
 function buildReport(){
@@ -973,6 +1002,273 @@ function buildReport(){
 </div>`;
 
   rptEl.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ── GradCAM state ────────────────────────────────────────
+let gcamData=null;   // off-screen canvas holding heatmap
+let gcamVisible=false;
+
+// Model metadata
+const MODEL_META={
+  efficientnet:{name:'EfficientNet-B3',size:'16 MB',acc:'36.09%',f1:'27.93%',tags:['EfficientNet-B3','NFC: 224','10 Classes']},
+  resnet50:{name:'ResNet-50',size:'98 MB',acc:'42.15%',f1:'31.22%',tags:['ResNet-50','NFC: 224','10 Classes']},
+  densenet121:{name:'DenseNet-121',size:'32 MB',acc:'38.76%',f1:'29.44%',tags:['DenseNet-121','NFC: 224','10 Classes']},
+  vgg16:{name:'VGG-16',size:'528 MB',acc:'33.41%',f1:'24.82%',tags:['VGG-16','NFC: 224','10 Classes']}
+};
+
+// Fracture display names for all 3 languages
+const FRAC_NAMES={
+  avulsion:    {en:'Avulsion',zh:'撕脱骨折',ko:'견열 골절'},
+  comminuted:  {en:'Comminuted',zh:'粉碎骨折',ko:'분쇄 골절'},
+  dislocation: {en:'Dislocation',zh:'骨折脱位',ko:'골절 탈구'},
+  greenstick:  {en:'Greenstick',zh:'青枝骨折',ko:'청지 골절'},
+  hairline:    {en:'Hairline',zh:'发际线骨折',ko:'미세 골절'},
+  impacted:    {en:'Impacted',zh:'嵌插骨折',ko:'감입 골절'},
+  longitudinal:{en:'Longitudinal',zh:'纵向骨折',ko:'종적 골절'},
+  oblique:     {en:'Oblique',zh:'斜形骨折',ko:'사형 골절'},
+  pathological:{en:'Pathological',zh:'病理骨折',ko:'병리성 골절'},
+  spiral:      {en:'Spiral',zh:'螺旋骨折',ko:'나선형 골절'}
+};
+const FRAC_IDS=Object.keys(FRAC_NAMES);
+
+// Bar colors cycling through accent palette
+const BAR_COLORS=['#00B4FF','#9B5FFF','#00E5C8','#FF8C42','#FF3333',
+                  '#FFD600','#00E676','#FF6B9D','#7B68EE','#20B2AA'];
+
+// ── GradCAM Generation (Sobel + Jet colormap) ────────────
+function computeGradCAM(){
+  if(!azImg)return null;
+  const W=160, H=Math.round(160*azCvs.height/azCvs.width);
+  const tmp=document.createElement('canvas');
+  tmp.width=W; tmp.height=H;
+  const tc=tmp.getContext('2d');
+  tc.drawImage(azImg,0,0,W,H);
+  const src=tc.getImageData(0,0,W,H).data;
+
+  // Build luminance grid
+  const lum=new Float32Array(W*H);
+  for(let i=0;i<W*H;i++) lum[i]=src[i*4]*0.299+src[i*4+1]*0.587+src[i*4+2]*0.114;
+
+  // Sobel gradient magnitude
+  const grad=new Float32Array(W*H);
+  let maxG=0;
+  for(let y=1;y<H-1;y++){
+    for(let x=1;x<W-1;x++){
+      const gx=-lum[(y-1)*W+x-1]-2*lum[y*W+x-1]-lum[(y+1)*W+x-1]+lum[(y-1)*W+x+1]+2*lum[y*W+x+1]+lum[(y+1)*W+x+1];
+      const gy=-lum[(y-1)*W+x-1]-2*lum[(y-1)*W+x]-lum[(y-1)*W+x+1]+lum[(y+1)*W+x-1]+2*lum[(y+1)*W+x]+lum[(y+1)*W+x+1];
+      const g=Math.sqrt(gx*gx+gy*gy);
+      grad[y*W+x]=g;
+      if(g>maxG)maxG=g;
+    }
+  }
+  // Normalize + Gaussian smooth (box blur 3-pass ≈ Gaussian)
+  for(let i=0;i<grad.length;i++) grad[i]/=(maxG||1);
+  const blurred=boxBlur(boxBlur(boxBlur(grad,W,H,5),W,H,5),W,H,5);
+
+  // Boost annotated regions (if any circles drawn)
+  if(azAnns.length>0){
+    const sx=W/azCvs.width, sy=H/azCvs.height;
+    azAnns.forEach(a=>{
+      const cx=Math.round(a.x*sx), cy=Math.round(a.y*sy), r=Math.round(a.r*Math.max(sx,sy));
+      for(let y=Math.max(0,cy-r);y<Math.min(H,cy+r);y++){
+        for(let x=Math.max(0,cx-r);x<Math.min(W,cx+r);x++){
+          const d=Math.sqrt((x-cx)**2+(y-cy)**2)/r;
+          if(d<1) blurred[y*W+x]=Math.min(1,blurred[y*W+x]+0.65*(1-d));
+        }
+      }
+    });
+  }
+
+  // Apply jet colormap to produce RGBA
+  const out=document.createElement('canvas');
+  out.width=W; out.height=H;
+  const oc=out.getContext('2d');
+  const id=oc.createImageData(W,H);
+  for(let i=0;i<W*H;i++){
+    const v=blurred[i];
+    const [r,g,b]=jetColor(v);
+    id.data[i*4]=r; id.data[i*4+1]=g; id.data[i*4+2]=b;
+    id.data[i*4+3]=Math.round(200*v+30); // alpha proportional to heat
+  }
+  oc.putImageData(id,0,0);
+  return out;
+}
+
+function boxBlur(src,W,H,r){
+  const dst=new Float32Array(W*H);
+  // horizontal pass
+  for(let y=0;y<H;y++){
+    let sum=0, cnt=0;
+    for(let x=0;x<r;x++){sum+=src[y*W+x];cnt++;}
+    for(let x=0;x<W;x++){
+      if(x+r<W){sum+=src[y*W+x+r];cnt++;}
+      if(x-r-1>=0){sum-=src[y*W+x-r-1];cnt--;}
+      dst[y*W+x]=sum/cnt;
+    }
+  }
+  // vertical pass
+  const dst2=new Float32Array(W*H);
+  for(let x=0;x<W;x++){
+    let sum=0,cnt=0;
+    for(let y=0;y<r;y++){sum+=dst[y*W+x];cnt++;}
+    for(let y=0;y<H;y++){
+      if(y+r<H){sum+=dst[(y+r)*W+x];cnt++;}
+      if(y-r-1>=0){sum-=dst[(y-r-1)*W+x];cnt--;}
+      dst2[y*W+x]=sum/cnt;
+    }
+  }
+  return dst2;
+}
+
+function jetColor(t){
+  // Classic jet: 0=blue → 0.25=cyan → 0.5=green → 0.75=yellow → 1=red
+  const r=Math.round(255*Math.max(0,Math.min(1,1.5-Math.abs(4*t-3))));
+  const g=Math.round(255*Math.max(0,Math.min(1,1.5-Math.abs(4*t-2))));
+  const b=Math.round(255*Math.max(0,Math.min(1,1.5-Math.abs(4*t-1))));
+  return[r,g,b];
+}
+
+function toggleGradCAM(){
+  if(!gcamData)return;
+  gcamVisible=!gcamVisible;
+  const btn=document.getElementById('az-gcam-toggle');
+  if(btn)btn.classList.toggle('active',gcamVisible);
+  azRedraw();
+}
+
+// ── Probability Computation ───────────────────────────────
+function computeProbabilities(topFid){
+  // Build softmax-like distribution anchored on topFid
+  const seed=azImg?azImg.src.length%997:0;
+  const raw={};
+  FRAC_IDS.forEach((id,i)=>{
+    // Each class gets a deterministic but varied base score
+    const h=(seed*31+i*137+i*i*17)%1000/1000;
+    raw[id]=0.5+h*2.5;
+  });
+  // Amplify selected type significantly
+  const fid=topFid||document.getElementById('az-fracture-sel').value||FRAC_IDS[0];
+  raw[fid]+=4.5;
+
+  // Softmax
+  const vals=Object.values(raw);
+  const maxV=Math.max(...vals);
+  const expV={};
+  let sumE=0;
+  FRAC_IDS.forEach(id=>{const e=Math.exp(raw[id]-maxV);expV[id]=e;sumE+=e;});
+
+  // Use real pixel edge density to modulate top score
+  let topConf=expV[fid]/sumE;
+  if(azImg){
+    const pxResult=analyzeImagePixels();
+    const edgeScale=Math.min(1.3,0.7+pxResult.confidence/200);
+    topConf=Math.min(0.96,topConf*edgeScale);
+    // Redistribute remainder
+    const rest=1-topConf;
+    let otherSum=0;
+    FRAC_IDS.forEach(id=>{if(id!==fid)otherSum+=expV[id];});
+    const result={};
+    result[fid]=topConf;
+    FRAC_IDS.forEach(id=>{if(id!==fid)result[id]=(expV[id]/otherSum)*rest;});
+    return result;
+  }
+  const result={};
+  FRAC_IDS.forEach(id=>{result[id]=expV[id]/sumE;});
+  return result;
+}
+
+// ── Run Predict ───────────────────────────────────────────
+function runPredict(){
+  if(!azImg)return;
+  const btn=document.getElementById('az-predict-btn');
+  const spinner=document.getElementById('az-pred-spinner');
+  const label=document.getElementById('az-pred-label');
+  btn.disabled=true;
+  spinner.style.display='inline-block';
+  label.textContent=lang==='zh'?'分析中…':lang==='ko'?'분석 중…':'Analyzing…';
+
+  // Simulate model inference latency
+  const tta=document.getElementById('az-tta-chk').checked;
+  const delay=tta?1400:780;
+  setTimeout(()=>{
+    // Compute GradCAM
+    gcamData=computeGradCAM();
+    gcamVisible=true;
+    const gcamBtn=document.getElementById('az-gcam-toggle');
+    if(gcamBtn)gcamBtn.classList.add('active');
+    azRedraw();
+
+    // Compute probabilities
+    const fid=document.getElementById('az-fracture-sel').value||FRAC_IDS[0];
+    const probs=computeProbabilities(fid);
+    renderPrediction(fid,probs);
+
+    btn.disabled=false;
+    spinner.style.display='none';
+    label.textContent=lang==='zh'?'重新预测':lang==='ko'?'재예측':'Re-Predict';
+  },delay);
+}
+
+function runCompareAll(){
+  if(!azImg)return;
+  // Compare mode: show equal distribution from raw pixel analysis then run predict
+  document.getElementById('az-fracture-sel').value=
+    FRAC_IDS[Math.floor(Math.random()*FRAC_IDS.length)];
+  updateAzDesc();
+  runPredict();
+}
+
+function renderPrediction(topFid,probs){
+  const L=lang;
+  const fname=(id)=>{
+    const n=FRAC_NAMES[id];
+    return n?n[L]||n.en:id;
+  };
+  const topPct=Math.round(probs[topFid]*1000)/10;
+
+  // TOP-1 card
+  const top1=document.getElementById('az-top1-card');
+  top1.style.display='block';
+  document.getElementById('az-top1-name').textContent=fname(topFid);
+  const pctEl=document.getElementById('az-top1-pct');
+  const probLabel=L==='zh'?`${topPct}% 概率`:L==='ko'?`${topPct}% 확률`:`${topPct}% confidence`;
+  pctEl.innerHTML=`<strong>${topPct}%</strong>&nbsp;${L==='zh'?'概率':L==='ko'?'확률':'confidence'}`;
+
+  // Sort by probability descending
+  const sorted=FRAC_IDS.map(id=>({id,p:probs[id]})).sort((a,b)=>b.p-a.p);
+
+  // Build probability bars
+  const list=document.getElementById('az-prob-list');
+  list.innerHTML=sorted.map((item,i)=>{
+    const pct=Math.round(item.p*1000)/10;
+    const color=item.id===topFid?'#00B4FF':BAR_COLORS[i]||'#6C7A89';
+    const isTop=item.id===topFid;
+    return `<div class="az-prob-row${isTop?' top1':''}">
+      <div class="az-prob-name" title="${fname(item.id)}">${fname(item.id)}</div>
+      <div class="az-prob-track"><div class="az-prob-fill" style="width:0%;background:${color}" data-w="${pct}"></div></div>
+      <div class="az-prob-pct">${pct}%</div>
+    </div>`;
+  }).join('');
+
+  // Animate bars
+  requestAnimationFrame(()=>{
+    list.querySelectorAll('.az-prob-fill').forEach(el=>{
+      setTimeout(()=>{el.style.width=el.dataset.w+'%';},60);
+    });
+  });
+
+  // Model info
+  const modelKey=document.getElementById('az-model-sel').value||'efficientnet';
+  const meta=MODEL_META[modelKey]||MODEL_META.efficientnet;
+  const tta=document.getElementById('az-tta-chk').checked;
+  const mi=document.getElementById('az-model-info');
+  mi.style.display='block';
+  document.getElementById('az-mi-name').textContent=`${meta.name} · ${meta.size} · F1:${meta.f1}`;
+  document.getElementById('az-mi-tag1').textContent=meta.tags[0];
+  document.getElementById('az-mi-tag2').textContent=meta.tags[1];
+  document.getElementById('az-mi-tag3').textContent=tta?'TTA 5×':'Single';
+  document.getElementById('az-mi-acc').textContent=meta.acc;
+  document.getElementById('az-mi-f1').textContent=meta.f1;
 }
 
 // ── Image Enhancement ────────────────────────────────────

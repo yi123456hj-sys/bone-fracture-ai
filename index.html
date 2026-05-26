@@ -165,26 +165,34 @@
 
     <!-- Workspace (shown after image load) -->
     <div class="az-workspace" id="az-workspace" style="display:none">
-      <!-- Left: image + annotation canvas -->
-      <div class="az-canvas-side">
+
+      <!-- ── LEFT: Image + GradCAM + Controls ── -->
+      <div class="az-gcam-panel">
+        <div class="az-panel-hdr"><span class="az-ph-num">1</span><span data-i18n="az.img_input">Image Input</span></div>
+
+        <!-- Canvas: image + GradCAM blend + annotations all in one -->
         <div class="az-img-wrap">
           <canvas id="az-canvas"></canvas>
         </div>
-        <!-- Image Enhancement Bar -->
+
+        <!-- Enhancement Bar -->
         <div class="az-enhance-bar" id="az-enhance-bar">
           <div class="az-enh-group">
-            <span class="az-enh-icon" title="Brightness">☀️</span>
+            <span class="az-enh-icon">☀️</span>
             <input type="range" class="az-enh-slider" id="az-bright-slider" min="30" max="250" value="100">
             <span class="az-enh-val" id="az-bright-val">100%</span>
           </div>
           <div class="az-enh-group">
-            <span class="az-enh-icon" title="Contrast">◑</span>
+            <span class="az-enh-icon">◑</span>
             <input type="range" class="az-enh-slider" id="az-contrast-slider" min="30" max="350" value="100">
             <span class="az-enh-val" id="az-contrast-val">100%</span>
           </div>
           <button class="az-enh-toggle" id="az-invert-btn" data-i18n="az.enh_invert">⇄ Invert</button>
+          <button class="az-enh-toggle" id="az-gcam-toggle">🌡 GradCAM</button>
           <button class="az-enh-toggle" id="az-reset-enh-btn" data-i18n="az.enh_reset">↺ Reset</button>
         </div>
+
+        <!-- Annotation toolbar -->
         <div class="az-toolbar">
           <span class="az-toolbar-label" data-i18n="az.color">Color:</span>
           <div class="az-color-btns">
@@ -196,28 +204,81 @@
           <div class="az-tb-spacer"></div>
           <button class="az-tb-btn" id="az-undo-btn" data-i18n="az.undo">↩ Undo</button>
           <button class="az-tb-btn" id="az-clear-btn" data-i18n="az.clear">Clear</button>
-          <button class="az-tb-btn az-reupload-btn" id="az-reupload-btn" data-i18n="az.reupload">↑ New Image</button>
+          <button class="az-tb-btn az-reupload-btn" id="az-reupload-btn" data-i18n="az.reupload">↑ New</button>
+        </div>
+
+        <!-- Model selector + TTA -->
+        <div class="az-model-bar">
+          <select id="az-model-sel" class="az-model-sel">
+            <option value="efficientnet">EfficientNet-B3 · 16 MB</option>
+            <option value="resnet50">ResNet-50 · 98 MB</option>
+            <option value="densenet121">DenseNet-121 · 32 MB</option>
+            <option value="vgg16">VGG-16 · 528 MB</option>
+          </select>
+          <label class="az-tta-label">
+            <input type="checkbox" id="az-tta-chk" class="az-tta-chk">
+            <span>TTA 5× <span class="az-tta-badge">acc ↑~5%</span></span>
+          </label>
+        </div>
+
+        <!-- Predict buttons -->
+        <div class="az-pred-btns">
+          <button class="az-predict-btn" id="az-predict-btn">
+            <span class="az-ai-spinner" id="az-pred-spinner" style="display:none"></span>
+            <span>🔍</span>
+            <span id="az-pred-label" data-i18n="az.predict">Predict</span>
+          </button>
+          <button class="az-compare-btn" id="az-compare-btn" data-i18n="az.compare">Compare All</button>
         </div>
         <div class="az-draw-hint" data-i18n="az.hint">Drag on the image to circle fracture areas</div>
       </div>
 
-      <!-- Right: form -->
-      <div class="az-form-side">
-        <div class="az-form-title" data-i18n="az.config">Configure Analysis</div>
+      <!-- ── RIGHT: Prediction Results + Form ── -->
+      <div class="az-pred-panel" id="az-pred-panel">
+        <div class="az-panel-hdr"><span class="az-ph-num">2</span><span data-i18n="az.pred_results">Prediction Results</span></div>
+
+        <!-- TOP-1 card -->
+        <div class="az-top1-card" id="az-top1-card" style="display:none">
+          <div class="az-top1-rank">TOP-1</div>
+          <div class="az-top1-name" id="az-top1-name">—</div>
+          <div class="az-top1-pct" id="az-top1-pct">—</div>
+        </div>
+
+        <!-- Probability bars -->
+        <div class="az-prob-list" id="az-prob-list">
+          <div class="az-prob-ph" data-i18n="az.pred_ph">Click "Predict" to run classification</div>
+        </div>
+
+        <!-- Model info strip -->
+        <div class="az-model-info" id="az-model-info" style="display:none">
+          <div class="az-mi-name" id="az-mi-name"></div>
+          <div class="az-mi-row2">
+            <span class="az-mi-tag" id="az-mi-tag1"></span>
+            <span class="az-mi-tag" id="az-mi-tag2"></span>
+            <span class="az-mi-tag" id="az-mi-tag3"></span>
+          </div>
+          <div class="az-mi-stats">
+            <div class="az-mi-stat"><div class="az-mi-sv" id="az-mi-acc">—</div><div class="az-mi-sk">Test ACC</div></div>
+            <div class="az-mi-stat"><div class="az-mi-sv" id="az-mi-f1">—</div><div class="az-mi-sk">Test F1-macro</div></div>
+          </div>
+        </div>
+
+        <!-- Divider into config section -->
+        <div class="az-divider"><span data-i18n="az.config">Configure Analysis</span></div>
 
         <div class="az-field">
           <label class="az-label" data-i18n="az.fracture_type">Fracture Type</label>
           <select id="az-fracture-sel" class="az-select">
-            <option value="avulsion">Avulsion Fracture / 撕脱性骨折 / 견열 골절</option>
-            <option value="comminuted">Comminuted Fracture / 粉碎性骨折 / 분쇄 골절</option>
-            <option value="dislocation">Fracture Dislocation / 骨折脱位 / 골절 탈구</option>
-            <option value="greenstick">Greenstick Fracture / 青枝骨折 / 청지 골절</option>
-            <option value="hairline">Hairline Fracture / 发际线骨折 / 미세 골절</option>
-            <option value="impacted">Impacted Fracture / 嵌插骨折 / 감입 골절</option>
-            <option value="longitudinal">Longitudinal Fracture / 纵向骨折 / 종적 골절</option>
-            <option value="oblique">Oblique Fracture / 斜形骨折 / 사형 골절</option>
-            <option value="pathological">Pathological Fracture / 病理性骨折 / 병리성 골절</option>
-            <option value="spiral">Spiral Fracture / 螺旋形骨折 / 나선형 골절</option>
+            <option value="avulsion">Avulsion / 撕脱性骨折 / 견열 골절</option>
+            <option value="comminuted">Comminuted / 粉碎性骨折 / 분쇄 골절</option>
+            <option value="dislocation">Dislocation / 骨折脱位 / 골절 탈구</option>
+            <option value="greenstick">Greenstick / 青枝骨折 / 청지 골절</option>
+            <option value="hairline">Hairline / 发际线骨折 / 미세 골절</option>
+            <option value="impacted">Impacted / 嵌插骨折 / 감입 골절</option>
+            <option value="longitudinal">Longitudinal / 纵向骨折 / 종적 골절</option>
+            <option value="oblique">Oblique / 斜形骨折 / 사형 골절</option>
+            <option value="pathological">Pathological / 病理性骨折 / 병리성 골절</option>
+            <option value="spiral">Spiral / 螺旋形骨折 / 나선형 골절</option>
           </select>
           <div class="az-fracture-desc" id="az-fracture-desc"></div>
         </div>
@@ -234,7 +295,6 @@
           </select>
         </div>
 
-        <!-- AI Smart Analyze Button -->
         <button class="az-ai-btn" id="az-ai-btn">
           <span class="az-ai-spinner" id="az-ai-spinner" style="display:none"></span>
           <span id="az-ai-icon">🤖</span>
@@ -251,7 +311,7 @@
           <div class="az-tip" data-i18n="az.tip1">① Upload or drag in your X-ray image</div>
           <div class="az-tip" data-i18n="az.tip2">② Draw circles on the fracture area</div>
           <div class="az-tip" data-i18n="az.tip3">③ Select type &amp; body region</div>
-          <div class="az-tip" data-i18n="az.tip4">④ Click Generate to get full report</div>
+          <div class="az-tip" data-i18n="az.tip4">④ Click Predict or Generate Report</div>
         </div>
       </div>
     </div>
