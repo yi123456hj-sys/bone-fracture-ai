@@ -1,0 +1,11 @@
+{
+  "name": "bone-fracture-ai",
+  "version": "1.0.0",
+  "description": "Bone Fracture Intelligence Dataset — AI-powered X-ray analysis",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

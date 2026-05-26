@@ -170,6 +170,21 @@
         <div class="az-img-wrap">
           <canvas id="az-canvas"></canvas>
         </div>
+        <!-- Image Enhancement Bar -->
+        <div class="az-enhance-bar" id="az-enhance-bar">
+          <div class="az-enh-group">
+            <span class="az-enh-icon" title="Brightness">☀️</span>
+            <input type="range" class="az-enh-slider" id="az-bright-slider" min="30" max="250" value="100">
+            <span class="az-enh-val" id="az-bright-val">100%</span>
+          </div>
+          <div class="az-enh-group">
+            <span class="az-enh-icon" title="Contrast">◑</span>
+            <input type="range" class="az-enh-slider" id="az-contrast-slider" min="30" max="350" value="100">
+            <span class="az-enh-val" id="az-contrast-val">100%</span>
+          </div>
+          <button class="az-enh-toggle" id="az-invert-btn" data-i18n="az.enh_invert">⇄ Invert</button>
+          <button class="az-enh-toggle" id="az-reset-enh-btn" data-i18n="az.enh_reset">↺ Reset</button>
+        </div>
         <div class="az-toolbar">
           <span class="az-toolbar-label" data-i18n="az.color">Color:</span>
           <div class="az-color-btns">
@@ -218,6 +233,14 @@
             <option value="pelvis">Pelvis &amp; Hip / 骨盆髋 / 골반·고관절</option>
           </select>
         </div>
+
+        <!-- AI Smart Analyze Button -->
+        <button class="az-ai-btn" id="az-ai-btn">
+          <span class="az-ai-spinner" id="az-ai-spinner" style="display:none"></span>
+          <span id="az-ai-icon">🤖</span>
+          <span id="az-ai-label" data-i18n="az.ai_analyze">AI Smart Analyze</span>
+        </button>
+        <div class="az-ai-result" id="az-ai-result" style="display:none"></div>
 
         <button class="az-generate-btn" id="az-generate-btn">
           <span>🔬</span>
@@ -416,6 +439,8 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
