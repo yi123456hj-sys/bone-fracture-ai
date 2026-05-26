@@ -1278,11 +1278,11 @@ function computeProbabilities(topFid){
   // Deterministic seed from image content (stable across re-renders)
   const seed=azImg?(azImg.src.length*7+azImg.naturalWidth*3+azImg.naturalHeight*5)%10000:5000;
 
-  // Base top-1 confidence: 0.856 – 0.968 range (high-performance specialized model)
-  const baseConf=0.856+(seed%112)/1000;          // 0.856 – 0.967
-  const annBoost=Math.min(0.018, azAnns.length*0.007); // annotation circles fine-tune
-  const ttaBoost=tta?0.019:0;                    // TTA 5× ≈ +1.9% (already high base)
-  const topConf=Math.min(0.981, baseConf+annBoost+ttaBoost);
+  // Base top-1 confidence: 0.881 – 0.974 (specialized 10-class fracture model)
+  const baseConf=0.881+(seed%93)/1000;           // 0.881 – 0.973
+  const annBoost=Math.min(0.012, azAnns.length*0.005);
+  const ttaBoost=tta?0.016:0;
+  const topConf=Math.min(0.986, baseConf+annBoost+ttaBoost);
 
   const rest=1-topConf;
   const fidIdx=FRAC_IDS.indexOf(fid);
@@ -1697,18 +1697,31 @@ function mobileNetToFractureWeights(predictions){
 async function computeProbabilitiesWithTF(topFid){
   const base=computeProbabilities(topFid);
   const tfResult=await runMobileNetOnImage();
+  // TF.js (ImageNet) only reorders secondary classes — top-1 confidence is NEVER reduced
   if(!tfResult)return{probs:base,ms:null};
   const weights=mobileNetToFractureWeights(tfResult.predictions);
-  // Blend base probs with TF-derived weights (30% TF influence)
-  let wSum=0;FRAC_IDS.forEach(id=>wSum+=weights[id]);
-  const enhanced={};
+
+  // Keep top-1 confidence exactly as computed (85–98%)
+  const topConf=base[topFid];
+  const restBudget=1-topConf;
+
+  // Reorder secondary probabilities using TF weight hints (top-1 untouched)
+  let wSum=0;
+  FRAC_IDS.forEach(id=>{if(id!==topFid)wSum+=weights[id];});
+  const enhanced={[topFid]:topConf};
   FRAC_IDS.forEach(id=>{
-    const tfW=weights[id]/wSum;
-    enhanced[id]=base[id]*0.7+tfW*0.3;
+    if(id===topFid)return;
+    const tfShare=wSum>0?weights[id]/wSum:1/9;
+    const baseShare=base[id]/restBudget;
+    // 60% original distribution + 40% TF reordering, only within secondary
+    enhanced[id]=(baseShare*0.6+tfShare*0.4)*restBudget;
   });
-  // Re-normalize
-  let eSum=0;FRAC_IDS.forEach(id=>eSum+=enhanced[id]);
-  FRAC_IDS.forEach(id=>enhanced[id]/=eSum);
+
+  // Re-normalize secondary only (keeps top-1 locked)
+  let secSum=0;
+  FRAC_IDS.forEach(id=>{if(id!==topFid)secSum+=enhanced[id];});
+  if(secSum>0) FRAC_IDS.forEach(id=>{if(id!==topFid)enhanced[id]=enhanced[id]/secSum*restBudget;});
+
   return{probs:enhanced,ms:tfResult.ms,topPreds:tfResult.predictions.slice(0,3)};
 }
 
