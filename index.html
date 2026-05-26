@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#060912">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>BoneScan AI — Bone Fracture Intelligence Dataset</title>
+<meta name="description" content="Interactive bone fracture X-ray dataset with annotation tool, causes, treatment & recovery guides. 10 fracture types, 3 languages.">
+<link rel="alternate" hreflang="en" href="?lang=en">
+<link rel="alternate" hreflang="zh" href="?lang=zh">
+<link rel="alternate" hreflang="ko" href="?lang=ko">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-logo">🦴</div>
+  <div class="ld-text">BoneScan AI</div>
+  <div class="ld-bar"><div class="ld-fill"></div></div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div id="detail-modal" role="dialog" aria-modal="true">
+  <div class="dm-overlay"></div>
+  <div class="dm-container">
+    <button class="dm-close" id="dm-close-btn" aria-label="Close">✕</button>
+
+    <!-- Left: X-ray + Annotation -->
+    <div class="dm-image-side">
+      <div class="dm-img-wrap">
+        <img id="dm-xray" src="" alt="" draggable="false">
+        <canvas id="annot-canvas" aria-label="Annotation canvas"></canvas>
+      </div>
+      <div class="dm-toolbar">
+        <span class="dm-toolbar-label">Color:</span>
+        <div class="color-btns">
+          <div class="color-btn active" data-color="#FF3333" style="background:#FF3333" title="Red" role="button" tabindex="0"></div>
+          <div class="color-btn" data-color="#FFD600" style="background:#FFD600" title="Yellow" role="button" tabindex="0"></div>
+          <div class="color-btn" data-color="#00E5FF" style="background:#00E5FF" title="Cyan" role="button" tabindex="0"></div>
+          <div class="color-btn" data-color="#00E676" style="background:#00E676" title="Green" role="button" tabindex="0"></div>
+        </div>
+        <div class="toolbar-spacer"></div>
+        <button class="toolbar-btn" id="dm-undo-btn">↩ Undo</button>
+        <button class="toolbar-btn" id="dm-clear-btn">Clear All</button>
+      </div>
+      <div class="dm-annot-hint" id="dm-draw-hint">Drag to circle the fracture area · Tap color to change</div>
+    </div>
+
+    <!-- Right: Medical Info -->
+    <div class="dm-info-side">
+      <div class="dm-header">
+        <div class="dm-fracture-badge" id="dm-badge"></div>
+        <h2 class="dm-fracture-name" id="dm-name"></h2>
+        <div class="dm-fracture-sub" id="dm-sub"></div>
+        <!-- Stats row -->
+        <div class="dm-stats-row">
+          <div class="dm-stat-box" id="dm-stat-train" style="border-top:2px solid #00B4FF">
+            <div class="dm-stat-n" id="dm-sn-train">—</div>
+            <div class="dm-stat-l" id="dm-sl-train">Train</div>
+          </div>
+          <div class="dm-stat-box" id="dm-stat-test" style="border-top:2px solid #00B4FF">
+            <div class="dm-stat-n" id="dm-sn-test">—</div>
+            <div class="dm-stat-l" id="dm-sl-test">Test</div>
+          </div>
+          <div class="dm-stat-box" id="dm-stat-total" style="border-top:2px solid #00B4FF">
+            <div class="dm-stat-n" id="dm-sn-total">—</div>
+            <div class="dm-stat-l" id="dm-sl-total">Total</div>
+          </div>
+        </div>
+      </div>
+      <div class="dm-tabs">
+        <button class="dm-tab active" data-tab="causes">Causes</button>
+        <button class="dm-tab" data-tab="treatment">Treatment</button>
+        <button class="dm-tab" data-tab="recovery">Recovery</button>
+      </div>
+      <div class="dm-panels">
+        <div class="dm-panel active" id="panel-causes"></div>
+        <div class="dm-panel" id="panel-treatment"></div>
+        <div class="dm-panel" id="panel-recovery"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#hero">
+      <div class="nav-logo-icon">🔬</div>
+      <span data-i18n="nav.brand">BoneScan AI</span>
+    </a>
+    <div class="nav-links">
+      <a href="#overview"  data-i18n="nav.overview">Overview</a>
+      <a href="#atlas"     data-i18n="nav.atlas">Atlas</a>
+      <a href="#analytics" data-i18n="nav.analytics">Analytics</a>
+      <a href="#pipeline"  data-i18n="nav.pipeline">Pipeline</a>
+      <a href="#versions"  data-i18n="nav.versions">Versions</a>
+    </div>
+    <div class="lang-switcher">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="zh">中文</button>
+      <button class="lang-btn" data-lang="ko">한국어</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <canvas id="particle-canvas"></canvas>
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge" data-i18n="hero.badge">Medical AI Dataset</div>
+    <h1 class="hero-title">
+      <span data-i18n="hero.line1">Bone Fracture</span><br>
+      <span class="g" data-i18n="hero.line2">Intelligence</span>
+    </h1>
+    <p class="hero-desc" data-i18n="hero.desc">A high-resolution X-ray imaging dataset spanning 10 fracture classifications, engineered for deep-learning model training, validation, and comparative benchmarking.</p>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num" data-count="1107">0</span>
+        <span class="stat-label" data-i18n="hero.s1">Total Images</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num" data-count="10">0</span>
+        <span class="stat-label" data-i18n="hero.s2">Fracture Types</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num" data-count="2">0</span>
+        <span class="stat-label" data-i18n="hero.s3">Dataset Versions</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="hero-scroll-arrow"></div>
+    <span data-i18n="hero.scroll">Scroll</span>
+  </div>
+</section>
+
+<!-- ══ OVERVIEW ══ -->
+<section id="overview" class="section section-alt">
+  <div class="section-inner">
+    <div class="section-eyebrow reveal" data-i18n="ov.title">Overview</div>
+    <h2 class="section-title reveal reveal-d1" data-i18n="ov.title">Dataset at a Glance</h2>
+    <p class="section-sub reveal reveal-d2" data-i18n="ov.sub">Comprehensive statistics across both dataset versions.</p>
+    <div class="ov-grid">
+      <div class="ov-card reveal reveal-d1" style="--ac:#00B4FF">
+        <div class="ov-icon" style="background:rgba(0,180,255,.1)">📊</div>
+        <div class="ov-big" style="color:#00B4FF">1,107</div>
+        <div class="ov-label" data-i18n="ov.c1l">Clean Split Images</div>
+        <div class="ov-sub" data-i18n="ov.c1s">After deduplication &amp; augmentation</div>
+      </div>
+      <div class="ov-card reveal reveal-d2" style="--ac:#9B5FFF">
+        <div class="ov-icon" style="background:rgba(155,95,255,.1)">🗂️</div>
+        <div class="ov-big" style="color:#9B5FFF">989</div>
+        <div class="ov-label" data-i18n="ov.c2l">Fixed Dataset Images</div>
+        <div class="ov-sub" data-i18n="ov.c2s">Refined train/test partitioning</div>
+      </div>
+      <div class="ov-card reveal reveal-d3" style="--ac:#00E5C8">
+        <div class="ov-icon" style="background:rgba(0,229,200,.1)">🧠</div>
+        <div class="ov-big" style="color:#00E5C8">885</div>
+        <div class="ov-label" data-i18n="ov.c3l">Training Samples</div>
+        <div class="ov-sub" data-i18n="ov.c3s">Clean split train set</div>
+      </div>
+      <div class="ov-card reveal reveal-d4" style="--ac:#FF8C42">
+        <div class="ov-icon" style="background:rgba(255,140,66,.1)">🏷️</div>
+        <div class="ov-big" style="color:#FF8C42">10</div>
+        <div class="ov-label" data-i18n="ov.c4l">Fracture Categories</div>
+        <div class="ov-sub" data-i18n="ov.c4s">Clinically validated types</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ATLAS ══ -->
+<section id="atlas" class="section">
+  <div class="section-inner">
+    <div class="section-eyebrow reveal" data-i18n="atlas.eyebrow">Fracture Atlas</div>
+    <h2 class="section-title reveal reveal-d1" data-i18n="atlas.title">10 Fracture Classifications</h2>
+    <p class="section-sub reveal reveal-d2" data-i18n="atlas.sub">Click any card to view details, annotate the X-ray, and explore causes, treatment &amp; recovery.</p>
+    <div class="atlas-grid" id="atlas-grid"></div>
+  </div>
+</section>
+
+<!-- ══ ANALYTICS ══ -->
+<section id="analytics" class="section section-alt">
+  <div class="section-inner">
+    <div class="section-eyebrow reveal" data-i18n="an.eyebrow">Data Analytics</div>
+    <h2 class="section-title reveal reveal-d1" data-i18n="an.title">Visual Intelligence</h2>
+    <p class="section-sub reveal reveal-d2" data-i18n="an.sub">Explore distribution patterns and split ratios across both dataset versions.</p>
+    <div class="analytics-grid">
+      <div class="chart-card reveal">
+        <div class="chart-title"><div class="chart-dot"></div><span data-i18n="an.chart1">Image Distribution by Fracture Type</span></div>
+        <div style="height:280px"><canvas id="chart1"></canvas></div>
+      </div>
+      <div class="chart-card reveal reveal-d1">
+        <div class="chart-title"><div class="chart-dot" style="background:#9B5FFF"></div><span data-i18n="an.chart2">Train / Test Split</span></div>
+        <div style="height:280px"><canvas id="chart2"></canvas></div>
+      </div>
+    </div>
+    <div class="chart-card reveal" style="margin-top:20px">
+      <div class="chart-title"><div class="chart-dot" style="background:#00E5C8"></div><span data-i18n="an.chart3">Dataset Version Comparison</span></div>
+      <div style="height:250px"><canvas id="chart3"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PIPELINE ══ -->
+<section id="pipeline" class="section">
+  <div class="section-inner">
+    <div class="section-eyebrow reveal" data-i18n="pipe.eyebrow">Data Pipeline</div>
+    <h2 class="section-title reveal reveal-d1" data-i18n="pipe.title">From Raw to Ready</h2>
+    <p class="section-sub reveal reveal-d2" data-i18n="pipe.sub">A rigorous multi-stage pipeline ensures dataset quality and reproducibility.</p>
+    <div class="pipeline">
+      <div class="pipe-step reveal">
+        <div class="pipe-dot">📁</div>
+        <div class="pipe-body">
+          <div class="pipe-num" data-i18n="pipe.s1n">Step 01</div>
+          <div class="pipe-title" data-i18n="pipe.s1t">Raw Collection</div>
+          <div class="pipe-desc" data-i18n="pipe.s1d">Original X-ray images sourced from peer-reviewed clinical papers, medical databases, and open-access repositories.</div>
+          <span class="pipe-tag" data-i18n="pipe.s1tag">Raw Data</span>
+        </div>
+      </div>
+      <div class="pipe-step reveal reveal-d1">
+        <div class="pipe-dot">🔑</div>
+        <div class="pipe-body">
+          <div class="pipe-num" data-i18n="pipe.s2n">Step 02</div>
+          <div class="pipe-title" data-i18n="pipe.s2t">Deduplication</div>
+          <div class="pipe-desc" data-i18n="pipe.s2d">MD5 hash matching eliminated exact duplicates. Perceptual hashing removed visually similar augmented pairs.</div>
+          <span class="pipe-tag" data-i18n="pipe.s2tag">MD5 + pHash</span>
+        </div>
+      </div>
+      <div class="pipe-step reveal reveal-d2">
+        <div class="pipe-dot">⚡</div>
+        <div class="pipe-body">
+          <div class="pipe-num" data-i18n="pipe.s3n">Step 03</div>
+          <div class="pipe-title" data-i18n="pipe.s3t">Augmentation</div>
+          <div class="pipe-desc" data-i18n="pipe.s3d">Controlled augmentation including rotations, flips, brightness and contrast variations to balance class distributions.</div>
+          <span class="pipe-tag" data-i18n="pipe.s3tag">Augmentation</span>
+        </div>
+      </div>
+      <div class="pipe-step reveal reveal-d3">
+        <div class="pipe-dot">✂️</div>
+        <div class="pipe-body">
+          <div class="pipe-num" data-i18n="pipe.s4n">Step 04</div>
+          <div class="pipe-title" data-i18n="pipe.s4t">Train / Test Split</div>
+          <div class="pipe-desc" data-i18n="pipe.s4d">Stratified random splitting into 80% training and 20% testing sets, with refined boundaries in the fixed dataset.</div>
+          <span class="pipe-tag" data-i18n="pipe.s4tag">Stratified Split</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ VERSIONS ══ -->
+<section id="versions" class="section section-alt">
+  <div class="section-inner">
+    <div class="section-eyebrow reveal" data-i18n="ver.eyebrow">Dataset Versions</div>
+    <h2 class="section-title reveal reveal-d1" data-i18n="ver.title">Two Refined Versions</h2>
+    <p class="section-sub reveal reveal-d2" data-i18n="ver.sub">Iterative improvements across pipeline stages produced two distinct, deployable datasets.</p>
+    <div class="ver-grid">
+      <div class="ver-card reveal" style="--glow:rgba(0,180,255,.05)">
+        <div class="ver-tag" style="background:rgba(0,180,255,.12);color:#00B4FF;border:1px solid rgba(0,180,255,.3)" data-i18n="ver.v1tag">Version 1</div>
+        <div class="ver-name" data-i18n="ver.v1name">Clean Split</div>
+        <div class="ver-desc" data-i18n="ver.v1desc">Deduplicated and augmented dataset with MD5 and perceptual hash filtering.</div>
+        <div class="ver-stats-row">
+          <div class="ver-stat"><div class="ver-stat-n" style="color:#00B4FF">1,107</div><div class="ver-stat-l" data-i18n="ver.total">Total</div></div>
+          <div class="ver-stat"><div class="ver-stat-n" style="color:#00B4FF">885</div><div class="ver-stat-l" data-i18n="ver.train">Train</div></div>
+          <div class="ver-stat"><div class="ver-stat-n" style="color:#00B4FF">222</div><div class="ver-stat-l" data-i18n="ver.test">Test</div></div>
+          <div class="ver-stat"><div class="ver-stat-n" style="color:#00B4FF">10</div><div class="ver-stat-l" data-i18n="ver.types">Types</div></div>
+        </div>
+      </div>
+      <div class="ver-card reveal reveal-d1" style="--glow:rgba(155,95,255,.05)">
+        <div class="ver-tag" style="background:rgba(155,95,255,.12);color:#9B5FFF;border:1px solid rgba(155,95,255,.3)" data-i18n="ver.v2tag">Version 2</div>
+        <div class="ver-name" data-i18n="ver.v2name">Fixed Dataset</div>
+        <div class="ver-desc" data-i18n="ver.v2desc">Refined version with improved train/test partitioning and stricter split boundaries.</div>
+        <div class="ver-stats-row">
+          <div class="ver-stat"><div class="ver-stat-n" style="color:#9B5FFF">989</div><div class="ver-stat-l" data-i18n="ver.total">Total</div></div>
+          <div class="ver-stat"><div class="ver-stat-n" style="color:#9B5FFF">859</div><div class="ver-stat-l" data-i18n="ver.train">Train</div></div>
+          <div class="ver-stat"><div class="ver-stat-n" style="color:#9B5FFF">130</div><div class="ver-stat-l" data-i18n="ver.test">Test</div></div>
+          <div class="ver-stat"><div class="ver-stat-n" style="color:#9B5FFF">10</div><div class="ver-stat-l" data-i18n="ver.types">Types</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <a class="footer-logo" href="#hero">
+        <div class="footer-logo-icon">🔬</div>
+        <span class="footer-logo-name" data-i18n="ft.logo">BoneScan AI</span>
+      </a>
+      <p class="footer-desc" data-i18n="ft.desc">A research-grade bone fracture X-ray dataset for advancing medical artificial intelligence and diagnostic automation.</p>
+    </div>
+    <div>
+      <div class="footer-col-title" data-i18n="ft.col2">Dataset Info</div>
+      <div class="footer-item"><span data-i18n="ft.source">Source</span>: <strong data-i18n="ft.src_v">Clinical X-ray archives</strong></div>
+      <div class="footer-item"><span data-i18n="ft.types">Classes</span>: <strong data-i18n="ft.types_v">10 fracture types</strong></div>
+      <div class="footer-item"><span data-i18n="ft.format">Format</span>: <strong data-i18n="ft.format_v">JPEG (augmented)</strong></div>
+    </div>
+    <div>
+      <div class="footer-col-title" data-i18n="ft.col3">Technical</div>
+      <div class="footer-item"><span data-i18n="ft.split">Split</span>: <strong data-i18n="ft.split_v">80% train / 20% test</strong></div>
+      <div class="footer-item"><span data-i18n="ft.hash">Dedup</span>: <strong data-i18n="ft.hash_v">MD5 + pHash</strong></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-i18n="ft.copy">© 2025 BoneScan AI Dataset</span>
+    <span data-i18n="ft.rights">For research &amp; educational use</span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
