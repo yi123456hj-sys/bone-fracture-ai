@@ -95,11 +95,11 @@
       <span data-i18n="nav.brand">BoneScan AI</span>
     </a>
     <div class="nav-links">
+      <a href="#analyze"   data-i18n="nav.analyze">Analyze</a>
       <a href="#overview"  data-i18n="nav.overview">Overview</a>
       <a href="#atlas"     data-i18n="nav.atlas">Atlas</a>
       <a href="#analytics" data-i18n="nav.analytics">Analytics</a>
       <a href="#pipeline"  data-i18n="nav.pipeline">Pipeline</a>
-      <a href="#versions"  data-i18n="nav.versions">Versions</a>
     </div>
     <div class="lang-switcher">
       <button class="lang-btn active" data-lang="en">EN</button>
@@ -138,6 +138,104 @@
   <div class="hero-scroll">
     <div class="hero-scroll-arrow"></div>
     <span data-i18n="hero.scroll">Scroll</span>
+  </div>
+</section>
+
+<!-- ══ ANALYZE ══ -->
+<section id="analyze" class="section">
+  <div class="section-inner">
+    <div class="section-eyebrow reveal" data-i18n="az.eyebrow">AI Analyzer</div>
+    <h2 class="section-title reveal reveal-d1" data-i18n="az.title">Upload &amp; Analyze Your X-Ray</h2>
+    <p class="section-sub reveal reveal-d2" data-i18n="az.sub">Upload your own X-ray image, circle the fracture area, then get a full medical analysis report — causes, treatment &amp; rehabilitation.</p>
+
+    <!-- Upload Zone -->
+    <div class="az-upload-zone reveal" id="az-upload-zone">
+      <input type="file" id="az-file-input" accept="image/*" style="display:none">
+      <div class="az-upload-icon">🩻</div>
+      <div class="az-upload-title" data-i18n="az.drop">Drop X-ray image here</div>
+      <div class="az-upload-sub" data-i18n="az.drop_sub">or click to browse · JPG / PNG / WEBP</div>
+      <button class="az-upload-btn" id="az-browse-btn" data-i18n="az.browse">Choose Image</button>
+      <div class="az-samples-row">
+        <span class="az-or" data-i18n="az.or_sample">or try a sample:</span>
+        <button class="az-sample-btn" data-fid="spiral">Spiral</button>
+        <button class="az-sample-btn" data-fid="comminuted">Comminuted</button>
+        <button class="az-sample-btn" data-fid="avulsion">Avulsion</button>
+      </div>
+    </div>
+
+    <!-- Workspace (shown after image load) -->
+    <div class="az-workspace" id="az-workspace" style="display:none">
+      <!-- Left: image + annotation canvas -->
+      <div class="az-canvas-side">
+        <div class="az-img-wrap">
+          <canvas id="az-canvas"></canvas>
+        </div>
+        <div class="az-toolbar">
+          <span class="az-toolbar-label" data-i18n="az.color">Color:</span>
+          <div class="az-color-btns">
+            <div class="az-color-btn active" data-color="#FF3333" style="background:#FF3333"></div>
+            <div class="az-color-btn" data-color="#FFD600" style="background:#FFD600"></div>
+            <div class="az-color-btn" data-color="#00E5FF" style="background:#00E5FF"></div>
+            <div class="az-color-btn" data-color="#00E676" style="background:#00E676"></div>
+          </div>
+          <div class="az-tb-spacer"></div>
+          <button class="az-tb-btn" id="az-undo-btn" data-i18n="az.undo">↩ Undo</button>
+          <button class="az-tb-btn" id="az-clear-btn" data-i18n="az.clear">Clear</button>
+          <button class="az-tb-btn az-reupload-btn" id="az-reupload-btn" data-i18n="az.reupload">↑ New Image</button>
+        </div>
+        <div class="az-draw-hint" data-i18n="az.hint">Drag on the image to circle fracture areas</div>
+      </div>
+
+      <!-- Right: form -->
+      <div class="az-form-side">
+        <div class="az-form-title" data-i18n="az.config">Configure Analysis</div>
+
+        <div class="az-field">
+          <label class="az-label" data-i18n="az.fracture_type">Fracture Type</label>
+          <select id="az-fracture-sel" class="az-select">
+            <option value="avulsion">Avulsion Fracture / 撕脱性骨折 / 견열 골절</option>
+            <option value="comminuted">Comminuted Fracture / 粉碎性骨折 / 분쇄 골절</option>
+            <option value="dislocation">Fracture Dislocation / 骨折脱位 / 골절 탈구</option>
+            <option value="greenstick">Greenstick Fracture / 青枝骨折 / 청지 골절</option>
+            <option value="hairline">Hairline Fracture / 发际线骨折 / 미세 골절</option>
+            <option value="impacted">Impacted Fracture / 嵌插骨折 / 감입 골절</option>
+            <option value="longitudinal">Longitudinal Fracture / 纵向骨折 / 종적 골절</option>
+            <option value="oblique">Oblique Fracture / 斜形骨折 / 사형 골절</option>
+            <option value="pathological">Pathological Fracture / 病理性骨折 / 병리성 골절</option>
+            <option value="spiral">Spiral Fracture / 螺旋形骨折 / 나선형 골절</option>
+          </select>
+          <div class="az-fracture-desc" id="az-fracture-desc"></div>
+        </div>
+
+        <div class="az-field">
+          <label class="az-label" data-i18n="az.body_region">Body Region</label>
+          <select id="az-body-sel" class="az-select">
+            <option value="arm">Upper Limb / 上肢 / 상지</option>
+            <option value="hand">Hand &amp; Wrist / 手腕 / 손·손목</option>
+            <option value="leg">Lower Limb / 下肢 / 하지</option>
+            <option value="foot">Foot &amp; Ankle / 足踝 / 발·발목</option>
+            <option value="spine">Spine / 脊柱 / 척추</option>
+            <option value="pelvis">Pelvis &amp; Hip / 骨盆髋 / 골반·고관절</option>
+          </select>
+        </div>
+
+        <button class="az-generate-btn" id="az-generate-btn">
+          <span>🔬</span>
+          <span data-i18n="az.generate">Generate Analysis Report</span>
+        </button>
+
+        <div class="az-tips">
+          <div class="az-tip" data-i18n="az.tip1">① Upload or drag in your X-ray image</div>
+          <div class="az-tip" data-i18n="az.tip2">② Draw circles on the fracture area</div>
+          <div class="az-tip" data-i18n="az.tip3">③ Select type &amp; body region</div>
+          <div class="az-tip" data-i18n="az.tip4">④ Click Generate to get full report</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analysis Report (shown after Generate) -->
+    <div class="az-report" id="az-report" style="display:none"></div>
+
   </div>
 </section>
 

@@ -233,7 +233,20 @@ const T = {
     'ver.eyebrow':'Dataset Versions','ver.title':'Two Refined Versions','ver.sub':'Iterative improvements across pipeline stages produced two distinct, deployable datasets.','ver.v1tag':'Version 1','ver.v1name':'Clean Split','ver.v1desc':'Deduplicated and augmented dataset with MD5 and perceptual hash filtering. Balanced class distribution with stratified train/test split.','ver.v2tag':'Version 2','ver.v2name':'Fixed Dataset','ver.v2desc':'Refined version with improved train/test partitioning. Stricter split boundaries reduce class imbalance for more reliable model evaluation.','ver.total':'Total','ver.train':'Train','ver.test':'Test','ver.types':'Types',
     'ft.logo':'BoneScan AI','ft.desc':'A research-grade bone fracture X-ray dataset for advancing medical artificial intelligence and diagnostic automation.','ft.col2':'Dataset Info','ft.col3':'Technical','ft.source':'Source','ft.src_v':'Clinical X-ray archives','ft.types':'Classes','ft.types_v':'10 fracture types','ft.format':'Format','ft.format_v':'JPEG (augmented)','ft.split':'Split','ft.split_v':'80% train / 20% test','ft.hash':'Dedup','ft.hash_v':'MD5 + pHash','ft.copy':'© 2025 BoneScan AI Dataset','ft.rights':'For research & educational use',
     'dm.tab_causes':'Causes','dm.tab_treatment':'Treatment','dm.tab_recovery':'Recovery',
-    'dm.draw_hint':'Drag to circle the fracture area · Tap color to change','dm.undo':'↩ Undo','dm.clear':'Clear All','dm.train':'Train','dm.test':'Test','dm.total':'Total'
+    'dm.draw_hint':'Drag to circle the fracture area · Tap color to change','dm.undo':'↩ Undo','dm.clear':'Clear All','dm.train':'Train','dm.test':'Test','dm.total':'Total',
+    'nav.analyze':'Analyze',
+    'az.eyebrow':'AI Analyzer','az.title':'Upload & Analyze Your X-Ray','az.sub':'Upload your own X-ray image, circle the fracture area, then get a full medical analysis report — causes, treatment & rehabilitation.',
+    'az.drop':'Drop X-ray image here','az.drop_sub':'or click to browse · JPG / PNG / WEBP','az.browse':'Choose Image','az.or_sample':'or try a sample:',
+    'az.color':'Color:','az.undo':'↩ Undo','az.clear':'Clear','az.reupload':'↑ New Image','az.hint':'Drag on the image to circle fracture areas',
+    'az.config':'Configure Analysis','az.fracture_type':'Fracture Type','az.body_region':'Body Region',
+    'az.generate':'Generate Analysis Report',
+    'az.tip1':'① Upload or drag in your X-ray image','az.tip2':'② Draw circles on the fracture area','az.tip3':'③ Select type & body region','az.tip4':'④ Click Generate to get full report',
+    'az.rpt_title':'FRACTURE ANALYSIS REPORT','az.rpt_date':'Date','az.rpt_marked':'regions marked',
+    'az.rpt_id':'Fracture Identified','az.rpt_loc':'Body Region','az.rpt_ann':'Annotations',
+    'az.rpt_causes':'Possible Causes','az.rpt_treat':'Treatment Protocol','az.rpt_recov':'Recovery & Rehabilitation','az.rpt_ex':'Recommended Exercises',
+    'az.rpt_disc':'⚠️ This report is for educational reference only. Always consult a qualified medical professional for diagnosis and treatment.',
+    'az.rpt_print':'🖨️ Print Report','az.rpt_new':'＋ New Analysis',
+    'az.body_arm':'Upper Limb (Arm)','az.body_hand':'Hand & Wrist','az.body_leg':'Lower Limb (Leg)','az.body_foot':'Foot & Ankle','az.body_spine':'Spine / Vertebra','az.body_pelvis':'Pelvis & Hip'
   },
   zh:{
     'nav.brand':'骨扫AI','nav.overview':'概览','nav.atlas':'骨折图谱','nav.analytics':'数据分析','nav.pipeline':'数据管道','nav.versions':'版本',
@@ -245,7 +258,20 @@ const T = {
     'ver.eyebrow':'数据集版本','ver.title':'两个精炼版本','ver.sub':'经过迭代优化，产出两个可直接部署的高质量数据集。','ver.v1tag':'版本一','ver.v1name':'清洁分割','ver.v1desc':'经MD5与感知哈希过滤的去重增强数据集。均衡类别分布，分层训练/测试分割。','ver.v2tag':'版本二','ver.v2name':'修正数据集','ver.v2desc':'改进训练/测试划分的精炼版本。更严格的分割边界降低类别不平衡，提升模型评估可靠性。','ver.total':'总计','ver.train':'训练','ver.test':'测试','ver.types':'类型',
     'ft.logo':'骨扫AI','ft.desc':'面向医疗人工智能与诊断自动化进步的研究级骨折X射线数据集。','ft.col2':'数据集信息','ft.col3':'技术规格','ft.source':'来源','ft.src_v':'临床X射线档案','ft.types':'类别','ft.types_v':'10种骨折类型','ft.format':'格式','ft.format_v':'JPEG（增强）','ft.split':'分割','ft.split_v':'80% 训练 / 20% 测试','ft.hash':'去重','ft.hash_v':'MD5 + pHash','ft.copy':'© 2025 骨扫AI数据集','ft.rights':'仅供研究与教育使用',
     'dm.tab_causes':'病因','dm.tab_treatment':'治疗','dm.tab_recovery':'康复',
-    'dm.draw_hint':'拖拽以圈出骨折区域 · 点击颜色切换','dm.undo':'↩ 撤销','dm.clear':'清除全部','dm.train':'训练','dm.test':'测试','dm.total':'总计'
+    'dm.draw_hint':'拖拽以圈出骨折区域 · 点击颜色切换','dm.undo':'↩ 撤销','dm.clear':'清除全部','dm.train':'训练','dm.test':'测试','dm.total':'总计',
+    'nav.analyze':'图像分析',
+    'az.eyebrow':'AI影像分析','az.title':'上传并分析您的X光片','az.sub':'上传您自己的X光影像，圈出骨折区域，即可获得完整的医疗分析报告——病因、治疗与康复方案。',
+    'az.drop':'将X光影像拖放到此处','az.drop_sub':'或点击选择文件 · 支持 JPG / PNG / WEBP','az.browse':'选择图片','az.or_sample':'或使用示例：',
+    'az.color':'颜色：','az.undo':'↩ 撤销','az.clear':'清除','az.reupload':'↑ 重新上传','az.hint':'拖拽在影像上画圈标注骨折区域',
+    'az.config':'配置分析','az.fracture_type':'骨折类型','az.body_region':'受累部位',
+    'az.generate':'生成分析报告',
+    'az.tip1':'① 上传或拖入您的X光影像','az.tip2':'② 在骨折区域画圈标注','az.tip3':'③ 选择骨折类型和受累部位','az.tip4':'④ 点击生成，获取完整报告',
+    'az.rpt_title':'骨折分析报告','az.rpt_date':'日期','az.rpt_marked':'处已标注',
+    'az.rpt_id':'识别骨折类型','az.rpt_loc':'受累部位','az.rpt_ann':'标注数量',
+    'az.rpt_causes':'可能病因','az.rpt_treat':'治疗方案','az.rpt_recov':'康复与恢复','az.rpt_ex':'推荐康复训练',
+    'az.rpt_disc':'⚠️ 本报告仅供教育参考。诊断和治疗请务必咨询专业医疗人员。',
+    'az.rpt_print':'🖨️ 打印报告','az.rpt_new':'＋ 新建分析',
+    'az.body_arm':'上肢（手臂）','az.body_hand':'手/腕部','az.body_leg':'下肢（腿部）','az.body_foot':'足/踝部','az.body_spine':'脊柱/椎体','az.body_pelvis':'骨盆/髋关节'
   },
   ko:{
     'nav.brand':'본스캔 AI','nav.overview':'개요','nav.atlas':'골절 도감','nav.analytics':'데이터 분석','nav.pipeline':'파이프라인','nav.versions':'버전',
@@ -257,7 +283,20 @@ const T = {
     'ver.eyebrow':'데이터셋 버전','ver.title':'두 가지 정제된 버전','ver.sub':'반복적인 파이프라인 개선을 통해 두 가지 배포 가능한 데이터셋이 생성되었습니다.','ver.v1tag':'버전 1','ver.v1name':'클린 스플릿','ver.v1desc':'MD5 및 인지 해시 필터링을 통한 중복 제거 및 증강 데이터셋. 균형 잡힌 클래스 분포와 층화 훈련/테스트 분할.','ver.v2tag':'버전 2','ver.v2name':'수정 데이터셋','ver.v2desc':'개선된 훈련/테스트 분할의 정제된 버전. 더 엄격한 분할 경계로 클래스 불균형 감소.','ver.total':'합계','ver.train':'훈련','ver.test':'테스트','ver.types':'유형',
     'ft.logo':'본스캔 AI','ft.desc':'의료 인공지능 발전과 진단 자동화를 위한 연구 등급 골절 X선 데이터셋.','ft.col2':'데이터셋 정보','ft.col3':'기술 사양','ft.source':'출처','ft.src_v':'임상 X선 아카이브','ft.types':'클래스','ft.types_v':'10가지 골절 유형','ft.format':'형식','ft.format_v':'JPEG (증강)','ft.split':'분할','ft.split_v':'80% 훈련 / 20% 테스트','ft.hash':'중복 제거','ft.hash_v':'MD5 + pHash','ft.copy':'© 2025 본스캔 AI 데이터셋','ft.rights':'연구 및 교육 목적으로만 사용',
     'dm.tab_causes':'원인','dm.tab_treatment':'치료','dm.tab_recovery':'재활',
-    'dm.draw_hint':'드래그하여 골절 부위를 표시 · 색상을 탭하여 변경','dm.undo':'↩ 실행취소','dm.clear':'전체 지우기','dm.train':'훈련','dm.test':'테스트','dm.total':'합계'
+    'dm.draw_hint':'드래그하여 골절 부위를 표시 · 색상을 탭하여 변경','dm.undo':'↩ 실행취소','dm.clear':'전체 지우기','dm.train':'훈련','dm.test':'테스트','dm.total':'합계',
+    'nav.analyze':'영상 분석',
+    'az.eyebrow':'AI 영상 분석','az.title':'X선 영상 업로드 및 분석','az.sub':'직접 촬영한 X선 영상을 업로드하고, 골절 부위를 표시한 후 원인·치료·재활 전체 분석 보고서를 받으세요.',
+    'az.drop':'여기에 X선 영상을 드래그하세요','az.drop_sub':'또는 클릭하여 파일 선택 · JPG / PNG / WEBP 지원','az.browse':'이미지 선택','az.or_sample':'또는 샘플 사용:',
+    'az.color':'색상:','az.undo':'↩ 실행취소','az.clear':'지우기','az.reupload':'↑ 새 이미지','az.hint':'이미지 위에서 드래그하여 골절 부위를 표시하세요',
+    'az.config':'분석 설정','az.fracture_type':'골절 유형','az.body_region':'해당 부위',
+    'az.generate':'분석 보고서 생성',
+    'az.tip1':'① X선 영상을 업로드하거나 드래그하세요','az.tip2':'② 골절 부위에 원을 그려 표시하세요','az.tip3':'③ 골절 유형과 신체 부위를 선택하세요','az.tip4':'④ 생성 버튼을 클릭하여 전체 보고서를 받으세요',
+    'az.rpt_title':'골절 분석 보고서','az.rpt_date':'날짜','az.rpt_marked':'개 부위 표시됨',
+    'az.rpt_id':'골절 유형 식별','az.rpt_loc':'해당 부위','az.rpt_ann':'표시 개수',
+    'az.rpt_causes':'가능한 원인','az.rpt_treat':'치료 프로토콜','az.rpt_recov':'회복 및 재활','az.rpt_ex':'권장 재활 운동',
+    'az.rpt_disc':'⚠️ 이 보고서는 교육 참고용입니다. 진단 및 치료는 반드시 전문 의료진에게 문의하십시오.',
+    'az.rpt_print':'🖨️ 보고서 인쇄','az.rpt_new':'＋ 새 분석',
+    'az.body_arm':'상지(팔)','az.body_hand':'손·손목','az.body_leg':'하지(다리)','az.body_foot':'발·발목','az.body_spine':'척추/추체','az.body_pelvis':'골반·고관절'
   }
 };
 
@@ -641,4 +680,276 @@ window.addEventListener('DOMContentLoaded',()=>{
 
   // ESC to close
   document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+  // Analyze section
+  initAnalyze();
 });
+
+/* ══════════════════════════════════════════
+   ANALYZE — Upload, Annotate, Report
+   ══════════════════════════════════════════ */
+
+// Rehab exercises by body part (EN / ZH / KO)
+const REHAB = {
+  arm:{
+    en:['Finger flexion/extension 10 reps × 3 sets','Wrist circles: clockwise & counter-clockwise','Grip strengthening with soft putty or stress ball','Elbow flexion/extension with light resistance band','Shoulder pendulum swings (if shoulder involved)','Progressive resistance training from week 6+'],
+    zh:['手指屈伸练习，每组10次×3组','腕关节顺、逆时针环绕活动','软质橡皮泥或握力球握力训练','轻阻力弹力带肘关节屈伸','肩关节钟摆练习（如累及肩部）','第6周起渐进性抗阻训练'],
+    ko:['손가락 굴신 운동 10회×3세트','손목 시계·반시계 원운동','부드러운 점토 또는 악력구로 근력 훈련','가벼운 탄성 밴드로 팔꿈치 굴신','어깨 관련 시 진자 운동','6주 이후 점진적 저항 운동']
+  },
+  hand:{
+    en:['Finger extension/flexion exercises','Thumb opposition to each finger','Putty or grip strengthening 10 min/day','Wrist ROM: flexion, extension, ulnar/radial deviation','Fine motor tasks: picking up coins, buttoning','Light weights for grip strength (late phase)'],
+    zh:['手指伸屈练习','拇指逐一对指练习','橡皮泥或握力训练，每天10分钟','腕关节活动度：屈伸和尺/桡侧偏斜','精细动作训练：捡硬币、系扣子','后期用轻重量进行握力强化'],
+    ko:['손가락 굴신 운동','엄지와 각 손가락 대립 운동','점토 또는 악력 강화 하루 10분','손목 ROM: 굴신 및 척측/요측 편위','미세 운동: 동전 집기, 단추 잠그기','후기에 가벼운 중량으로 악력 강화']
+  },
+  leg:{
+    en:['Ankle pumps 20 reps every hour (bed phase)','Quadriceps sets: tighten quads, hold 5 s','Straight leg raises (SLR) 3×10','Heel slides on bed until knee at 90°','Crutch-assisted partial weight-bearing walking','Stationary cycling (no resistance initially)','Balance board training (from week 6+)'],
+    zh:['踝关节泵，每小时20次（卧床期）','股四头肌等长收缩：保持5秒','直腿抬高（SLR），3×10次','仰卧足跟滑动至膝关节屈曲90°','拄拐部分负重行走','固定自行车骑行（初期不加阻力）','第6周起平衡板训练'],
+    ko:['발목 펌프 매 시간 20회(침상 안정 단계)','대퇴사두근 정적 수축: 5초 유지','하지 직거상(SLR) 3×10','침대에서 발꿈치 슬라이드(무릎 90°까지)','목발 이용 부분 체중부하 보행','고정 자전거 타기(초기 무저항)','6주 이후 균형 보드 훈련']
+  },
+  foot:{
+    en:['Toe curls and extensions 20 reps × 3','Ankle alphabet: trace A–Z with toes','Towel scrunches with toes (strengthening)','Calf raises when cleared for weight-bearing','Single-leg balance 30 s × 3 (late phase)','Proprioception training on foam/balance board','Progressive return: walk → jog → run'],
+    zh:['足趾屈伸，每组20次×3组','踝关节字母练习：用脚趾写A–Z','毛巾抓握（足趾肌力强化）','负重允许后进行提踵练习','后期单腿站立，每次30秒×3组','泡沫垫/平衡板本体感觉训练','渐进式恢复：步行→慢跑→跑步'],
+    ko:['발가락 굴신 20회×3세트','발목 알파벳: 발가락으로 A-Z','수건 움켜쥐기(발가락 근력 강화)','체중부하 허가 후 발뒤꿈치 올리기','후기 외발 균형 30초×3(후기)','폼/균형 보드 고유 감각 훈련','점진적 복귀: 보행→조깅→달리기']
+  },
+  spine:{
+    en:['Pelvic tilts: flatten lower back to floor, hold 5 s','Cat-cow gentle spinal mobilization 10 reps','Dead bug core activation 3×8','Bird-dog: alternate arm/leg extension 3×8','Gentle walking programme (5 min → increase weekly)','Aquatic therapy if available (reduces spinal load)'],
+    zh:['骨盆倾斜：腰背贴地保持5秒','猫式伸展轻柔脊椎活动，10次','死虫式核心激活，3×8次','鸟犬式：对角线肢体伸展，3×8次','渐进式步行（从5分钟开始，每周递增）','条件允许时进行水中康复治疗'],
+    ko:['골반 기울이기: 요추 바닥에 밀착 5초 유지','고양이-낙타 척추 가동 10회','데드버그 코어 활성화 3×8','버드독: 대각 팔다리 신전 3×8','점진적 보행 프로그램(5분부터 주간 증가)','수중 재활 치료(척추 부하 감소, 가능한 경우)']
+  },
+  pelvis:{
+    en:['Ankle pumps and calf raises (bed rest phase)','Supine hip abduction/adduction with resistance band','Walker-assisted partial weight-bearing walking','Clamshell exercises for hip abductor strength','Glute bridges 3×12 (progress to single-leg)','Gait re-training with physiotherapist'],
+    zh:['踝泵和提踵（卧床期）','仰卧位弹力带辅助髋关节内外展','助行器辅助部分负重步行','蚌式运动强化髋外展肌群','臀桥练习，3×12次（进阶至单腿）','在物理治疗师指导下进行步态训练'],
+    ko:['발목 펌프 및 종아리 올리기(침상 안정)','앙와위 탄성 밴드 고관절 내외전','보행기로 부분 체중부하 보행','조개껍데기 운동으로 고관절 외전근 강화','교각 운동 3×12(외발 교각으로 진행)','물리치료사와 보행 재훈련']
+  }
+};
+
+// State for analyze canvas
+let azAnns=[], azDrawing=false, azSX=0, azSY=0, azColor='#FF3333';
+let azCvs=null, azCtx2=null, azImg=null;
+
+function initAnalyze(){
+  const zone=document.getElementById('az-upload-zone');
+  const inp=document.getElementById('az-file-input');
+
+  // Click to browse
+  document.getElementById('az-browse-btn').addEventListener('click',e=>{e.stopPropagation();inp.click();});
+  zone.addEventListener('click',()=>inp.click());
+  inp.addEventListener('change',e=>{if(e.target.files[0])readFile(e.target.files[0]);});
+
+  // Drag and drop
+  zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('dragover');});
+  zone.addEventListener('dragleave',()=>zone.classList.remove('dragover'));
+  zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('dragover');if(e.dataTransfer.files[0])readFile(e.dataTransfer.files[0]);});
+
+  // Sample buttons
+  document.querySelectorAll('.az-sample-btn').forEach(btn=>{
+    btn.addEventListener('click',e=>{e.stopPropagation();loadSample(btn.dataset.fid);});
+  });
+
+  // Toolbar
+  document.querySelectorAll('.az-color-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{azColor=btn.dataset.color;document.querySelectorAll('.az-color-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');});
+  });
+  document.getElementById('az-undo-btn').addEventListener('click',()=>{azAnns.pop();azRedraw();});
+  document.getElementById('az-clear-btn').addEventListener('click',()=>{azAnns=[];azRedraw();});
+  document.getElementById('az-reupload-btn').addEventListener('click',resetUpload);
+
+  // Fracture select → update description
+  const sel=document.getElementById('az-fracture-sel');
+  sel.addEventListener('change',updateAzDesc);
+
+  // Generate button
+  document.getElementById('az-generate-btn').addEventListener('click',buildReport);
+}
+
+function readFile(file){
+  if(!file.type.startsWith('image/'))return;
+  const reader=new FileReader();
+  reader.onload=e=>{const img=new Image();img.onload=()=>showWorkspace(img);img.src=e.target.result;};
+  reader.readAsDataURL(file);
+}
+
+function loadSample(fid){
+  const img=new Image();
+  img.onload=()=>{showWorkspace(img);document.getElementById('az-fracture-sel').value=fid;updateAzDesc();};
+  img.src=`images/${fid}.jpg`;
+}
+
+function showWorkspace(img){
+  azImg=img; azAnns=[];
+  document.getElementById('az-upload-zone').style.display='none';
+  document.getElementById('az-report').style.display='none';
+  const ws=document.getElementById('az-workspace');
+  ws.style.display='grid';
+
+  azCvs=document.getElementById('az-canvas');
+  azCtx2=azCvs.getContext('2d');
+
+  // Size canvas to fit container, max 600px tall
+  const wrap=azCvs.parentElement;
+  const maxW=wrap.clientWidth||600;
+  const ratio=img.width/img.height;
+  let w=maxW, h=w/ratio;
+  const maxH=Math.min(window.innerHeight*0.55,560);
+  if(h>maxH){h=maxH;w=h*ratio;}
+  azCvs.width=Math.round(w); azCvs.height=Math.round(h);
+  azRedraw();
+  bindAzCvs();
+  updateAzDesc();
+  ws.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function azRedraw(){
+  if(!azCtx2||!azImg)return;
+  azCtx2.clearRect(0,0,azCvs.width,azCvs.height);
+  azCtx2.drawImage(azImg,0,0,azCvs.width,azCvs.height);
+  azAnns.forEach(a=>{
+    azCtx2.save();
+    azCtx2.beginPath();azCtx2.arc(a.x,a.y,a.r,0,Math.PI*2);
+    azCtx2.strokeStyle=a.c;azCtx2.lineWidth=2.5;
+    azCtx2.shadowColor=a.c;azCtx2.shadowBlur=12;azCtx2.globalAlpha=.92;
+    azCtx2.stroke();azCtx2.restore();
+  });
+}
+
+function azTempCircle(cx,cy,r){
+  azRedraw();
+  if(r<3)return;
+  azCtx2.save();
+  azCtx2.beginPath();azCtx2.arc(cx,cy,r,0,Math.PI*2);
+  azCtx2.strokeStyle=azColor;azCtx2.lineWidth=2;azCtx2.setLineDash([6,4]);
+  azCtx2.shadowColor=azColor;azCtx2.shadowBlur=6;azCtx2.globalAlpha=.65;
+  azCtx2.stroke();azCtx2.restore();
+}
+
+function azCoords(e){
+  const r=azCvs.getBoundingClientRect();
+  const sx=azCvs.width/r.width, sy=azCvs.height/r.height;
+  if(e.touches&&e.touches.length){
+    return{x:(e.touches[0].clientX-r.left)*sx,y:(e.touches[0].clientY-r.top)*sy};
+  }
+  return{x:(e.clientX-r.left)*sx,y:(e.clientY-r.top)*sy};
+}
+
+function bindAzCvs(){
+  // clone to remove old listeners
+  const c2=azCvs.cloneNode(true);
+  azCvs.parentNode.replaceChild(c2,azCvs);
+  azCvs=c2; azCtx2=c2.getContext('2d'); azRedraw();
+
+  function down(e){e.preventDefault();const p=azCoords(e);azSX=p.x;azSY=p.y;azDrawing=true;}
+  function move(e){if(!azDrawing)return;e.preventDefault();const p=azCoords(e);const dx=p.x-azSX,dy=p.y-azSY;azTempCircle(azSX,azSY,Math.sqrt(dx*dx+dy*dy));}
+  function up(e){
+    if(!azDrawing)return;e.preventDefault();azDrawing=false;
+    let ex,ey;
+    if(e.changedTouches&&e.changedTouches.length){
+      const r=azCvs.getBoundingClientRect();const sx=azCvs.width/r.width,sy=azCvs.height/r.height;
+      ex=(e.changedTouches[0].clientX-r.left)*sx;ey=(e.changedTouches[0].clientY-r.top)*sy;
+    }else{const p=azCoords(e);ex=p.x;ey=p.y;}
+    const dx=ex-azSX,dy=ey-azSY,r=Math.sqrt(dx*dx+dy*dy);
+    if(r>5){azAnns.push({x:azSX,y:azSY,r,c:azColor});azRedraw();}
+  }
+  azCvs.addEventListener('mousedown',down);
+  azCvs.addEventListener('mousemove',move);
+  azCvs.addEventListener('mouseup',up);
+  azCvs.addEventListener('mouseleave',()=>{if(azDrawing){azDrawing=false;azRedraw();}});
+  azCvs.addEventListener('touchstart',down,{passive:false});
+  azCvs.addEventListener('touchmove',move,{passive:false});
+  azCvs.addEventListener('touchend',up,{passive:false});
+}
+
+function updateAzDesc(){
+  const fid=document.getElementById('az-fracture-sel').value;
+  const f=FRACTURES.find(x=>x.id===fid);
+  if(f) document.getElementById('az-fracture-desc').textContent=f[lang].desc;
+}
+
+function resetUpload(){
+  document.getElementById('az-upload-zone').style.display='flex';
+  document.getElementById('az-workspace').style.display='none';
+  document.getElementById('az-report').style.display='none';
+  document.getElementById('az-file-input').value='';
+  azAnns=[];azImg=null;
+}
+
+function buildReport(){
+  const fid=document.getElementById('az-fracture-sel').value;
+  const bp=document.getElementById('az-body-sel').value;
+  const f=FRACTURES.find(x=>x.id===fid);
+  const med=MED[fid];
+  if(!f||!med){return;}
+
+  const l=lang;
+  const fl=f[l]; const m=med[l]||med.en;
+  const cnt=azAnns.length;
+  const today=new Date().toLocaleDateString(l==='ko'?'ko-KR':l==='zh'?'zh-CN':'en-US');
+
+  // Body part label
+  const bpKey='az.body_'+bp;
+  const bpLabel=T[l][bpKey]||bp;
+
+  // Rehab exercises
+  const exList=(REHAB[bp]&&REHAB[bp][l])||REHAB.arm[l];
+
+  // Marker word
+  const markedWord=l==='zh'?`${cnt}处已标注`:l==='ko'?`${cnt}${T.ko['az.rpt_marked']}`:`${cnt} region${cnt!==1?'s':''} marked`;
+
+  const G=k=>T[l][k]||T.en[k];
+
+  const rptEl=document.getElementById('az-report');
+  rptEl.style.display='block';
+  rptEl.innerHTML=`
+<div class="rpt-header">
+  <div class="rpt-header-left">
+    <div class="rpt-hicon">🩻</div>
+    <div>
+      <div class="rpt-htitle">${G('az.rpt_title')}</div>
+      <div class="rpt-hmeta">${G('az.rpt_date')}: ${today} · ${markedWord}</div>
+    </div>
+  </div>
+  <div class="rpt-badge" style="background:${f.color}1A;color:${f.color};border:1px solid ${f.color}44">${f.id.toUpperCase()}</div>
+</div>
+
+<div class="rpt-summary">
+  <div class="rpt-sum-item">
+    <div class="rpt-sum-label">${G('az.rpt_id')}</div>
+    <div class="rpt-sum-value" style="color:${f.color}">${fl.name}</div>
+  </div>
+  <div class="rpt-sum-item">
+    <div class="rpt-sum-label">${G('az.rpt_loc')}</div>
+    <div class="rpt-sum-value">${bpLabel}</div>
+  </div>
+  <div class="rpt-sum-item">
+    <div class="rpt-sum-label">${G('az.rpt_ann')}</div>
+    <div class="rpt-sum-value" style="color:${cnt>0?'#00E676':'var(--text3)'}">${cnt}</div>
+  </div>
+</div>
+
+<div class="rpt-body">
+  ${['causes','treatment','recovery'].map(tab=>{
+    const items=m[tab]||med.en[tab];
+    const titles={causes:G('az.rpt_causes'),treatment:G('az.rpt_treat'),recovery:G('az.rpt_recov')};
+    return `<div>
+      <div class="rpt-section-title">${titles[tab]}</div>
+      <div class="rpt-items">
+        ${items.map(it=>`<div class="rpt-item"><div class="rpt-item-icon">${it.i}</div><div class="rpt-item-text">${it.t}</div></div>`).join('')}
+      </div>
+    </div>`;
+  }).join('')}
+
+  <div>
+    <div class="rpt-section-title">${G('az.rpt_ex')}</div>
+    <div class="rpt-exercises">
+      ${exList.map((ex,i)=>`<div class="rpt-exercise"><span class="re-num">${String(i+1).padStart(2,'0')}</span><span class="re-text">${ex}</span></div>`).join('')}
+    </div>
+  </div>
+</div>
+
+<div class="rpt-disclaimer">${G('az.rpt_disc')}</div>
+<div class="rpt-actions">
+  <button class="rpt-btn rpt-btn-outline" onclick="window.print()">${G('az.rpt_print')}</button>
+  <button class="rpt-btn rpt-btn-primary" onclick="resetUpload()">${G('az.rpt_new')}</button>
+</div>`;
+
+  rptEl.scrollIntoView({behavior:'smooth',block:'start'});
+}
