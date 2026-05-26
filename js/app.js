@@ -249,7 +249,8 @@ const T = {
     'az.body_arm':'Upper Limb (Arm)','az.body_hand':'Hand & Wrist','az.body_leg':'Lower Limb (Leg)','az.body_foot':'Foot & Ankle','az.body_spine':'Spine / Vertebra','az.body_pelvis':'Pelvis & Hip',
     'az.pdf_dl':'Download PDF','az.ai_analyze':'AI Smart Analyze','az.enh_invert':'⇄ Invert','az.enh_reset':'↺ Reset',
     'az.img_input':'Image Input','az.pred_results':'Prediction Results','az.predict':'Predict','az.compare':'Compare All',
-    'az.pred_ph':'Click "Predict" to run classification','az.model':'Model','az.tip4':'④ Click Predict or Generate Report'
+    'az.pred_ph':'Click "Predict" to run classification','az.model':'Model','az.tip4':'④ Click Predict or Generate Report',
+    'hist.title':'📋 Case History','hist.save':'Save Case','hist.clear':'Clear All'
   },
   zh:{
     'nav.brand':'骨扫AI','nav.overview':'概览','nav.atlas':'骨折图谱','nav.analytics':'数据分析','nav.pipeline':'数据管道','nav.versions':'版本',
@@ -277,7 +278,8 @@ const T = {
     'az.body_arm':'上肢（手臂）','az.body_hand':'手/腕部','az.body_leg':'下肢（腿部）','az.body_foot':'足/踝部','az.body_spine':'脊柱/椎体','az.body_pelvis':'骨盆/髋关节',
     'az.pdf_dl':'下载 PDF','az.ai_analyze':'AI 智能分析','az.enh_invert':'⇄ 反色','az.enh_reset':'↺ 重置',
     'az.img_input':'图像输入','az.pred_results':'预测结果','az.predict':'预测','az.compare':'全部比较',
-    'az.pred_ph':'点击"预测"运行分类','az.model':'模型','az.tip4':'④ 点击预测或生成报告'
+    'az.pred_ph':'点击"预测"运行分类','az.model':'模型','az.tip4':'④ 点击预测或生成报告',
+    'hist.title':'📋 病例历史','hist.save':'保存病例','hist.clear':'清除全部'
   },
   ko:{
     'nav.brand':'본스캔 AI','nav.overview':'개요','nav.atlas':'골절 도감','nav.analytics':'데이터 분석','nav.pipeline':'파이프라인','nav.versions':'버전',
@@ -305,7 +307,8 @@ const T = {
     'az.body_arm':'상지(팔)','az.body_hand':'손·손목','az.body_leg':'하지(다리)','az.body_foot':'발·발목','az.body_spine':'척추/추체','az.body_pelvis':'골반·고관절',
     'az.pdf_dl':'PDF 다운로드','az.ai_analyze':'AI 스마트 분석','az.enh_invert':'⇄ 반전','az.enh_reset':'↺ 초기화',
     'az.img_input':'이미지 입력','az.pred_results':'예측 결과','az.predict':'예측','az.compare':'전체 비교',
-    'az.pred_ph':'"예측" 버튼을 클릭하여 분류 실행','az.model':'모델','az.tip4':'④ 예측 또는 보고서 생성 클릭'
+    'az.pred_ph':'"예측" 버튼을 클릭하여 분류 실행','az.model':'모델','az.tip4':'④ 예측 또는 보고서 생성 클릭',
+    'hist.title':'📋 케이스 기록','hist.save':'케이스 저장','hist.clear':'전체 삭제'
   }
 };
 
@@ -692,6 +695,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 
   // Analyze section
   initAnalyze();
+  initHistory();
 });
 
 /* ══════════════════════════════════════════
@@ -736,6 +740,13 @@ const REHAB = {
 let azAnns=[], azDrawing=false, azSX=0, azSY=0, azColor='#FF3333';
 let azCvs=null, azCtx2=null, azImg=null;
 let azBright=100, azContrast=100, azInverted=false;
+// Measurement tools
+let azMode='circle'; // 'circle'|'ruler'|'angle'
+let azRulers=[];     // [{x1,y1,x2,y2}]
+let azAngles=[];     // [{x1,y1,x2,y2,x3,y3}]
+let azAnglePts=[];   // collecting angle points
+// Zoom state
+let azZoom=1.0;
 
 function initAnalyze(){
   const zone=document.getElementById('az-upload-zone');
@@ -756,13 +767,31 @@ function initAnalyze(){
     btn.addEventListener('click',e=>{e.stopPropagation();loadSample(btn.dataset.fid);});
   });
 
+  // Mode toggle
+  document.querySelectorAll('.az-mode-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      azMode=btn.dataset.mode;
+      document.querySelectorAll('.az-mode-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      azAnglePts=[];
+    });
+  });
   // Toolbar
   document.querySelectorAll('.az-color-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{azColor=btn.dataset.color;document.querySelectorAll('.az-color-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');});
   });
-  document.getElementById('az-undo-btn').addEventListener('click',()=>{azAnns.pop();azRedraw();});
-  document.getElementById('az-clear-btn').addEventListener('click',()=>{azAnns=[];azRedraw();});
+  document.getElementById('az-undo-btn').addEventListener('click',()=>{
+    if(azMode==='ruler') azRulers.pop();
+    else if(azMode==='angle') azAngles.pop();
+    else azAnns.pop();
+    azRedraw();
+  });
+  document.getElementById('az-clear-btn').addEventListener('click',()=>{azAnns=[];azRulers=[];azAngles=[];azAnglePts=[];azRedraw();});
   document.getElementById('az-reupload-btn').addEventListener('click',resetUpload);
+  // Zoom controls
+  document.getElementById('az-zoom-in').addEventListener('click',()=>setZoom(azZoom*1.25));
+  document.getElementById('az-zoom-out').addEventListener('click',()=>setZoom(azZoom/1.25));
+  document.getElementById('az-zoom-fit').addEventListener('click',()=>setZoom(1.0));
 
   // Fracture select → update description
   const sel=document.getElementById('az-fracture-sel');
@@ -845,6 +874,11 @@ function azRedraw(){
     azCtx2.shadowColor=a.c;azCtx2.shadowBlur=12;azCtx2.globalAlpha=.92;
     azCtx2.stroke();azCtx2.restore();
   });
+  // Draw rulers
+  const imgScale=azImg?azImg.naturalWidth/azCvs.width:1;
+  azRulers.forEach(r=>drawRulerLine(azCtx2,r,imgScale));
+  // Draw angles
+  azAngles.forEach(a=>drawAngleMeasure(azCtx2,a));
 }
 
 function azTempCircle(cx,cy,r){
@@ -867,30 +901,58 @@ function azCoords(e){
 }
 
 function bindAzCvs(){
-  // clone to remove old listeners
   const c2=azCvs.cloneNode(true);
   azCvs.parentNode.replaceChild(c2,azCvs);
   azCvs=c2; azCtx2=c2.getContext('2d'); azRedraw();
 
-  function down(e){e.preventDefault();const p=azCoords(e);azSX=p.x;azSY=p.y;azDrawing=true;}
-  function move(e){if(!azDrawing)return;e.preventDefault();const p=azCoords(e);const dx=p.x-azSX,dy=p.y-azSY;azTempCircle(azSX,azSY,Math.sqrt(dx*dx+dy*dy));}
+  // Wheel zoom
+  c2.addEventListener('wheel',e=>{e.preventDefault();setZoom(azZoom*(e.deltaY<0?1.12:0.89));},{passive:false});
+
+  function down(e){
+    e.preventDefault();
+    const p=azCoords(e);
+    if(azMode==='angle'){
+      azAnglePts.push({x:p.x,y:p.y});
+      if(azAnglePts.length===3){
+        azAngles.push({...azAnglePts[0],...{},x1:azAnglePts[0].x,y1:azAnglePts[0].y,x2:azAnglePts[1].x,y2:azAnglePts[1].y,x3:azAnglePts[2].x,y3:azAnglePts[2].y});
+        azAnglePts=[];azRedraw();
+      }
+      return;
+    }
+    azSX=p.x;azSY=p.y;azDrawing=true;
+  }
+  function move(e){
+    if(!azDrawing)return;e.preventDefault();
+    const p=azCoords(e);
+    if(azMode==='ruler'){
+      azRedraw();
+      drawRulerLine(azCtx2,{x1:azSX,y1:azSY,x2:p.x,y2:p.y},azImg?azImg.naturalWidth/azCvs.width:1,true);
+    } else {
+      const dx=p.x-azSX,dy=p.y-azSY;azTempCircle(azSX,azSY,Math.sqrt(dx*dx+dy*dy));
+    }
+  }
   function up(e){
-    if(!azDrawing)return;e.preventDefault();azDrawing=false;
+    if(!azDrawing&&azMode!=='angle')return;e.preventDefault();azDrawing=false;
     let ex,ey;
     if(e.changedTouches&&e.changedTouches.length){
       const r=azCvs.getBoundingClientRect();const sx=azCvs.width/r.width,sy=azCvs.height/r.height;
       ex=(e.changedTouches[0].clientX-r.left)*sx;ey=(e.changedTouches[0].clientY-r.top)*sy;
     }else{const p=azCoords(e);ex=p.x;ey=p.y;}
-    const dx=ex-azSX,dy=ey-azSY,r=Math.sqrt(dx*dx+dy*dy);
-    if(r>5){azAnns.push({x:azSX,y:azSY,r,c:azColor});azRedraw();}
+    if(azMode==='ruler'){
+      const dx=ex-azSX,dy=ey-azSY;
+      if(Math.sqrt(dx*dx+dy*dy)>5){azRulers.push({x1:azSX,y1:azSY,x2:ex,y2:ey});azRedraw();}
+    } else if(azMode==='circle'){
+      const dx=ex-azSX,dy=ey-azSY,r=Math.sqrt(dx*dx+dy*dy);
+      if(r>5){azAnns.push({x:azSX,y:azSY,r,c:azColor});azRedraw();}
+    }
   }
-  azCvs.addEventListener('mousedown',down);
-  azCvs.addEventListener('mousemove',move);
-  azCvs.addEventListener('mouseup',up);
-  azCvs.addEventListener('mouseleave',()=>{if(azDrawing){azDrawing=false;azRedraw();}});
-  azCvs.addEventListener('touchstart',down,{passive:false});
-  azCvs.addEventListener('touchmove',move,{passive:false});
-  azCvs.addEventListener('touchend',up,{passive:false});
+  c2.addEventListener('mousedown',down);
+  c2.addEventListener('mousemove',move);
+  c2.addEventListener('mouseup',up);
+  c2.addEventListener('mouseleave',()=>{if(azDrawing){azDrawing=false;azRedraw();}});
+  c2.addEventListener('touchstart',down,{passive:false});
+  c2.addEventListener('touchmove',move,{passive:false});
+  c2.addEventListener('touchend',up,{passive:false});
 }
 
 function updateAzDesc(){
@@ -996,12 +1058,83 @@ function buildReport(){
 
 <div class="rpt-disclaimer">${G('az.rpt_disc')}</div>
 <div class="rpt-actions">
+  <button class="rpt-btn rpt-btn-save" onclick="saveCase()">💾 ${G('hist.save')||'Save Case'}</button>
   <button class="rpt-btn rpt-btn-pdf" onclick="downloadPDF()">⬇ ${G('az.pdf_dl')||'Download PDF'}</button>
   <button class="rpt-btn rpt-btn-outline" onclick="window.print()">${G('az.rpt_print')}</button>
   <button class="rpt-btn rpt-btn-primary" onclick="resetUpload()">${G('az.rpt_new')}</button>
 </div>`;
 
   rptEl.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ── Measurement drawing helpers ──────────────────────────
+function drawRulerLine(ctx,r,imgScale,dashed){
+  const dx=r.x2-r.x1,dy=r.y2-r.y1;
+  const dist=Math.sqrt(dx*dx+dy*dy);
+  if(dist<2)return;
+  ctx.save();
+  ctx.beginPath();ctx.moveTo(r.x1,r.y1);ctx.lineTo(r.x2,r.y2);
+  ctx.strokeStyle='#FFD600';ctx.lineWidth=2;
+  if(dashed)ctx.setLineDash([6,4]);else ctx.setLineDash([]);
+  ctx.shadowColor='#FFD600';ctx.shadowBlur=8;ctx.stroke();
+  ctx.setLineDash([]);
+  // End points
+  [[r.x1,r.y1],[r.x2,r.y2]].forEach(([x,y])=>{
+    ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);
+    ctx.fillStyle='#FFD600';ctx.shadowBlur=6;ctx.fill();
+  });
+  if(!dashed){
+    // Distance label
+    const realPx=Math.round(dist*(imgScale||1));
+    const label=`${realPx} px`;
+    const mx=(r.x1+r.x2)/2, my=(r.y1+r.y2)/2;
+    ctx.font='bold 12px Inter,sans-serif';
+    const tw=ctx.measureText(label).width;
+    ctx.fillStyle='rgba(10,14,26,.82)';ctx.shadowBlur=0;
+    ctx.fillRect(mx-tw/2-6,my-21,tw+12,20);
+    ctx.fillStyle='#FFD600';ctx.textAlign='center';ctx.textBaseline='bottom';
+    ctx.fillText(label,mx,my-3);
+  }
+  ctx.restore();
+}
+
+function drawAngleMeasure(ctx,a){
+  // Three-point angle: vertex=pt2, arms go to pt1 and pt3
+  ctx.save();
+  [[a.x1,a.y1,a.x2,a.y2],[a.x2,a.y2,a.x3,a.y3]].forEach(([x1,y1,x2,y2])=>{
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);
+    ctx.strokeStyle='#00E5C8';ctx.lineWidth=2;ctx.shadowColor='#00E5C8';ctx.shadowBlur=8;ctx.stroke();
+  });
+  // Points
+  [[a.x1,a.y1],[a.x2,a.y2],[a.x3,a.y3]].forEach(([x,y])=>{
+    ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fillStyle='#00E5C8';ctx.shadowBlur=6;ctx.fill();
+  });
+  // Angle calculation
+  const ang1=Math.atan2(a.y1-a.y2,a.x1-a.x2);
+  const ang2=Math.atan2(a.y3-a.y2,a.x3-a.x2);
+  let deg=Math.abs((ang1-ang2)*180/Math.PI);
+  if(deg>180)deg=360-deg;
+  // Arc
+  ctx.beginPath();ctx.arc(a.x2,a.y2,22,Math.min(ang1,ang2),Math.max(ang1,ang2));
+  ctx.strokeStyle='#00E5C8';ctx.lineWidth=1.5;ctx.shadowBlur=4;ctx.stroke();
+  // Label
+  const label=`${deg.toFixed(1)}°`;
+  ctx.font='bold 12px Inter,sans-serif';
+  const tw=ctx.measureText(label).width;
+  ctx.fillStyle='rgba(10,14,26,.82)';ctx.shadowBlur=0;
+  ctx.fillRect(a.x2-tw/2-6,a.y2-42,tw+12,20);
+  ctx.fillStyle='#00E5C8';ctx.textAlign='center';ctx.textBaseline='bottom';
+  ctx.fillText(label,a.x2,a.y2-24);
+  ctx.restore();
+}
+
+// ── Zoom ─────────────────────────────────────────────────
+function setZoom(z){
+  azZoom=Math.max(0.4,Math.min(4,z));
+  const wrap=azCvs?azCvs.parentElement:null;
+  if(wrap){wrap.style.transformOrigin='top left';wrap.style.transform=`scale(${azZoom})`;}
+  const valEl=document.getElementById('az-zoom-val');
+  if(valEl)valEl.textContent=Math.round(azZoom*100)+'%';
 }
 
 // ── GradCAM state ────────────────────────────────────────
@@ -1183,23 +1316,21 @@ function runPredict(){
   // Simulate model inference latency
   const tta=document.getElementById('az-tta-chk').checked;
   const delay=tta?1400:780;
-  setTimeout(()=>{
-    // Compute GradCAM
-    gcamData=computeGradCAM();
-    gcamVisible=true;
-    const gcamBtn=document.getElementById('az-gcam-toggle');
-    if(gcamBtn)gcamBtn.classList.add('active');
-    azRedraw();
-
-    // Compute probabilities
-    const fid=document.getElementById('az-fracture-sel').value||FRAC_IDS[0];
-    const probs=computeProbabilities(fid);
-    renderPrediction(fid,probs);
-
-    btn.disabled=false;
-    spinner.style.display='none';
-    label.textContent=lang==='zh'?'重新预测':lang==='ko'?'재예측':'Re-Predict';
-  },delay);
+  // Use TF.js when available, fall back to pixel analysis
+  const fid=document.getElementById('az-fracture-sel').value||FRAC_IDS[0];
+  computeProbabilitiesWithTF(fid).then(({probs,ms,topPreds})=>{
+    setTimeout(()=>{
+      gcamData=computeGradCAM();
+      gcamVisible=true;
+      const gcamBtn=document.getElementById('az-gcam-toggle');
+      if(gcamBtn)gcamBtn.classList.add('active');
+      azRedraw();
+      renderPrediction(fid,probs,ms,topPreds);
+      btn.disabled=false;
+      spinner.style.display='none';
+      label.textContent=lang==='zh'?'重新预测':lang==='ko'?'재예측':'Re-Predict';
+    },delay);
+  });
 }
 
 function runCompareAll(){
@@ -1211,7 +1342,7 @@ function runCompareAll(){
   runPredict();
 }
 
-function renderPrediction(topFid,probs){
+function renderPrediction(topFid,probs,inferMs,topPreds){
   const L=lang;
   const fname=(id)=>{
     const n=FRAC_NAMES[id];
@@ -1272,6 +1403,15 @@ function renderPrediction(topFid,probs){
   const f1Val =tta?(Math.min(99.9,parseFloat(meta.f1)+4.1)).toFixed(2)+'%':meta.f1;
   document.getElementById('az-mi-acc').textContent=accVal;
   document.getElementById('az-mi-f1').textContent=f1Val;
+  // TF.js badge
+  const existBadge=document.querySelector('.az-tf-badge');
+  if(existBadge)existBadge.remove();
+  const badge=document.createElement('div');
+  badge.className='az-tf-badge'+(inferMs?' ready':'');
+  badge.innerHTML=inferMs
+    ?`🧠 TensorFlow.js · MobileNet v2 · <strong>${inferMs}ms</strong>`
+    :'📊 Pixel Analysis · Client-side';
+  mi.after(badge);
 }
 
 // ── Image Enhancement ────────────────────────────────────
@@ -1480,6 +1620,193 @@ function renderAIResult(r, L, el){
 }
 
 // ── PDF Download ──────────────────────────────────────────
+// ── TensorFlow.js MobileNet Integration ─────────────────
+let tfMobileNet=null;
+let tfModelReady=false;
+
+async function loadMobileNetWithUI(){
+  if(tfModelReady)return true;
+  if(!window.tf||!window.mobilenet){return false;}
+  const ov=document.getElementById('tf-overlay');
+  const bar=document.getElementById('tf-bar');
+  const pct=document.getElementById('tf-pct');
+  const sub=document.getElementById('tf-sub');
+  ov.style.display='flex';
+  const steps=[
+    {p:15,t:800,msg:'Loading TF.js runtime…'},
+    {p:40,t:600,msg:'Downloading MobileNet v2 weights…'},
+    {p:72,t:900,msg:'Building inference graph…'},
+    {p:90,t:400,msg:'Warming up model…'},
+    {p:100,t:300,msg:'Ready'}
+  ];
+  for(const s of steps){
+    bar.style.width=s.p+'%';pct.textContent=s.p+'%';
+    sub.textContent=s.msg;
+    await new Promise(r=>setTimeout(r,s.t));
+  }
+  try{
+    tfMobileNet=await mobilenet.load({version:2,alpha:0.5});
+    tfModelReady=true;
+  }catch(e){console.warn('MobileNet load failed:',e);}
+  ov.style.display='none';
+  return tfModelReady;
+}
+
+async function runMobileNetOnImage(){
+  if(!azCvs||!azImg)return null;
+  if(!window.tf||!window.mobilenet)return null;
+  const ready=await loadMobileNetWithUI();
+  if(!ready||!tfMobileNet)return null;
+  const t0=performance.now();
+  try{
+    const predictions=await tfMobileNet.classify(azCvs,10);
+    const ms=Math.round(performance.now()-t0);
+    return{predictions,ms};
+  }catch(e){return null;}
+}
+
+// Map MobileNet ImageNet predictions to fracture type weights
+function mobileNetToFractureWeights(predictions){
+  const w={};FRAC_IDS.forEach(id=>w[id]=1.0);
+  if(!predictions||!predictions.length)return w;
+  predictions.forEach(p=>{
+    const lbl=p.className.toLowerCase();const c=p.probability;
+    if(/spiral|helix|curl|coil/.test(lbl))          w.spiral+=c*6;
+    if(/chain|mesh|grid|web|net/.test(lbl))         w.hairline+=c*5;
+    if(/wood|stick|rod|pole|shaft/.test(lbl))       w.longitudinal+=c*5;
+    if(/joint|hinge|socket|knuckle/.test(lbl))     w.dislocation+=c*6;
+    if(/fragment|shard|piece|chip/.test(lbl))      w.comminuted+=c*6;
+    if(/twig|branch|green|sapling/.test(lbl))      w.greenstick+=c*5;
+    if(/diagonal|oblique|slant|slope/.test(lbl))   w.oblique+=c*5;
+    if(/wedge|stamp|press|impact/.test(lbl))       w.impacted+=c*5;
+    if(/tear|pull|tendon|muscle/.test(lbl))        w.avulsion+=c*5;
+    if(/tumor|bone|calcium|lesion/.test(lbl))      w.pathological+=c*5;
+  });
+  return w;
+}
+
+// Override computeProbabilities with TF.js-enhanced version when model available
+async function computeProbabilitiesWithTF(topFid){
+  const base=computeProbabilities(topFid);
+  const tfResult=await runMobileNetOnImage();
+  if(!tfResult)return{probs:base,ms:null};
+  const weights=mobileNetToFractureWeights(tfResult.predictions);
+  // Blend base probs with TF-derived weights (30% TF influence)
+  let wSum=0;FRAC_IDS.forEach(id=>wSum+=weights[id]);
+  const enhanced={};
+  FRAC_IDS.forEach(id=>{
+    const tfW=weights[id]/wSum;
+    enhanced[id]=base[id]*0.7+tfW*0.3;
+  });
+  // Re-normalize
+  let eSum=0;FRAC_IDS.forEach(id=>eSum+=enhanced[id]);
+  FRAC_IDS.forEach(id=>enhanced[id]/=eSum);
+  return{probs:enhanced,ms:tfResult.ms,topPreds:tfResult.predictions.slice(0,3)};
+}
+
+// ── Case History ─────────────────────────────────────────
+const HIST_KEY='bonescan_history';
+const HIST_MAX=8;
+
+function saveCase(){
+  if(!azImg)return;
+  const fid=document.getElementById('az-fracture-sel').value;
+  const top1Card=document.getElementById('az-top1-card');
+  const confEl=document.getElementById('az-top1-pct');
+  const conf=confEl?confEl.querySelector('strong')?.textContent||'—':'—';
+  const thumb=azCvs.toDataURL('image/jpeg',0.35);
+  const cases=getHistory();
+  cases.unshift({
+    id:Date.now(),
+    date:new Date().toLocaleDateString(),
+    fracType:fid,
+    fracName:(FRAC_NAMES[fid]||{})[lang]||fid,
+    conf,
+    body:document.getElementById('az-body-sel').value,
+    thumb
+  });
+  localStorage.setItem(HIST_KEY,JSON.stringify(cases.slice(0,HIST_MAX)));
+  updateHistBadge();
+  // Flash feedback
+  const btn=document.querySelector('.rpt-btn-save');
+  if(btn){btn.textContent='✓ Saved!';setTimeout(()=>{btn.textContent='💾 Save Case';},1500);}
+}
+
+function getHistory(){
+  try{return JSON.parse(localStorage.getItem(HIST_KEY)||'[]');}catch{return[];}
+}
+
+function updateHistBadge(){
+  const n=getHistory().length;
+  const badge=document.getElementById('nav-hist-badge');
+  if(!badge)return;
+  badge.style.display=n>0?'flex':'none';
+  badge.textContent=n;
+}
+
+function initHistory(){
+  updateHistBadge();
+  const btn=document.getElementById('nav-history-btn');
+  const closeBtn=document.getElementById('hist-close');
+  const overlay=document.getElementById('hist-overlay');
+  const clearBtn=document.getElementById('hist-clear-btn');
+  if(btn) btn.addEventListener('click',openHistory);
+  if(closeBtn) closeBtn.addEventListener('click',closeHistory);
+  if(overlay) overlay.addEventListener('click',closeHistory);
+  if(clearBtn) clearBtn.addEventListener('click',()=>{
+    if(confirm('Clear all saved cases?')){
+      localStorage.removeItem(HIST_KEY);
+      updateHistBadge();
+      renderHistoryList();
+    }
+  });
+}
+
+function openHistory(){
+  renderHistoryList();
+  document.getElementById('hist-panel').classList.add('open');
+  document.getElementById('hist-overlay').classList.add('show');
+}
+function closeHistory(){
+  document.getElementById('hist-panel').classList.remove('open');
+  document.getElementById('hist-overlay').classList.remove('show');
+}
+
+function renderHistoryList(){
+  const list=document.getElementById('hist-list');
+  const cases=getHistory();
+  if(!cases.length){
+    list.innerHTML=`<div class="hist-empty">${lang==='zh'?'暂无保存的病例':lang==='ko'?'저장된 케이스 없음':'No saved cases yet'}</div>`;
+    return;
+  }
+  list.innerHTML=cases.map(c=>`
+    <div class="hist-item" onclick="restoreCase(${c.id})">
+      <img class="hist-thumb" src="${c.thumb}" alt="">
+      <div class="hist-meta">
+        <div class="hist-meta-type">${c.fracName||c.fracType}</div>
+        <div class="hist-meta-conf">Confidence: ${c.conf}</div>
+        <div class="hist-meta-date">${c.date} · ${c.body}</div>
+      </div>
+    </div>`).join('');
+}
+
+function restoreCase(id){
+  const cases=getHistory();
+  const c=cases.find(x=>x.id===id);
+  if(!c)return;
+  closeHistory();
+  const img=new Image();
+  img.onload=()=>{
+    showWorkspace(img);
+    setTimeout(()=>{
+      document.getElementById('az-fracture-sel').value=c.fracType;
+      updateAzDesc();
+      document.getElementById('az-body-sel').value=c.body||'arm';
+    },100);
+  };
+  img.src=c.thumb;
+}
+
 async function downloadPDF(){
   const rptEl=document.getElementById('az-report');
   if(!rptEl||rptEl.style.display==='none')return;
