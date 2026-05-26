@@ -657,10 +657,10 @@ function initNav(){
 window.addEventListener('DOMContentLoaded',()=>{
   setTimeout(()=>document.getElementById('loader').classList.add('hidden'),1900);
   buildAtlas();
-  initParticles();
   initNav();
   setTimeout(()=>{initReveal();initCounters();},100);
   setTimeout(initCharts,400);
+  initPremium();
 
   // Language
   document.querySelectorAll('.lang-btn').forEach(btn=>btn.addEventListener('click',()=>applyLang(btn.dataset.lang)));
@@ -984,6 +984,7 @@ function resetUpload(){
 }
 
 function buildReport(){
+  playRptSnd();
   const fid=document.getElementById('az-fracture-sel').value;
   const bp=document.getElementById('az-body-sel').value;
   const f=FRACTURES.find(x=>x.id===fid);
@@ -1306,6 +1307,8 @@ function computeProbabilities(topFid){
 // ── Run Predict ───────────────────────────────────────────
 function runPredict(){
   if(!azImg)return;
+  startScanBeam();
+  playScanSnd();
   const btn=document.getElementById('az-predict-btn');
   const spinner=document.getElementById('az-pred-spinner');
   const label=document.getElementById('az-pred-label');
@@ -1320,6 +1323,8 @@ function runPredict(){
   const fid=document.getElementById('az-fracture-sel').value||FRAC_IDS[0];
   computeProbabilitiesWithTF(fid).then(({probs,ms,topPreds})=>{
     setTimeout(()=>{
+      stopScanBeam();
+      playSuccessSnd();
       gcamData=computeGradCAM();
       gcamVisible=true;
       const gcamBtn=document.getElementById('az-gcam-toggle');
@@ -1840,4 +1845,318 @@ async function downloadPDF(){
   }finally{
     if(actions)actions.style.visibility='visible';
   }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PREMIUM VISUAL SYSTEM — Unique Edition
+   ═══════════════════════════════════════════════════════════ */
+
+// ── 1. Custom Medical Cursor ─────────────────────────────
+function initCustomCursor(){
+  const outer=document.createElement('div');
+  const inner=document.createElement('div');
+  const crossH=document.createElement('div');
+  const crossV=document.createElement('div');
+  outer.className='cursor-outer';
+  inner.className='cursor-inner';
+  crossH.className='cursor-cross-h';
+  crossV.className='cursor-cross-v';
+  document.body.append(outer,inner,crossH,crossV);
+
+  let mx=-200,my=-200,ox=-200,oy=-200;
+
+  document.addEventListener('mousemove',e=>{
+    mx=e.clientX; my=e.clientY;
+    inner.style.left=mx+'px'; inner.style.top=my+'px';
+    crossH.style.left=(mx-30)+'px'; crossH.style.top=my+'px';
+    crossV.style.left=mx+'px'; crossV.style.top=(my-30)+'px';
+  });
+
+  (function animOuter(){
+    ox+=(mx-ox)*0.16; oy+=(my-oy)*0.16;
+    outer.style.left=ox+'px'; outer.style.top=oy+'px';
+    requestAnimationFrame(animOuter);
+  })();
+
+  document.addEventListener('mousedown',()=>document.body.classList.add('cur-click'));
+  document.addEventListener('mouseup',()=>document.body.classList.remove('cur-click'));
+
+  const iEls='a,button,select,[role="button"],[tabindex],label,.atlas-card,.ov-card,.ver-card,.hist-item';
+  document.addEventListener('mouseover',e=>{
+    if(e.target.closest(iEls)) document.body.classList.add('cur-link');
+  });
+  document.addEventListener('mouseout',e=>{
+    if(e.target.closest(iEls)) document.body.classList.remove('cur-link');
+  });
+  document.addEventListener('mouseleave',()=>{outer.style.opacity='0';inner.style.opacity='0';crossH.style.opacity='0';crossV.style.opacity='0';});
+  document.addEventListener('mouseenter',()=>{outer.style.opacity='1';inner.style.opacity='1';crossH.style.opacity='1';crossV.style.opacity='1';});
+}
+
+// ── 2. Holographic Card Tilt + Shimmer ───────────────────
+function initHolographicCards(){
+  const cards=document.querySelectorAll('.ov-card,.ver-card,.atlas-card,.chart-card');
+  cards.forEach(card=>{
+    const shimmer=document.createElement('span');
+    shimmer.className='holo-shimmer';
+    card.appendChild(shimmer);
+
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const rx=(e.clientX-r.left)/r.width-0.5;
+      const ry=(e.clientY-r.top)/r.height-0.5;
+      const px=((rx+0.5)*100).toFixed(1);
+      const py=((ry+0.5)*100).toFixed(1);
+      shimmer.style.background='radial-gradient(circle at '+px+'% '+py+'%, rgba(255,255,255,.14) 0%, rgba(0,180,255,.06) 32%, transparent 64%)';
+      shimmer.style.opacity='1';
+      const intensity=card.classList.contains('atlas-card')?11:13;
+      card.style.transform='perspective(750px) rotateY('+(rx*intensity)+'deg) rotateX('+(-ry*intensity)+'deg) translateY(-6px) scale(1.016)';
+      const gx=rx>0?'10px':'-10px';
+      card.style.boxShadow='0 28px 56px rgba(0,0,0,.55), '+gx+' 0 28px rgba(0,180,255,.07)';
+    });
+    card.addEventListener('mouseleave',()=>{
+      shimmer.style.opacity='0';
+      card.style.transform='';
+      card.style.boxShadow='';
+    });
+  });
+}
+
+// ── 3. Magnetic CTA Buttons ──────────────────────────────
+function initMagneticButtons(){
+  document.querySelectorAll('.az-predict-btn,.az-ai-btn,.az-generate-btn,.az-upload-btn').forEach(btn=>{
+    btn.addEventListener('mousemove',e=>{
+      if(btn.disabled) return;
+      const r=btn.getBoundingClientRect();
+      const x=(e.clientX-r.left-r.width/2)*0.28;
+      const y=(e.clientY-r.top-r.height/2)*0.28;
+      btn.style.transform='translate('+x+'px,'+y+'px) translateY(-2px)';
+    });
+    btn.addEventListener('mouseleave',()=>{ btn.style.transform=''; });
+  });
+}
+
+// ── 4. Hero Glitch Text Init ─────────────────────────────
+function initGlitch(){
+  const g=document.querySelector('.hero-title .g');
+  if(!g)return;
+  g.classList.add('hero-glitch');
+  g.setAttribute('data-g',g.textContent);
+}
+
+// ── 5. Floating Neural Nodes in Hero ────────────────────
+function initHeroNodes(){
+  const hero=document.getElementById('hero');
+  if(!hero)return;
+  const colors=['#00B4FF','#9B5FFF','#00E5C8','#FF6B9D','#00B4FF'];
+  for(let i=0;i<14;i++){
+    const n=document.createElement('div');
+    n.className='hero-node';
+    n.style.cssText='left:'+(5+Math.random()*90)+'%;top:'+(10+Math.random()*80)+'%;color:'+colors[i%colors.length]+';background:'+colors[i%colors.length]+';animation-duration:'+(4+Math.random()*6)+'s;animation-delay:'+(Math.random()*5)+'s';
+    hero.appendChild(n);
+  }
+}
+
+// ── 6. X-Ray Scan Beam ───────────────────────────────────
+let _scanBeam=null,_scanLines=null;
+function startScanBeam(){
+  const wrap=document.querySelector('.az-img-wrap');
+  if(!wrap) return;
+  stopScanBeam();
+  _scanBeam=document.createElement('div');
+  _scanBeam.className='az-scan-beam';
+  _scanLines=document.createElement('div');
+  _scanLines.className='az-scan-lines';
+  wrap.appendChild(_scanLines);
+  wrap.appendChild(_scanBeam);
+}
+function stopScanBeam(){
+  if(_scanBeam){_scanBeam.remove();_scanBeam=null;}
+  if(_scanLines){_scanLines.remove();_scanLines=null;}
+}
+
+// ── 7. Web Audio Sound System ────────────────────────────
+let _audioCtx=null;
+let _soundOn=false;
+function _ac(){
+  if(!_audioCtx) try{_audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return null;}
+  return _audioCtx;
+}
+function _tone(freq,dur,vol,type,detune){
+  if(!_soundOn) return;
+  const ctx=_ac(); if(!ctx) return;
+  try{
+    const o=ctx.createOscillator();
+    const g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.frequency.value=freq||880;
+    o.type=type||'sine';
+    if(detune) o.detune.value=detune;
+    g.gain.setValueAtTime(vol||0.03,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+(dur||0.12));
+    o.start(ctx.currentTime);
+    o.stop(ctx.currentTime+(dur||0.12));
+  }catch(e){}
+}
+function playClickSnd(){_tone(1100,.05,.022,'square');}
+function playScanSnd(){
+  if(!_soundOn) return;
+  const ctx=_ac(); if(!ctx) return;
+  try{
+    const o=ctx.createOscillator();
+    const g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.type='sawtooth';
+    o.frequency.setValueAtTime(180,ctx.currentTime);
+    o.frequency.linearRampToValueAtTime(2200,ctx.currentTime+0.9);
+    g.gain.setValueAtTime(0.018,ctx.currentTime);
+    g.gain.linearRampToValueAtTime(0.025,ctx.currentTime+0.45);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.9);
+    o.start(ctx.currentTime);
+    o.stop(ctx.currentTime+0.9);
+  }catch(e){}
+}
+function playSuccessSnd(){
+  _tone(880,.14,.022,'sine');
+  setTimeout(()=>_tone(1320,.18,.018,'sine'),140);
+  setTimeout(()=>_tone(1760,.22,.014,'sine'),260);
+}
+function playRptSnd(){
+  _tone(440,.1,.02,'triangle');
+  setTimeout(()=>_tone(660,.14,.018,'triangle'),110);
+}
+function initSoundToggle(){
+  const btn=document.createElement('button');
+  btn.className='sound-toggle';
+  btn.title='Toggle sound effects';
+  btn.innerHTML='🔇';
+  btn.setAttribute('aria-label','Toggle sound');
+  document.body.appendChild(btn);
+  btn.addEventListener('click',()=>{
+    _soundOn=!_soundOn;
+    btn.innerHTML=_soundOn?'🔊':'🔇';
+    btn.classList.toggle('on',_soundOn);
+    if(_soundOn){
+      const ctx=_ac();
+      if(ctx&&ctx.state==='suspended') ctx.resume();
+      playSuccessSnd();
+    }
+  });
+}
+
+// ── 8. Enhanced Particle System (connection lines + mouse interaction) ──
+function upgradeParticles(){
+  const canvas=document.getElementById('particle-canvas');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  let W,H,pts=[];
+  let mouseX=-999,mouseY=-999;
+  const COLORS_P=['rgba(0,180,255,','rgba(155,95,255,','rgba(0,229,200,'];
+
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  window.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;},{passive:true});
+
+  class P{
+    constructor(){this.reset();}
+    reset(){
+      this.x=Math.random()*W; this.y=Math.random()*H;
+      this.vx=(Math.random()-.5)*.5; this.vy=(Math.random()-.5)*.5;
+      this.r=Math.random()*1.6+.4; this.a=Math.random()*.45+.08;
+      this.c=COLORS_P[Math.floor(Math.random()*COLORS_P.length)];
+    }
+    update(){
+      this.x+=this.vx; this.y+=this.vy;
+      if(this.x<0)this.x=W; if(this.x>W)this.x=0;
+      if(this.y<0)this.y=H; if(this.y>H)this.y=0;
+      // Subtle mouse repulsion
+      const dx=this.x-mouseX,dy=this.y-mouseY,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<90&&d>0){const f=0.4/d;this.vx+=dx*f*.018;this.vy+=dy*f*.018;}
+      // Clamp velocity
+      const spd=Math.sqrt(this.vx*this.vx+this.vy*this.vy);
+      if(spd>1.2){this.vx/=spd/1.2;this.vy/=spd/1.2;}
+    }
+    draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=this.c+this.a+')';ctx.fill();}
+  }
+
+  function drawLines(){
+    for(let i=0;i<pts.length;i++){
+      for(let j=i+1;j<pts.length;j++){
+        const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<140){
+          const alpha=(0.06*(1-d/140)).toFixed(3);
+          ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
+          ctx.strokeStyle='rgba(0,180,255,'+alpha+')';ctx.lineWidth=.7;ctx.stroke();
+        }
+      }
+      // Line to mouse
+      const dx=pts[i].x-mouseX,dy=pts[i].y-mouseY,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<160){
+        const alpha=(0.12*(1-d/160)).toFixed(3);
+        ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(mouseX,mouseY);
+        ctx.strokeStyle='rgba(0,229,200,'+alpha+')';ctx.lineWidth=.8;ctx.stroke();
+      }
+    }
+  }
+
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{p.update();p.draw();});
+    drawLines();
+    requestAnimationFrame(loop);
+  }
+
+  window.addEventListener('resize',resize,{passive:true});
+  resize();
+  pts=[];
+  for(let i=0;i<75;i++) pts.push(new P());
+  loop();
+}
+
+// ── 9. Typewriter AI result ───────────────────────────────
+function typewriteEl(el,htmlStr){
+  el.style.display='block';
+  const cur=document.createElement('span');
+  cur.className='tw-cur';
+  const txt=htmlStr;
+  let i=0;
+  const speed=Math.max(3,Math.round(3000/txt.length));
+  el.innerHTML='';el.appendChild(cur);
+  const iv=setInterval(()=>{
+    i+=Math.max(1,Math.round(txt.length/220));
+    if(i>=txt.length){i=txt.length;clearInterval(iv);cur.remove();}
+    el.innerHTML=txt.slice(0,i);
+    el.appendChild(cur);
+    el.scrollTop=el.scrollHeight;
+  },speed);
+}
+
+// ── 10. Obs-section typewriter in AI result ───────────────
+const _origRenderAI=typeof renderAIResult==='function'?renderAIResult:null;
+function hookAITypewriter(){
+  // patch renderAIResult to use typewriter for obs items after render
+  const orig=window.renderAIResult;
+  if(!orig)return;
+  window.renderAIResult=function(r,L,el){
+    orig(r,L,el);
+    playRptSnd();
+    // add subtle type-in class to obs items
+    setTimeout(()=>{
+      const obs=el.querySelectorAll('.ai-obs-item');
+      obs.forEach((o,i)=>{
+        o.style.opacity='0';o.style.transform='translateX(-8px)';o.style.transition='opacity .3s ease,transform .3s ease';
+        setTimeout(()=>{o.style.opacity='1';o.style.transform='none';},120+i*90);
+      });
+    },80);
+  };
+}
+
+// ── Init all premium systems ──────────────────────────────
+function initPremium(){
+  initCustomCursor();
+  upgradeParticles();
+  initHeroNodes();
+  initGlitch();
+  setTimeout(initHolographicCards,250);
+  initMagneticButtons();
+  initSoundToggle();
+  hookAITypewriter();
 }

@@ -470,3 +470,82 @@ footer{background:var(--bg3);border-top:1px solid var(--cb);padding:56px 4% 36px
 /* ── Save Case button in report ──────────────────────────── */
 .rpt-btn-save{background:linear-gradient(135deg,rgba(0,180,255,.2),rgba(155,95,255,.2));border:1px solid rgba(0,180,255,.35);color:var(--blue)}
 .rpt-btn-save:hover{background:linear-gradient(135deg,rgba(0,180,255,.35),rgba(155,95,255,.3))}
+
+/* ═══════════════════════════════════════════════════════════
+   PREMIUM VISUAL SYSTEM — BoneScan AI Unique Edition
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Custom Medical Cursor ───────────────────────────────── */
+*{cursor:none!important}
+input,textarea,select{cursor:text!important}
+.cursor-outer{position:fixed;pointer-events:none;z-index:99999;width:34px;height:34px;border:1.5px solid rgba(0,180,255,.75);border-radius:50%;transform:translate(-50%,-50%);transition:width .22s ease,height .22s ease,border-color .22s ease,background .22s ease,border-radius .2s ease;will-change:left,top}
+.cursor-inner{position:fixed;pointer-events:none;z-index:100000;width:5px;height:5px;background:var(--blue);border-radius:50%;transform:translate(-50%,-50%);transition:width .1s,height .1s,background .15s;will-change:left,top}
+body.cur-link .cursor-outer{width:54px;height:54px;border-color:rgba(0,180,255,.3);background:rgba(0,180,255,.06)}
+body.cur-link .cursor-inner{width:3px;height:3px}
+body.cur-click .cursor-outer{width:22px;height:22px;border-color:rgba(0,229,200,.9);background:rgba(0,229,200,.1)}
+body.cur-drag .cursor-outer{width:42px;height:42px;border-radius:5px;border-color:var(--teal);transform:translate(-50%,-50%) rotate(45deg)}
+
+/* ── Hero Glitch Text ─────────────────────────────────────── */
+.hero-glitch{position:relative;display:inline}
+@keyframes ga{0%,87%,100%{clip-path:inset(0 0 100% 0);opacity:0;transform:none}88%{clip-path:inset(8% 0 68% 0);transform:translate(-5px,1px);opacity:1}89%{clip-path:inset(62% 0 5% 0);transform:translate(5px,-1px);opacity:1}90%{clip-path:inset(28% 0 42% 0);transform:translate(-2px);opacity:1}91%{clip-path:inset(0 0 100% 0);opacity:0}94%{clip-path:inset(42% 0 22% 0);transform:translate(4px);opacity:1}95%{clip-path:inset(0 0 100% 0);opacity:0}}
+@keyframes gb{0%,87%,100%{clip-path:inset(0 0 100% 0);opacity:0;transform:none}88%{clip-path:inset(58% 0 15% 0);transform:translate(6px,2px);opacity:1}89%{clip-path:inset(15% 0 55% 0);transform:translate(-6px,-2px);opacity:1}90%{clip-path:inset(0 0 100% 0);opacity:0}92%{clip-path:inset(22% 0 58% 0);transform:translate(-3px,1px);opacity:1}93%{clip-path:inset(0 0 100% 0);opacity:0}}
+.hero-glitch::before{content:attr(data-g);position:absolute;inset:0;color:#00ffff;-webkit-text-fill-color:#00ffff;animation:ga 9s ease infinite;pointer-events:none}
+.hero-glitch::after{content:attr(data-g);position:absolute;inset:0;color:#ff00cc;-webkit-text-fill-color:#ff00cc;animation:gb 9s ease infinite .6s;pointer-events:none}
+
+/* ── Holographic Shimmer (JS-injected child) ─────────────── */
+.holo-shimmer{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:2;opacity:0;transition:opacity .3s;mix-blend-mode:screen}
+
+/* ── X-Ray Scan Beam ─────────────────────────────────────── */
+@keyframes scan-sweep{0%{top:-3px;opacity:0}4%{opacity:1}96%{opacity:1}100%{top:calc(100% + 3px);opacity:0}}
+.az-scan-beam{position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent 0%,rgba(0,229,200,.25) 15%,rgba(0,229,200,1) 50%,rgba(0,229,200,.25) 85%,transparent 100%);box-shadow:0 0 8px rgba(0,229,200,1),0 0 24px rgba(0,229,200,.75),0 0 56px rgba(0,229,200,.35);pointer-events:none;z-index:20;animation:scan-sweep 1s linear infinite}
+.az-scan-lines{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,229,200,.022) 2px,rgba(0,229,200,.022) 4px);pointer-events:none;z-index:19}
+
+/* ── Neon Pulse on Upload Zone ───────────────────────────── */
+@keyframes neon-pulse{0%,100%{box-shadow:0 0 0 0 transparent}50%{box-shadow:0 0 28px 3px rgba(0,180,255,.14),0 0 56px 8px rgba(0,180,255,.06),inset 0 0 28px rgba(0,180,255,.04)}}
+.az-upload-zone{animation:neon-pulse 3.2s ease-in-out infinite!important}
+
+/* ── Chromatic Canvas Border ─────────────────────────────── */
+@keyframes chroma{0%{border-color:rgba(0,180,255,.3);box-shadow:0 0 18px rgba(0,180,255,.12)}33%{border-color:rgba(155,95,255,.3);box-shadow:0 0 18px rgba(155,95,255,.12)}66%{border-color:rgba(0,229,200,.3);box-shadow:0 0 18px rgba(0,229,200,.12)}100%{border-color:rgba(0,180,255,.3);box-shadow:0 0 18px rgba(0,180,255,.12)}}
+.az-img-wrap{border:1px solid rgba(0,180,255,.25);animation:chroma 9s linear infinite}
+
+/* ── Typewriter cursor ───────────────────────────────────── */
+.tw-cur{display:inline-block;width:2px;height:.85em;background:var(--teal);margin-left:2px;vertical-align:text-bottom;animation:tw-blink .65s ease-in-out infinite}
+@keyframes tw-blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ── Probability bar entrance stagger ────────────────────── */
+@keyframes bar-in{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+.az-prob-row{animation:bar-in .32s ease both}
+
+/* ── Section scanlines (subtle) ──────────────────────────── */
+.section-alt{position:relative}
+.section-alt::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,.007) 3px,rgba(255,255,255,.007) 4px);pointer-events:none;z-index:0}
+.section-alt .section-inner{position:relative;z-index:1}
+
+/* ── Floating hero nodes ─────────────────────────────────── */
+@keyframes node-float{0%,100%{transform:translateY(0) scale(1);opacity:.55}40%{transform:translateY(-16px) scale(1.15);opacity:.9}70%{transform:translateY(9px) scale(.88);opacity:.4}}
+.hero-node{position:absolute;width:5px;height:5px;border-radius:50%;box-shadow:0 0 12px currentColor;animation:node-float linear infinite;pointer-events:none}
+
+/* ── Sound toggle button ─────────────────────────────────── */
+.sound-toggle{position:fixed;bottom:28px;right:28px;z-index:500;width:40px;height:40px;border-radius:50%;background:rgba(6,9,18,.85);border:1px solid rgba(255,255,255,.12);color:var(--text3);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;backdrop-filter:blur(8px)}
+.sound-toggle:hover{border-color:rgba(0,180,255,.4);color:var(--blue);transform:scale(1.1)}
+.sound-toggle.on{border-color:rgba(0,229,200,.4);color:var(--teal)}
+
+/* ── Prediction TOP-1 entrance ───────────────────────────── */
+@keyframes top1-pop{from{opacity:0;transform:scale(.88) translateY(8px)}to{opacity:1;transform:none}}
+.az-top1-card[style*="block"]{animation:top1-pop .45s cubic-bezier(.34,1.56,.64,1) both}
+
+/* ── Magnetic button aura ─────────────────────────────────── */
+.az-predict-btn,.az-ai-btn,.az-generate-btn,.az-upload-btn{transition:transform .18s cubic-bezier(.34,1.56,.64,1),opacity .18s,box-shadow .18s!important;will-change:transform}
+
+/* ── Nav logo glow pulse ─────────────────────────────────── */
+@keyframes logo-glow{0%,100%{box-shadow:0 0 0 0 rgba(0,180,255,0)}50%{box-shadow:0 0 16px 2px rgba(0,180,255,.35)}}
+.nav-logo-icon{animation:logo-glow 4s ease-in-out infinite}
+
+/* ── Atlas card scan line on hover ───────────────────────── */
+@keyframes atlas-scan{from{top:0}to{top:100%}}
+.atlas-card:hover .atlas-img::after{content:'';position:absolute;left:0;right:0;height:2px;background:rgba(0,229,200,.6);box-shadow:0 0 8px rgba(0,229,200,.8);animation:atlas-scan .6s linear}
+
+/* ── Cursor crosshair lines (subtle) ─────────────────────── */
+.cursor-cross-h,.cursor-cross-v{position:fixed;pointer-events:none;z-index:99998;background:rgba(0,180,255,.18);transition:opacity .2s}
+.cursor-cross-h{height:1px;width:60px;transform:translateY(-50%)}
+.cursor-cross-v{width:1px;height:60px;transform:translateX(-50%)}
