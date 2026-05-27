@@ -98,6 +98,8 @@
       <a href="#analyze"   data-i18n="nav.analyze">Analyze</a>
       <a href="#overview"  data-i18n="nav.overview">Overview</a>
       <a href="#atlas"     data-i18n="nav.atlas">Atlas</a>
+      <a href="#bodymap"   data-i18n="nav.bodymap">Body Map</a>
+      <a href="#risk"      data-i18n="nav.risk">Risk Score</a>
       <a href="#analytics" data-i18n="nav.analytics">Analytics</a>
       <a href="#pipeline"  data-i18n="nav.pipeline">Pipeline</a>
     </div>
@@ -398,6 +400,191 @@
     <h2 class="section-title reveal reveal-d1" data-i18n="atlas.title">10 Fracture Classifications</h2>
     <p class="section-sub reveal reveal-d2" data-i18n="atlas.sub">Click any card to view details, annotate the X-ray, and explore causes, treatment &amp; recovery.</p>
     <div class="atlas-grid" id="atlas-grid"></div>
+  </div>
+</section>
+
+<!-- ══ BODY MAP ══ -->
+<section id="bodymap" class="section section-alt">
+  <div class="section-inner">
+    <div class="section-eyebrow reveal" data-i18n="bm.eyebrow">Interactive Body Map</div>
+    <h2 class="section-title reveal reveal-d1" data-i18n="bm.title">Fracture Location Explorer</h2>
+    <p class="section-sub reveal reveal-d2" data-i18n="bm.sub">Click on any body region to explore related fracture types, common causes, and clinical information.</p>
+    <div class="bm-container reveal">
+      <div class="bm-svg-wrap">
+        <div class="bm-svg-label" data-i18n="bm.click_hint">↓ Click a region</div>
+        <svg id="bm-svg" viewBox="0 0 220 510" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- HEAD -->
+          <ellipse class="br" id="br-head" data-region="head" cx="110" cy="42" rx="31" ry="36"/>
+          <!-- NECK/CERVICAL -->
+          <rect class="br" id="br-cervical" data-region="cervical" x="100" y="77" width="20" height="22" rx="6"/>
+          <!-- THORAX -->
+          <path class="br" id="br-thorax" data-region="thorax" d="M92 99 Q70 105 65 165 L155 165 Q150 105 128 99 Q120 97 110 97 Q100 97 92 99Z"/>
+          <!-- SHOULDERS LEFT -->
+          <ellipse class="br" id="br-shld-l" data-region="shoulder" cx="52" cy="112" rx="22" ry="15"/>
+          <!-- SHOULDERS RIGHT -->
+          <ellipse class="br" id="br-shld-r" data-region="shoulder" cx="168" cy="112" rx="22" ry="15"/>
+          <!-- LEFT UPPER ARM -->
+          <rect class="br" id="br-arm-l" data-region="arm" x="30" y="122" width="18" height="62" rx="9"/>
+          <!-- RIGHT UPPER ARM -->
+          <rect class="br" id="br-arm-r" data-region="arm" x="172" y="122" width="18" height="62" rx="9"/>
+          <!-- LEFT FOREARM/WRIST -->
+          <rect class="br" id="br-wrist-l" data-region="wrist" x="24" y="187" width="16" height="55" rx="8"/>
+          <!-- RIGHT FOREARM/WRIST -->
+          <rect class="br" id="br-wrist-r" data-region="wrist" x="180" y="187" width="16" height="55" rx="8"/>
+          <!-- LEFT HAND -->
+          <ellipse class="br" id="br-hand-l" data-region="hand" cx="32" cy="254" rx="15" ry="19"/>
+          <!-- RIGHT HAND -->
+          <ellipse class="br" id="br-hand-r" data-region="hand" cx="188" cy="254" rx="15" ry="19"/>
+          <!-- LUMBAR SPINE -->
+          <rect class="br" id="br-lumbar" data-region="lumbar" x="98" y="165" width="24" height="50" rx="7"/>
+          <!-- PELVIS / HIP -->
+          <path class="br" id="br-pelvis" data-region="hip" d="M82 215 Q62 228 58 258 L82 262 Q90 240 110 238 Q130 240 138 262 L162 258 Q158 228 138 215 Z"/>
+          <!-- LEFT THIGH -->
+          <rect class="br" id="br-thigh-l" data-region="femur" x="72" y="263" width="22" height="80" rx="11"/>
+          <!-- RIGHT THIGH -->
+          <rect class="br" id="br-thigh-r" data-region="femur" x="126" y="263" width="22" height="80" rx="11"/>
+          <!-- LEFT KNEE -->
+          <circle class="br" id="br-knee-l" data-region="knee" cx="83" cy="354" r="13"/>
+          <!-- RIGHT KNEE -->
+          <circle class="br" id="br-knee-r" data-region="knee" cx="137" cy="354" r="13"/>
+          <!-- LEFT LOWER LEG -->
+          <rect class="br" id="br-leg-l" data-region="tibia" x="75" y="367" width="18" height="88" rx="9"/>
+          <!-- RIGHT LOWER LEG -->
+          <rect class="br" id="br-leg-r" data-region="tibia" x="127" y="367" width="18" height="88" rx="9"/>
+          <!-- LEFT FOOT/ANKLE -->
+          <path class="br" id="br-foot-l" data-region="foot" d="M68 455 L96 455 L98 473 L55 473 Z"/>
+          <!-- RIGHT FOOT/ANKLE -->
+          <path class="br" id="br-foot-r" data-region="foot" d="M124 455 L152 455 L165 473 L122 473 Z"/>
+        </svg>
+      </div>
+      <!-- Info Panel -->
+      <div class="bm-info-side" id="bm-info-side">
+        <div class="bm-placeholder" id="bm-placeholder">
+          <div class="bm-ph-icon">🦴</div>
+          <div class="bm-ph-title" data-i18n="bm.ph_title">Select a Body Region</div>
+          <div class="bm-ph-text" data-i18n="bm.ph_text">Click on any part of the skeleton to explore related fracture types, causes, and clinical details.</div>
+          <div class="bm-ph-chips">
+            <span class="bm-ph-chip" data-i18n="bm.chip1">📍 21 body regions</span>
+            <span class="bm-ph-chip" data-i18n="bm.chip2">🦴 19 fracture types</span>
+            <span class="bm-ph-chip" data-i18n="bm.chip3">🌐 3 languages</span>
+          </div>
+        </div>
+        <div class="bm-detail" id="bm-detail" style="display:none">
+          <div class="bm-detail-hdr">
+            <div class="bm-region-icon" id="bm-region-icon"></div>
+            <div class="bm-region-meta">
+              <div class="bm-region-name" id="bm-region-name"></div>
+              <div class="bm-region-sub" id="bm-region-sub"></div>
+            </div>
+          </div>
+          <div class="bm-prevalence">
+            <span class="bm-prev-lbl" data-i18n="bm.prevalence">Prevalence</span>
+            <div class="bm-prev-track"><div class="bm-prev-fill" id="bm-prev-fill" style="width:0%"></div></div>
+            <span class="bm-prev-pct" id="bm-prev-pct">—</span>
+          </div>
+          <div class="bm-fractures-title" data-i18n="bm.related">Related Fracture Types</div>
+          <div class="bm-fracture-chips" id="bm-fracture-chips"></div>
+          <div class="bm-desc-box" id="bm-desc-box"></div>
+          <div class="bm-facts" id="bm-facts"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ RISK CALCULATOR ══ -->
+<section id="risk" class="section">
+  <div class="section-inner">
+    <div class="section-eyebrow reveal" data-i18n="rc.eyebrow">Risk Assessment</div>
+    <h2 class="section-title reveal reveal-d1" data-i18n="rc.title">Fracture Risk Calculator</h2>
+    <p class="section-sub reveal reveal-d2" data-i18n="rc.sub">Enter your health profile to get a personalized fracture risk score with evidence-based recommendations.</p>
+    <div class="rc-wrapper">
+      <!-- Form -->
+      <div class="rc-form-card reveal">
+        <div class="rc-field-row">
+          <div class="rc-field">
+            <label class="rc-lbl" data-i18n="rc.age">Age <span class="rc-val-badge" id="rc-age-v">45</span></label>
+            <input type="range" id="rc-age" class="rc-slider" min="20" max="90" value="45">
+            <div class="rc-range-labels"><span>20</span><span>90</span></div>
+          </div>
+          <div class="rc-field">
+            <label class="rc-lbl" data-i18n="rc.bmi">BMI <span class="rc-val-badge" id="rc-bmi-v">24.0</span></label>
+            <input type="range" id="rc-bmi" class="rc-slider" min="14" max="45" value="24" step="0.5">
+            <div class="rc-range-labels"><span>14</span><span>45</span></div>
+          </div>
+        </div>
+        <div class="rc-field">
+          <label class="rc-lbl" data-i18n="rc.tscore">Bone Density T-score <span class="rc-val-badge" id="rc-tscore-v">0.0</span></label>
+          <input type="range" id="rc-tscore" class="rc-slider rc-slider-tscore" min="-40" max="25" value="0">
+          <div class="rc-range-labels"><span>-4.0 (Osteoporosis)</span><span>+2.5 (Normal)</span></div>
+        </div>
+        <div class="rc-field-row">
+          <div class="rc-field">
+            <label class="rc-lbl" data-i18n="rc.sex">Sex</label>
+            <div class="rc-seg" id="rc-sex">
+              <button class="rc-seg-btn" data-v="male" data-i18n="rc.male">♂ Male</button>
+              <button class="rc-seg-btn active" data-v="female" data-i18n="rc.female">♀ Female</button>
+            </div>
+          </div>
+          <div class="rc-field">
+            <label class="rc-lbl" data-i18n="rc.activity">Activity Level</label>
+            <div class="rc-seg" id="rc-activity">
+              <button class="rc-seg-btn active" data-v="sedentary" data-i18n="rc.sedentary">🛋 Sedentary</button>
+              <button class="rc-seg-btn" data-v="moderate" data-i18n="rc.moderate">🚶 Moderate</button>
+              <button class="rc-seg-btn" data-v="active" data-i18n="rc.active">🏃 Active</button>
+            </div>
+          </div>
+        </div>
+        <div class="rc-field">
+          <label class="rc-lbl" data-i18n="rc.calcium">Calcium &amp; Vitamin D Intake</label>
+          <div class="rc-seg" id="rc-calcium">
+            <button class="rc-seg-btn active" data-v="low" data-i18n="rc.cal_low">🔴 Low</button>
+            <button class="rc-seg-btn" data-v="medium" data-i18n="rc.cal_med">🟡 Medium</button>
+            <button class="rc-seg-btn" data-v="high" data-i18n="rc.cal_high">🟢 Adequate</button>
+          </div>
+        </div>
+        <div class="rc-checks">
+          <label class="rc-check"><input type="checkbox" id="rc-smoke" class="rc-chk-input"><span class="rc-chk-box"></span><span data-i18n="rc.smoking">🚬 Current smoker</span></label>
+          <label class="rc-check"><input type="checkbox" id="rc-prev" class="rc-chk-input"><span class="rc-chk-box"></span><span data-i18n="rc.prev_frac">🦴 Previous fracture</span></label>
+          <label class="rc-check"><input type="checkbox" id="rc-family" class="rc-chk-input"><span class="rc-chk-box"></span><span data-i18n="rc.family">👨‍👩‍👧 Family history of osteoporosis</span></label>
+          <label class="rc-check"><input type="checkbox" id="rc-steroids" class="rc-chk-input"><span class="rc-chk-box"></span><span data-i18n="rc.steroids">💊 Long-term corticosteroids (&gt;3 months)</span></label>
+        </div>
+        <button class="rc-calc-btn" id="rc-calc-btn">
+          <span>🔬</span>
+          <span data-i18n="rc.calculate">Calculate My Fracture Risk</span>
+        </button>
+      </div>
+
+      <!-- Result Panel -->
+      <div class="rc-result-card reveal reveal-d1" id="rc-result-card">
+        <div class="rc-gauge-area">
+          <svg class="rc-gauge-svg" viewBox="0 0 220 140">
+            <defs>
+              <linearGradient id="rcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%"   stop-color="#00E676"/>
+                <stop offset="33%"  stop-color="#FFD600"/>
+                <stop offset="66%"  stop-color="#FF8C42"/>
+                <stop offset="100%" stop-color="#FF3333"/>
+              </linearGradient>
+            </defs>
+            <path d="M20 130 A90 90 0 0 1 200 130" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="16" stroke-linecap="round"/>
+            <path id="rc-arc" d="M20 130 A90 90 0 0 1 200 130" fill="none" stroke="url(#rcGrad)" stroke-width="16" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="283" style="transition:stroke-dashoffset 1.2s cubic-bezier(.34,1.56,.64,1)"/>
+            <text id="rc-score-num" x="110" y="112" text-anchor="middle" font-size="42" font-weight="900" fill="#fff" font-family="Inter,sans-serif">--</text>
+            <text id="rc-score-lbl" x="110" y="132" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.45)" font-family="Inter,sans-serif" letter-spacing="2">RISK SCORE</text>
+          </svg>
+          <div class="rc-risk-badge" id="rc-risk-badge">—</div>
+        </div>
+        <div class="rc-breakdown" id="rc-breakdown" style="display:none">
+          <div class="rc-breakdown-title" data-i18n="rc.breakdown">Risk Factor Breakdown</div>
+          <div id="rc-factor-list"></div>
+        </div>
+        <div class="rc-recs" id="rc-recs" style="display:none">
+          <div class="rc-recs-title" data-i18n="rc.recs_title">Recommendations</div>
+          <div id="rc-rec-list"></div>
+        </div>
+        <div class="rc-disclaimer" data-i18n="rc.disc">⚠️ Educational reference only. Consult a physician for clinical evaluation.</div>
+      </div>
+    </div>
   </div>
 </section>
 

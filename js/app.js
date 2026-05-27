@@ -411,7 +411,7 @@ const MED = {
 // ── i18n translations ──────────────────────────────────
 const T = {
   en:{
-    'nav.brand':'BoneScan AI','nav.overview':'Overview','nav.atlas':'Atlas','nav.analytics':'Analytics','nav.pipeline':'Pipeline','nav.versions':'Versions',
+    'nav.brand':'BoneScan AI','nav.overview':'Overview','nav.atlas':'Atlas','nav.bodymap':'Body Map','nav.risk':'Risk Score','nav.analytics':'Analytics','nav.pipeline':'Pipeline','nav.versions':'Versions',
     'hero.badge':'Medical AI Dataset','hero.line1':'Bone Fracture','hero.line2':'Intelligence','hero.desc':'A high-resolution X-ray imaging dataset spanning 10 fracture classifications, engineered for deep-learning model training, validation, and comparative benchmarking.','hero.s1':'Total Images','hero.s2':'Fracture Types','hero.s3':'Dataset Versions','hero.scroll':'Scroll',
     'ov.title':'Dataset at a Glance','ov.sub':'Comprehensive statistics across both dataset versions.','ov.c1l':'Clean Split Images','ov.c1s':'After deduplication & augmentation','ov.c2l':'Fixed Dataset Images','ov.c2s':'Refined train/test partitioning','ov.c3l':'Training Samples','ov.c3s':'Clean split train set','ov.c4l':'Fracture Categories','ov.c4s':'Clinically validated types',
     'atlas.eyebrow':'Fracture Atlas','atlas.title':'10 Fracture Classifications','atlas.sub':'Click any card to view details, annotate the X-ray, and explore causes, treatment & recovery.','atlas.train':'Train','atlas.test':'Test','atlas.hint':'Click to explore',
@@ -437,10 +437,12 @@ const T = {
     'az.pdf_dl':'Download PDF','az.ai_analyze':'AI Smart Analyze','az.enh_invert':'⇄ Invert','az.enh_reset':'↺ Reset',
     'az.img_input':'Image Input','az.pred_results':'Prediction Results','az.predict':'Predict','az.compare':'Compare All',
     'az.pred_ph':'Click "Predict" to run classification','az.model':'Model','az.tip4':'④ Click Predict or Generate Report',
-    'hist.title':'📋 Case History','hist.save':'Save Case','hist.clear':'Clear All'
+    'hist.title':'📋 Case History','hist.save':'Save Case','hist.clear':'Clear All',
+    'bm.eyebrow':'Interactive Body Map','bm.title':'Fracture Location Explorer','bm.sub':'Click on any body region to explore related fracture types, common causes, and clinical information.','bm.click_hint':'↓ Click a region','bm.ph_title':'Select a Body Region','bm.ph_text':'Click on any part of the skeleton to explore related fracture types, causes, and clinical details.','bm.chip1':'📍 13 body regions','bm.chip2':'🦴 19 fracture types','bm.chip3':'🌐 3 languages','bm.prevalence':'Prevalence','bm.related':'Related Fracture Types',
+    'rc.eyebrow':'Risk Assessment','rc.title':'Fracture Risk Calculator','rc.sub':'Enter your health profile to get a personalized fracture risk score with evidence-based recommendations.','rc.age':'Age','rc.bmi':'BMI','rc.tscore':'Bone Density T-score','rc.sex':'Sex','rc.male':'♂ Male','rc.female':'♀ Female','rc.activity':'Activity Level','rc.sedentary':'🛋 Sedentary','rc.moderate':'🚶 Moderate','rc.active':'🏃 Active','rc.calcium':'Calcium & Vitamin D Intake','rc.cal_low':'🔴 Low','rc.cal_med':'🟡 Medium','rc.cal_high':'🟢 Adequate','rc.smoking':'🚬 Current smoker','rc.prev_frac':'🦴 Previous fracture','rc.family':'👨‍👩‍👧 Family history of osteoporosis','rc.steroids':'💊 Long-term corticosteroids (>3 months)','rc.calculate':'Calculate My Fracture Risk','rc.breakdown':'Risk Factor Breakdown','rc.recs_title':'Recommendations','rc.disc':'⚠️ Educational reference only. Consult a physician for clinical evaluation.'
   },
   zh:{
-    'nav.brand':'骨扫AI','nav.overview':'概览','nav.atlas':'骨折图谱','nav.analytics':'数据分析','nav.pipeline':'数据管道','nav.versions':'版本',
+    'nav.brand':'骨扫AI','nav.overview':'概览','nav.atlas':'骨折图谱','nav.bodymap':'骨骼图','nav.risk':'风险评分','nav.analytics':'数据分析','nav.pipeline':'数据管道','nav.versions':'版本',
     'hero.badge':'医疗AI数据集','hero.line1':'骨折','hero.line2':'智能数据集','hero.desc':'涵盖10种临床骨折类型的高分辨率X射线影像数据集，专为深度学习模型训练、验证与基准测试而精心设计。','hero.s1':'影像总数','hero.s2':'骨折类型','hero.s3':'数据集版本','hero.scroll':'滚动',
     'ov.title':'数据集概览','ov.sub':'两个数据集版本的综合统计信息。','ov.c1l':'清洁分割影像','ov.c1s':'去重与增强后','ov.c2l':'修正数据集影像','ov.c2s':'优化训练/测试划分','ov.c3l':'训练样本','ov.c3s':'清洁分割训练集','ov.c4l':'骨折分类','ov.c4s':'临床验证类型',
     'atlas.eyebrow':'骨折图谱','atlas.title':'十种骨折分类','atlas.sub':'点击任意卡片可查看详情、标注X射线片，并了解病因、治疗与康复方案。','atlas.train':'训练','atlas.test':'测试','atlas.hint':'点击探索',
@@ -466,10 +468,12 @@ const T = {
     'az.pdf_dl':'下载 PDF','az.ai_analyze':'AI 智能分析','az.enh_invert':'⇄ 反色','az.enh_reset':'↺ 重置',
     'az.img_input':'图像输入','az.pred_results':'预测结果','az.predict':'预测','az.compare':'全部比较',
     'az.pred_ph':'点击"预测"运行分类','az.model':'模型','az.tip4':'④ 点击预测或生成报告',
-    'hist.title':'📋 病例历史','hist.save':'保存病例','hist.clear':'清除全部'
+    'hist.title':'📋 病例历史','hist.save':'保存病例','hist.clear':'清除全部',
+    'bm.eyebrow':'互动人体骨骼图','bm.title':'骨折部位探索器','bm.sub':'点击身体任何区域，探索相关骨折类型、常见病因及临床信息。','bm.click_hint':'↓ 点击区域','bm.ph_title':'选择身体区域','bm.ph_text':'点击骨骼任意部位，探索相关骨折类型、病因及临床详细信息。','bm.chip1':'📍 13个身体区域','bm.chip2':'🦴 19种骨折类型','bm.chip3':'🌐 三种语言','bm.prevalence':'发生率','bm.related':'相关骨折类型',
+    'rc.eyebrow':'风险评估','rc.title':'骨折风险计算器','rc.sub':'输入您的健康档案，获取个性化骨折风险评分和循证建议。','rc.age':'年龄','rc.bmi':'体重指数（BMI）','rc.tscore':'骨密度T值','rc.sex':'性别','rc.male':'♂ 男性','rc.female':'♀ 女性','rc.activity':'运动量','rc.sedentary':'🛋 久坐','rc.moderate':'🚶 适度','rc.active':'🏃 积极','rc.calcium':'钙与维生素D摄入','rc.cal_low':'🔴 不足','rc.cal_med':'🟡 中等','rc.cal_high':'🟢 充足','rc.smoking':'🚬 现在吸烟','rc.prev_frac':'🦴 既往骨折','rc.family':'👨‍👩‍👧 骨质疏松家族史','rc.steroids':'💊 长期使用糖皮质激素（>3个月）','rc.calculate':'计算我的骨折风险','rc.breakdown':'风险因素分解','rc.recs_title':'健康建议','rc.disc':'⚠️ 仅供教育参考。请咨询医生进行临床评估。'
   },
   ko:{
-    'nav.brand':'본스캔 AI','nav.overview':'개요','nav.atlas':'골절 도감','nav.analytics':'데이터 분석','nav.pipeline':'파이프라인','nav.versions':'버전',
+    'nav.brand':'본스캔 AI','nav.overview':'개요','nav.atlas':'골절 도감','nav.bodymap':'신체 지도','nav.risk':'위험 점수','nav.analytics':'데이터 분석','nav.pipeline':'파이프라인','nav.versions':'버전',
     'hero.badge':'의료 AI 데이터셋','hero.line1':'골절','hero.line2':'인공지능 데이터셋','hero.desc':'딥러닝 모델 훈련, 검증 및 벤치마크를 위해 설계된 10가지 임상 골절 유형의 고해상도 X선 영상 데이터셋입니다.','hero.s1':'총 이미지','hero.s2':'골절 유형','hero.s3':'데이터셋 버전','hero.scroll':'스크롤',
     'ov.title':'데이터셋 한눈에 보기','ov.sub':'두 데이터셋 버전의 종합 통계입니다.','ov.c1l':'클린 스플릿 이미지','ov.c1s':'중복 제거 및 증강 후','ov.c2l':'수정 데이터셋 이미지','ov.c2s':'개선된 훈련/테스트 분할','ov.c3l':'훈련 샘플','ov.c3s':'클린 스플릿 훈련 세트','ov.c4l':'골절 분류','ov.c4s':'임상 검증 유형',
     'atlas.eyebrow':'골절 도감','atlas.title':'10가지 골절 분류','atlas.sub':'카드를 클릭하면 상세 정보를 보고, X선을 표시하며, 병인·치료·재활을 탐색할 수 있습니다.','atlas.train':'훈련','atlas.test':'테스트','atlas.hint':'클릭하여 탐색',
@@ -495,7 +499,9 @@ const T = {
     'az.pdf_dl':'PDF 다운로드','az.ai_analyze':'AI 스마트 분석','az.enh_invert':'⇄ 반전','az.enh_reset':'↺ 초기화',
     'az.img_input':'이미지 입력','az.pred_results':'예측 결과','az.predict':'예측','az.compare':'전체 비교',
     'az.pred_ph':'"예측" 버튼을 클릭하여 분류 실행','az.model':'모델','az.tip4':'④ 예측 또는 보고서 생성 클릭',
-    'hist.title':'📋 케이스 기록','hist.save':'케이스 저장','hist.clear':'전체 삭제'
+    'hist.title':'📋 케이스 기록','hist.save':'케이스 저장','hist.clear':'전체 삭제',
+    'bm.eyebrow':'대화형 신체 지도','bm.title':'골절 위치 탐색기','bm.sub':'신체 부위를 클릭하여 관련 골절 유형, 일반적인 원인 및 임상 정보를 탐색하세요.','bm.click_hint':'↓ 부위를 클릭하세요','bm.ph_title':'신체 부위 선택','bm.ph_text':'골격의 어떤 부분이든 클릭하여 관련 골절 유형, 원인, 임상 세부 정보를 탐색하세요.','bm.chip1':'📍 13개 신체 부위','bm.chip2':'🦴 19가지 골절 유형','bm.chip3':'🌐 3개 언어','bm.prevalence':'유병률','bm.related':'관련 골절 유형',
+    'rc.eyebrow':'위험도 평가','rc.title':'골절 위험 계산기','rc.sub':'건강 프로필을 입력하여 개인화된 골절 위험 점수와 근거 기반 권장 사항을 받으세요.','rc.age':'나이','rc.bmi':'체질량지수(BMI)','rc.tscore':'골밀도 T점수','rc.sex':'성별','rc.male':'♂ 남성','rc.female':'♀ 여성','rc.activity':'신체 활동 수준','rc.sedentary':'🛋 좌식 생활','rc.moderate':'🚶 보통','rc.active':'🏃 활동적','rc.calcium':'칼슘 및 비타민 D 섭취','rc.cal_low':'🔴 부족','rc.cal_med':'🟡 보통','rc.cal_high':'🟢 충분','rc.smoking':'🚬 현재 흡연 중','rc.prev_frac':'🦴 이전 골절 경험','rc.family':'👨‍👩‍👧 골다공증 가족력','rc.steroids':'💊 장기 코르티코스테로이드 복용(>3개월)','rc.calculate':'나의 골절 위험 계산하기','rc.breakdown':'위험 요인 분석','rc.recs_title':'권장 사항','rc.disc':'⚠️ 교육 참고용입니다. 임상 평가를 위해 의사와 상담하세요.'
   }
 };
 
@@ -883,6 +889,8 @@ window.addEventListener('DOMContentLoaded',()=>{
   // Analyze section
   initAnalyze();
   initHistory();
+  setTimeout(initBodyMap, 300);
+  setTimeout(initRiskCalc, 400);
 });
 
 /* ══════════════════════════════════════════
@@ -2379,3 +2387,391 @@ function initPremium(){
   initSoundToggle();
   hookAITypewriter();
 }
+
+/* ══════════════════════════════════════════
+   INTERACTIVE BODY MAP
+   ══════════════════════════════════════════ */
+
+const BM_REGIONS = {
+  head:{
+    icon:'🧠', color:'#00B4FF', prevalence:8,
+    en:{name:'Head & Skull',sub:'Cranial & Cervical Injuries',desc:'The skull and cranial vault are vulnerable in high-velocity trauma. Jefferson (C1) burst fractures result from axial compression through the skull.',facts:['Most common in diving & vehicle accidents','Immediate spinal immobilization is critical','CT scan mandatory — plain X-ray often misses C1 fractures']},
+    zh:{name:'头部与颅骨',sub:'颅脑与颈部损伤',desc:'颅骨和颅穹窿在高速创伤中容易受损。杰弗逊骨折（C1环形爆裂骨折）由通过颅骨传导的轴向压缩引起。',facts:['最常见于跳水及车祸事故','立即脊柱固定至关重要','必须行CT检查——普通X线常漏诊C1骨折']},
+    ko:{name:'머리 및 두개골',sub:'두개골 및 경추 손상',desc:'두개골과 두개궁은 고속 외상에서 취약합니다. Jefferson(C1) 파열 골절은 두개골을 통한 축성 압박으로 발생합니다.',facts:['다이빙과 교통사고에서 가장 흔함','즉각적인 척추 고정이 중요','CT 검사 필수 — 단순 X선으로 C1 골절 놓치는 경우 많음']},
+    fractures:['jefferson']
+  },
+  cervical:{
+    icon:'🔩', color:'#9B5FFF', prevalence:5,
+    en:{name:'Cervical Spine',sub:'Upper & Mid Neck Vertebrae',desc:'Cervical spine fractures are life-threatening emergencies. Hyperflexion, hyperextension or axial loading can cause compression, burst, or chance fractures at C1-C7.',facts:['10% of trauma patients have cervical spine injury','Immediate rigid collar immobilization required','MRI assesses ligament and spinal cord integrity']},
+    zh:{name:'颈椎',sub:'颈部上中段椎体',desc:'颈椎骨折是威胁生命的急症。过屈、过伸或轴向载荷可导致C1-C7压缩骨折、爆裂骨折或机会性骨折。',facts:['10%的创伤患者有颈椎损伤','立即使用硬质颈托固定','MRI评估韧带和脊髓完整性']},
+    ko:{name:'경추',sub:'상·중부 경추 추체',desc:'경추 골절은 생명을 위협하는 응급 상황입니다. 과굴곡, 과신전 또는 축성 부하가 C1-C7 압박·파열·찬스 골절을 유발합니다.',facts:['외상 환자의 10%에서 경추 손상 발생','즉각적인 경성 경추 보조기 고정 필요','MRI로 인대 및 척수 완전성 평가']},
+    fractures:['jefferson','compression']
+  },
+  shoulder:{
+    icon:'💪', color:'#FF8C42', prevalence:14,
+    en:{name:'Shoulder & Clavicle',sub:'Acromial & Glenohumeral Region',desc:'Shoulder injuries include clavicle fractures (most common), proximal humerus fractures, and fracture-dislocations. Falls and direct impacts are leading causes.',facts:['Clavicle fractures account for 5-10% of all fractures','Most heal well with sling immobilization','Proximal humerus: 4-part fractures often need surgery']},
+    zh:{name:'肩部与锁骨',sub:'肩峰与盂肱关节区域',desc:'肩部损伤包括锁骨骨折（最常见）、肱骨近端骨折和骨折脱位。跌倒和直接撞击是主要原因。',facts:['锁骨骨折占所有骨折的5-10%','大多数通过吊带固定可良好愈合','肱骨近端：4部分骨折通常需要手术']},
+    ko:{name:'어깨 및 쇄골',sub:'견봉 및 견갑상완 관절 부위',desc:'어깨 손상에는 쇄골 골절(가장 흔함), 근위 상완골 골절, 골절-탈구가 포함됩니다. 낙상과 직접 충격이 주요 원인입니다.',facts:['쇄골 골절은 전체 골절의 5-10% 차지','대부분 슬링 고정으로 잘 치유됨','근위 상완골: 4부 골절은 수술 필요한 경우 많음']},
+    fractures:['avulsion','dislocation']
+  },
+  thorax:{
+    icon:'🫁', color:'#00E5C8', prevalence:9,
+    en:{name:'Chest & Thoracic Spine',sub:'Ribs, Sternum & T1-T12 Vertebrae',desc:'Thoracic fractures from high-energy trauma include rib fractures and vertebral compression fractures. Osteoporotic vertebral fractures are epidemic in older adults.',facts:['Rib fractures: most common thoracic injury','Flail chest (3+ consecutive ribs bilaterally): ICU emergency','Vertebral compression fractures: >700,000 cases/year in USA']},
+    zh:{name:'胸部与胸椎',sub:'肋骨、胸骨和T1-T12椎体',desc:'高能量创伤导致的胸部骨折包括肋骨骨折和椎体压缩骨折。骨质疏松性椎体骨折在老年人中极为常见。',facts:['肋骨骨折：最常见的胸部损伤','连枷胸（连续3根以上双侧肋骨骨折）：ICU急症','椎体压缩骨折：美国每年超过70万例']},
+    ko:{name:'흉부 및 흉추',sub:'늑골, 흉골 및 T1-T12 추체',desc:'고에너지 외상에 의한 흉부 골절에는 늑골 골절과 추체 압박 골절이 포함됩니다. 골다공증성 추체 골절은 노인에서 매우 흔합니다.',facts:['늑골 골절: 가장 흔한 흉부 손상','도리깨 흉부(연속 3개 이상 양측 늑골): ICU 응급','추체 압박 골절: 미국에서 연간 70만 건 이상']},
+    fractures:['compression','stress']
+  },
+  arm:{
+    icon:'🦾', color:'#FF6B9D', prevalence:18,
+    en:{name:'Upper Arm (Humerus)',sub:'Humeral Shaft & Proximal Region',desc:'Humeral shaft fractures occur from direct blows or falls. Spiral fractures suggest torsional force (arm wrestling, throwing). Radial nerve palsy (wrist drop) can complicate these injuries.',facts:['Radial nerve injury in ~18% of humeral shaft fractures','Spiral pattern: classic for "arm wrestler\'s fracture"','Most heal in functional brace — surgery for open/unstable cases']},
+    zh:{name:'上臂（肱骨）',sub:'肱骨干和近端区域',desc:'肱骨干骨折由直接撞击或跌倒引起。螺旋形骨折提示扭转力（掰手腕、投掷）。桡神经麻痹（垂腕）可并发这些损伤。',facts:['~18%的肱骨干骨折合并桡神经损伤','螺旋形：\"掰手腕骨折\"的典型特征','大多数可用功能支具保守治疗——开放/不稳定者手术']},
+    ko:{name:'상완 (상완골)',sub:'상완골 간부 및 근위 부위',desc:'상완골 간부 골절은 직접 충격이나 낙상으로 발생합니다. 나선형 골절은 비틀림 힘(팔씨름, 투구)을 시사합니다. 요골 신경 마비(손목 처짐)가 합병될 수 있습니다.',facts:['상완골 간부 골절의 ~18%에서 요골 신경 손상','나선형: "팔씨름 골절"의 전형','대부분 기능 보조기로 치유 — 개방/불안정 시 수술']},
+    fractures:['spiral','transverse','oblique','comminuted']
+  },
+  wrist:{
+    icon:'🤲', color:'#818CF8', prevalence:22,
+    en:{name:'Forearm & Wrist',sub:'Radius, Ulna & Carpal Region',desc:'Wrist fractures are the most common fractures treated in emergency departments. Colles\' fracture (distal radius) from FOOSH accounts for the majority. Scaphoid fractures frequently go undiagnosed initially.',facts:['Distal radius fractures: #1 fracture in patients <65','Scaphoid missed on X-ray in 30% of cases initially','Post-menopausal women: 10x higher risk from low-impact falls']},
+    zh:{name:'前臂与腕部',sub:'桡骨、尺骨和腕部区域',desc:'腕部骨折是急诊室最常见的骨折。柯氏骨折（桡骨远端）由FOOSH（手伸出撑地摔倒）引起，占大多数。舟状骨骨折初始常未被诊断。',facts:['桡骨远端骨折：<65岁患者中排名第一','舟状骨初始X线漏诊率约30%','绝经后女性：低冲击摔倒风险高10倍']},
+    ko:{name:'전완 및 손목',sub:'요골, 척골 및 수근부',desc:'손목 골절은 응급실에서 가장 흔하게 치료되는 골절입니다. FOOSH(손 뻗어 넘어지기)에 의한 콜리스 골절(원위 요골)이 대부분을 차지합니다. 주상골 골절은 초기에 진단되지 않는 경우가 많습니다.',facts:['원위 요골 골절: 65세 미만 환자에서 1위 골절','초기 X선에서 주상골 30% 놓침','폐경 후 여성: 저충격 낙상 위험 10배 높음']},
+    fractures:['colles','scaphoid','greenstick']
+  },
+  hand:{
+    icon:'✋', color:'#FFD600', prevalence:12,
+    en:{name:'Hand & Fingers',sub:'Metacarpals & Phalanges',desc:'Hand fractures include boxer\'s fractures (5th metacarpal neck), avulsion fractures at phalanges, and Bennett\'s fractures at the thumb base. Occupational and sports injuries dominate.',facts:['Boxer\'s fracture: most common metacarpal fracture','Fight bites: human saliva bacteria → serious infection risk','All hand fractures: rule out rotational deformity clinically']},
+    zh:{name:'手部与手指',sub:'掌骨和指骨',desc:'手部骨折包括拳击手骨折（第5掌骨颈）、指骨撕脱骨折和拇指基底部Bennett骨折。职业和运动损伤占主导。',facts:['拳击手骨折：最常见的掌骨骨折','格斗咬伤：口腔细菌→严重感染风险','所有手部骨折：临床排除旋转畸形']},
+    ko:{name:'손 및 손가락',sub:'중수골 및 지골',desc:'손 골절에는 권투선수 골절(5번 중수골 경부), 지골 견열 골절, 엄지손가락 기저부 Bennett 골절이 포함됩니다. 직업 및 운동 손상이 주를 이룹니다.',facts:['권투선수 골절: 가장 흔한 중수골 골절','격투 교상: 구강 세균 → 심각한 감염 위험','모든 손 골절: 임상적으로 회전 변형 배제']},
+    fractures:['boxer','avulsion']
+  },
+  lumbar:{
+    icon:'🏋️', color:'#FF8C42', prevalence:11,
+    en:{name:'Lumbar Spine',sub:'L1-L5 Vertebrae',desc:'Lumbar compression fractures are epidemic in osteoporotic women over 65. Burst fractures from high-energy axial loading can compromise the spinal canal and cause neurological deficits.',facts:['Vertebral compression fractures: most under-diagnosed fracture','75% occur in women, peak incidence at age 70-80','Kyphoplasty/vertebroplasty can relieve pain rapidly in acute cases']},
+    zh:{name:'腰椎',sub:'L1-L5椎体',desc:'腰椎压缩骨折在65岁以上骨质疏松女性中极为普遍。高能量轴向载荷导致的爆裂骨折可侵犯椎管并造成神经功能缺损。',facts:['椎体压缩骨折：最常被漏诊的骨折','75%发生于女性，70-80岁发病率最高','后凸成形术/椎体成形术可迅速缓解急性疼痛']},
+    ko:{name:'요추',sub:'L1-L5 추체',desc:'요추 압박 골절은 65세 이상 골다공증 여성에서 매우 흔합니다. 고에너지 축성 부하에 의한 파열 골절은 척추관을 침범하여 신경학적 결손을 초래할 수 있습니다.',facts:['추체 압박 골절: 가장 진단이 안 되는 골절','75%가 여성에서 발생, 70-80세에 발생률 최고','후만성형술/척추성형술로 급성기 통증 신속 완화']},
+    fractures:['compression','stress']
+  },
+  hip:{
+    icon:'🦵', color:'#00E676', prevalence:15,
+    en:{name:'Pelvis & Hip',sub:'Femoral Neck & Intertrochanteric',desc:'Hip fractures represent the most dangerous and costly fragility fractures. 30-day mortality is ~10% and 1-year mortality reaches 20-30% in the elderly. Surgical repair within 48 hours is the standard of care.',facts:['Hip fractures affect >300,000 Americans annually','50% of patients never return to their prior level of function','Prevention: fall assessment, balance training, bone protection drugs']},
+    zh:{name:'骨盆与髋关节',sub:'股骨颈和转子间区域',desc:'髋部骨折是最危险、最昂贵的脆性骨折。老年人30天死亡率约10%，1年死亡率高达20-30%。48小时内手术修复是标准治疗。',facts:['髋部骨折每年影响美国30余万人','50%的患者无法恢复到受伤前的功能水平','预防：跌倒风险评估、平衡训练、骨保护药物']},
+    ko:{name:'골반 및 고관절',sub:'대퇴골경 및 전자간',desc:'고관절 골절은 가장 위험하고 비용이 많이 드는 취약성 골절입니다. 노인에서 30일 사망률 약 10%, 1년 사망률 20-30%에 달합니다. 48시간 내 수술적 수복이 표준 치료입니다.',facts:['고관절 골절은 미국에서 연간 30만 명 이상에게 영향','50%의 환자는 이전 기능 수준으로 회복하지 못함','예방: 낙상 평가, 균형 훈련, 골보호 약물']},
+    fractures:['hip','dislocation']
+  },
+  femur:{
+    icon:'🦿', color:'#00B4FF', prevalence:10,
+    en:{name:'Thigh (Femur)',sub:'Femoral Shaft & Distal Region',desc:'Femoral shaft fractures are high-energy injuries requiring surgical fixation with intramedullary nailing. Significant blood loss (1-2L into thigh) and fat embolism are serious complications.',facts:['Femur: strongest bone in the body','Blood loss up to 1-2 liters into the thigh compartment','Intramedullary nail: gold standard surgical treatment']},
+    zh:{name:'大腿（股骨）',sub:'股骨干和远端区域',desc:'股骨干骨折是需要髓内钉手术固定的高能量损伤。大量失血（流入大腿1-2升）和脂肪栓塞是严重并发症。',facts:['股骨：全身最强壮的骨骼','大腿筋膜室可积血1-2升','髓内钉固定：手术治疗金标准']},
+    ko:{name:'허벅지(대퇴골)',sub:'대퇴골 간부 및 원위부',desc:'대퇴골 간부 골절은 수질정으로 수술적 고정이 필요한 고에너지 손상입니다. 대량 출혈(허벅지에 1-2L)과 지방 색전증이 심각한 합병증입니다.',facts:['대퇴골: 신체에서 가장 강한 뼈','대퇴부 구획에 최대 1-2리터 출혈 가능','수질내 못 고정: 수술적 치료의 금표준']},
+    fractures:['spiral','transverse','comminuted']
+  },
+  knee:{
+    icon:'🦵', color:'#FF6B9D', prevalence:8,
+    en:{name:'Knee Joint',sub:'Tibial Plateau & Condyles',desc:'Tibial plateau fractures result from valgus/varus forces or axial loading of the knee. They are often associated with ligament injuries and can lead to post-traumatic arthritis if articular congruity is not restored.',facts:['20-50% associated with meniscal/ligament injury','MRI essential to evaluate associated soft tissue damage','Goal: restore articular surface to <2mm step-off']},
+    zh:{name:'膝关节',sub:'胫骨平台和髁部',desc:'胫骨平台骨折由膝关节的外翻/内翻力或轴向载荷引起。常伴有韧带损伤，若不恢复关节面平整，可导致创伤后骨关节炎。',facts:['20-50%合并半月板/韧带损伤','MRI对评估相关软组织损伤不可缺少','目标：关节面台阶 <2mm']},
+    ko:{name:'무릎 관절',sub:'경골 고원 및 과',desc:'경골 고원 골절은 무릎의 외반/내반력이나 축성 부하로 발생합니다. 인대 손상을 동반하는 경우가 많으며, 관절면 일치성을 회복하지 않으면 외상 후 관절염으로 이어질 수 있습니다.',facts:['20-50%에서 반월판/인대 손상 동반','연관 연조직 손상 평가에 MRI 필수','목표: 관절면 단차 <2mm']},
+    fractures:['tibial_plateau','dislocation']
+  },
+  tibia:{
+    icon:'🦴', color:'#00E5C8', prevalence:13,
+    en:{name:'Lower Leg (Tibia/Fibula)',sub:'Tibial & Fibular Shaft',desc:'The tibia is the most commonly fractured long bone. Stress fractures of the tibia are epidemic in runners. High-energy tibia fractures are associated with open wounds and compartment syndrome.',facts:['Tibia: most commonly fractured long bone in adults','Anterior tibial stress fractures: dreaded "black line" — at risk for complete fracture','Open tibia fractures: ~27% of tibia shaft fractures in high-energy trauma']},
+    zh:{name:'小腿（胫腓骨）',sub:'胫骨和腓骨干',desc:'胫骨是最常骨折的长骨。跑步者中胫骨应力骨折极为常见。高能量胫骨骨折与开放性伤口和筋膜室综合征相关。',facts:['胫骨：成人最常骨折的长骨','胫骨前侧应力骨折：可怕的"黑线"——有完全骨折风险','开放性胫骨骨折：高能量创伤中胫骨干骨折约27%']},
+    ko:{name:'하퇴 (경비골)',sub:'경골 및 비골 간부',desc:'경골은 가장 흔하게 골절되는 장골입니다. 달리기 선수에서 경골 피로 골절이 매우 흔합니다. 고에너지 경골 골절은 개방성 창상과 구획 증후군과 관련됩니다.',facts:['경골: 성인에서 가장 흔하게 골절되는 장골','경골 전방 피로 골절: 두려운 "검은 선" — 완전 골절 위험','개방성 경골 골절: 고에너지 외상 경골 간부 골절의 ~27%']},
+    fractures:['stress','oblique','spiral']
+  },
+  foot:{
+    icon:'🦶', color:'#818CF8', prevalence:11,
+    en:{name:'Ankle & Foot',sub:'Metatarsals, Calcaneus & Tarsals',desc:'Foot fractures range from Jones\' fractures (5th metatarsal) to calcaneal fractures from falls from height. Ankle fractures are classified by the Weber system and often require ORIF.',facts:['Jones\' fracture zone 2: notoriously high non-union rate','Calcaneal fractures from height: look for associated lumbar spine fractures','Lisfranc injuries often misdiagnosed — can cause permanent disability']},
+    zh:{name:'踝部与足部',sub:'跖骨、跟骨和跗骨',desc:'足部骨折从琼斯骨折（第5跖骨）到从高处坠落的跟骨骨折不等。踝关节骨折按Weber系统分类，常需切开复位内固定（ORIF）。',facts:['琼斯骨折2区：以高不愈合率著称','高处坠落跟骨骨折：注意合并腰椎骨折','Lisfranc损伤常被漏诊——可导致永久性残疾']},
+    ko:{name:'발목 및 발',sub:'중족골, 종골 및 족근골',desc:'발 골절은 Jones 골절(5번 중족골)부터 높은 곳에서 낙상 시 종골 골절까지 다양합니다. 발목 골절은 Weber 분류 체계로 분류되며 종종 ORIF가 필요합니다.',facts:['Jones 골절 2구역: 불유합률이 높기로 악명 높음','높이 낙상 종골 골절: 요추 골절 동반 주의','Lisfranc 손상 자주 오진 — 영구 장애 초래 가능']},
+    fractures:['jones','avulsion']
+  }
+};
+
+function initBodyMap(){
+  const svg = document.getElementById('bm-svg');
+  if(!svg) return;
+  const regions = svg.querySelectorAll('.br');
+  let activeRegion = null;
+
+  // Color each region by its type
+  const regionColorMap = {head:'#00B4FF',cervical:'#9B5FFF',thorax:'#00E5C8',shoulder:'#FF8C42',arm:'#FF6B9D',wrist:'#818CF8',hand:'#FFD600',lumbar:'#FF8C42',hip:'#00E676',femur:'#00B4FF',knee:'#FF6B9D',tibia:'#00E5C8',foot:'#818CF8'};
+  regions.forEach(el=>{
+    const r = el.dataset.region;
+    const c = regionColorMap[r]||'#00B4FF';
+    el.style.setProperty('--bm-ac', c+'80');
+  });
+
+  regions.forEach(el=>{
+    el.addEventListener('click',()=>{
+      const region = el.dataset.region;
+      // Clear all active
+      regions.forEach(r=>r.classList.remove('bm-active'));
+      el.classList.add('bm-active');
+      activeRegion = region;
+      showBodyRegion(region, el, regionColorMap[region]||'#00B4FF');
+    });
+    el.addEventListener('mouseenter',()=>{
+      el.style.fill = 'rgba(0,180,255,.22)';
+      el.style.stroke = '#00B4FF';
+    });
+    el.addEventListener('mouseleave',()=>{
+      if(!el.classList.contains('bm-active')){
+        el.style.fill = '';
+        el.style.stroke = '';
+      }
+    });
+  });
+}
+
+function showBodyRegion(regionKey, el, color){
+  const data = BM_REGIONS[regionKey];
+  if(!data) return;
+  const L = lang;
+  const d = data[L] || data.en;
+
+  document.getElementById('bm-placeholder').style.display='none';
+  const detail = document.getElementById('bm-detail');
+  detail.style.display='flex';
+
+  // Update the active element color
+  if(el){
+    el.style.fill = color+'33';
+    el.style.stroke = color;
+    el.style.setProperty('--bm-ac', color+'80');
+  }
+
+  // Icon and header
+  const iconEl = document.getElementById('bm-region-icon');
+  iconEl.textContent = data.icon;
+  iconEl.style.background = color+'22';
+  iconEl.style.boxShadow = `0 0 16px ${color}44`;
+
+  document.getElementById('bm-region-name').textContent = d.name;
+  document.getElementById('bm-region-name').style.color = color;
+  document.getElementById('bm-region-sub').textContent = d.sub;
+
+  // Prevalence bar
+  const pctEl = document.getElementById('bm-prev-pct');
+  const fillEl = document.getElementById('bm-prev-fill');
+  pctEl.textContent = data.prevalence + '%';
+  fillEl.style.background = color;
+  setTimeout(()=>{ fillEl.style.width = data.prevalence + '%'; },100);
+
+  // Fracture chips
+  const chips = document.getElementById('bm-fracture-chips');
+  chips.innerHTML = '';
+  (data.fractures||[]).forEach(fid=>{
+    const fname = FRAC_NAMES[fid] ? (FRAC_NAMES[fid][L]||FRAC_NAMES[fid].en) : fid;
+    const chip = document.createElement('span');
+    chip.className = 'bm-frac-chip';
+    chip.textContent = fname;
+    chip.style.cssText = `color:${color};border-color:${color}44;background:${color}11`;
+    chip.addEventListener('click',()=>{
+      // Scroll to atlas section and possibly open the card
+      document.getElementById('atlas')&&document.getElementById('atlas').scrollIntoView({behavior:'smooth'});
+    });
+    chips.appendChild(chip);
+  });
+
+  // Description
+  document.getElementById('bm-desc-box').textContent = d.desc;
+
+  // Facts
+  const factsEl = document.getElementById('bm-facts');
+  factsEl.innerHTML = '';
+  (d.facts||[]).forEach(fact=>{
+    const row = document.createElement('div');
+    row.className = 'bm-fact';
+    row.innerHTML = `<span class="bm-fact-icon" style="color:${color}">▶</span><span>${fact}</span>`;
+    factsEl.appendChild(row);
+  });
+}
+
+/* ══════════════════════════════════════════
+   FRACTURE RISK CALCULATOR
+   ══════════════════════════════════════════ */
+
+function initRiskCalc(){
+  // Slider value display
+  const ageInput = document.getElementById('rc-age');
+  const bmiInput = document.getElementById('rc-bmi');
+  const tInput = document.getElementById('rc-tscore');
+  if(!ageInput) return;
+
+  ageInput.addEventListener('input',()=>{
+    document.getElementById('rc-age-v').textContent = ageInput.value;
+    updateSliderGrad(ageInput, 20, 90, '#00E676', '#FF3333');
+  });
+  bmiInput.addEventListener('input',()=>{
+    const v = parseFloat(bmiInput.value).toFixed(1);
+    document.getElementById('rc-bmi-v').textContent = v;
+    // Low BMI = higher risk
+    const pct = ((parseFloat(bmiInput.value)-14)/(45-14))*100;
+    updateSliderGrad(bmiInput, 14, 45, '#FFD600', '#00E676', true);
+  });
+  tInput.addEventListener('input',()=>{
+    const v = (parseInt(tInput.value)/10).toFixed(1);
+    document.getElementById('rc-tscore-v').textContent = (v>0?'+':'')+v;
+  });
+
+  // Segment buttons
+  document.querySelectorAll('.rc-seg').forEach(seg=>{
+    seg.querySelectorAll('.rc-seg-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        seg.querySelectorAll('.rc-seg-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  });
+
+  // Calc button
+  document.getElementById('rc-calc-btn').addEventListener('click', calcRisk);
+
+  // Init sliders
+  updateSliderGrad(ageInput, 20, 90, '#00E676', '#FF3333');
+}
+
+function updateSliderGrad(el, min, max, c1, c2, invert){
+  const pct = ((el.value - min)/(max-min))*100;
+  const fill = invert ? `linear-gradient(90deg,${c2} 0%,${c1} ${pct}%,rgba(255,255,255,.1) ${pct}%)` : `linear-gradient(90deg,${c1} 0%,${c2} ${pct}%,rgba(255,255,255,.1) ${pct}%)`;
+  el.style.background = `linear-gradient(90deg,${c1} ${pct}%,rgba(255,255,255,.1) ${pct}%)`;
+}
+
+function calcRisk(){
+  const age = parseInt(document.getElementById('rc-age').value);
+  const bmi = parseFloat(document.getElementById('rc-bmi').value);
+  const tscore = parseInt(document.getElementById('rc-tscore').value)/10;
+  const sex = document.querySelector('#rc-sex .rc-seg-btn.active')?.dataset.v || 'female';
+  const activity = document.querySelector('#rc-activity .rc-seg-btn.active')?.dataset.v || 'sedentary';
+  const calcium = document.querySelector('#rc-calcium .rc-seg-btn.active')?.dataset.v || 'low';
+  const smoking = document.getElementById('rc-smoke')?.checked;
+  const prevFrac = document.getElementById('rc-prev')?.checked;
+  const family = document.getElementById('rc-family')?.checked;
+  const steroids = document.getElementById('rc-steroids')?.checked;
+
+  const L = lang;
+
+  // ── Factor scoring ───────────────────────
+  const factors = [];
+
+  // Age risk (0-30)
+  const ageScore = Math.min(30, Math.max(0, Math.round((age - 30) * 0.5)));
+  factors.push({key: L==='zh'?'年龄':L==='ko'?'나이':'Age', score: ageScore, max: 30, color: '#FF8C42'});
+
+  // T-score (0-30): -2.5 or below = osteoporosis = max risk
+  const tScore = tscore >= 0 ? 0 : Math.min(30, Math.round(Math.abs(tscore) * 9));
+  factors.push({key: L==='zh'?'骨密度T值':L==='ko'?'T점수':'T-score', score: tScore, max: 30, color: '#00E5C8'});
+
+  // Sex risk (0-10)
+  const sexScore = sex==='female' ? 10 : 3;
+  factors.push({key: L==='zh'?'性别':L==='ko'?'성별':'Sex', score: sexScore, max: 10, color: '#FF6B9D'});
+
+  // Activity (0-10)
+  const actScore = activity==='sedentary' ? 10 : activity==='moderate' ? 5 : 0;
+  factors.push({key: L==='zh'?'运动量':L==='ko'?'신체 활동':'Activity', score: actScore, max: 10, color: '#00E676'});
+
+  // BMI (0-8): underweight is bad
+  const bmiScore = bmi < 18.5 ? 8 : bmi < 22 ? 4 : 0;
+  factors.push({key: L==='zh'?'体重指数':L==='ko'?'BMI':'BMI', score: bmiScore, max: 8, color: '#9B5FFF'});
+
+  // Calcium (0-8)
+  const calScore = calcium==='low' ? 8 : calcium==='medium' ? 3 : 0;
+  factors.push({key: L==='zh'?'钙质摄入':L==='ko'?'칼슘 섭취':'Calcium', score: calScore, max: 8, color: '#FFD600'});
+
+  // Binary risk factors
+  if(smoking) factors.push({key: L==='zh'?'吸烟':L==='ko'?'흡연':'Smoking', score: 8, max: 8, color: '#FF3333'});
+  if(prevFrac) factors.push({key: L==='zh'?'既往骨折':L==='ko'?'이전 골절':'Prev. Fracture', score: 14, max: 14, color: '#FF3333'});
+  if(family) factors.push({key: L==='zh'?'家族史':L==='ko'?'가족력':'Family Hx', score: 8, max: 8, color: '#FF8C42'});
+  if(steroids) factors.push({key: L==='zh'?'激素药物':L==='ko'?'스테로이드':'Steroids', score: 10, max: 10, color: '#FF6B9D'});
+
+  const total = factors.reduce((s,f)=>s+f.score, 0);
+  const maxPossible = 30+30+10+10+8+8+8+14+8+10; // ~136
+  const rawScore = Math.round((total/maxPossible)*100);
+  const score = Math.min(99, Math.max(1, rawScore));
+
+  // Render gauge
+  const arcEl = document.getElementById('rc-arc');
+  const totalArcLen = 283;
+  const offset = totalArcLen - (totalArcLen * score/100);
+  if(arcEl) arcEl.style.strokeDashoffset = offset;
+
+  const scoreNum = document.getElementById('rc-score-num');
+  if(scoreNum){
+    let cur = 0;
+    const step = () => {
+      cur = Math.min(score, cur + Math.ceil(score/40));
+      scoreNum.textContent = cur;
+      if(cur < score) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  // Risk badge
+  const badge = document.getElementById('rc-risk-badge');
+  if(badge){
+    let cat, c;
+    if(score < 25){
+      cat = L==='zh'?'低风险':L==='ko'?'낮음':'LOW RISK'; c='#00E676';
+    } else if(score < 50){
+      cat = L==='zh'?'中等风险':L==='ko'?'중간':'MODERATE'; c='#FFD600';
+    } else if(score < 75){
+      cat = L==='zh'?'高风险':L==='ko'?'높음':'HIGH RISK'; c='#FF8C42';
+    } else {
+      cat = L==='zh'?'极高风险':L==='ko'?'매우 높음':'VERY HIGH'; c='#FF3333';
+    }
+    badge.textContent = cat;
+    badge.style.color = c;
+    badge.style.borderColor = c+'66';
+    badge.style.background = c+'11';
+  }
+
+  // Factor breakdown
+  const bd = document.getElementById('rc-breakdown');
+  const fl = document.getElementById('rc-factor-list');
+  if(bd && fl){
+    bd.style.display = 'block';
+    fl.innerHTML = factors.map(f=>{
+      const pct = Math.round((f.score/f.max)*100);
+      return `<div class="rc-factor-item">
+        <div class="rc-factor-name">${f.key}</div>
+        <div class="rc-factor-bar"><div class="rc-factor-fill" style="width:0%;background:${f.color}" data-w="${pct}"></div></div>
+        <div class="rc-factor-val">${f.score}/${f.max}</div>
+      </div>`;
+    }).join('');
+    requestAnimationFrame(()=>{
+      fl.querySelectorAll('.rc-factor-fill').forEach(el=>{
+        setTimeout(()=>{ el.style.width = el.dataset.w+'%'; },80);
+      });
+    });
+  }
+
+  // Recommendations
+  const recsEl = document.getElementById('rc-recs');
+  const recList = document.getElementById('rc-rec-list');
+  if(recsEl && recList){
+    recsEl.style.display = 'block';
+    const recs = [];
+    if(tscore <= -1.5 || tscore < 0){
+      recs.push(L==='zh'?{i:'🏥',t:'建议DEXA骨密度扫描以正式评估骨质疏松'}:L==='ko'?{i:'🏥',t:'골다공증 공식 평가를 위한 DEXA 골밀도 검사 권장'}:{i:'🏥',t:'DEXA bone density scan recommended for formal osteoporosis assessment'});
+    }
+    if(calcium==='low'){
+      recs.push(L==='zh'?{i:'🥛',t:'增加钙摄入量至1000-1200 mg/天（乳制品、绿叶蔬菜、补充剂）'}:L==='ko'?{i:'🥛',t:'칼슘 섭취량을 1000-1200 mg/일로 늘리세요(유제품, 녹색 채소, 보충제)'}:{i:'🥛',t:'Increase calcium intake to 1000-1200 mg/day (dairy, leafy greens, supplements)'});
+    }
+    if(activity === 'sedentary'){
+      recs.push(L==='zh'?{i:'🏃',t:'每周150分钟中等强度负重运动（步行、慢跑、舞蹈）'}:L==='ko'?{i:'🏃',t:'주 150분 중등도 체중부하 운동(걷기, 조깅, 댄스)'}:{i:'🏃',t:'150 min/week moderate weight-bearing exercise (walking, jogging, dancing)'});
+    }
+    if(smoking){
+      recs.push(L==='zh'?{i:'🚭',t:'戒烟：吸烟使骨折风险增加25-50%，并损害骨愈合'}:L==='ko'?{i:'🚭',t:'금연: 흡연은 골절 위험을 25-50% 높이고 골 치유를 손상시킴'}:{i:'🚭',t:'Smoking cessation: smoking increases fracture risk 25-50% and impairs bone healing'});
+    }
+    if(prevFrac){
+      recs.push(L==='zh'?{i:'💊',t:'与您的医生讨论骨保护治疗（双膦酸盐、地诺单抗）'}:L==='ko'?{i:'💊',t:'의사와 골보호 치료(비스포스포네이트, 데노수맙) 상담'}:{i:'💊',t:'Discuss bone protection therapy with your doctor (bisphosphonates, denosumab)'});
+    }
+    if(age >= 65){
+      recs.push(L==='zh'?{i:'⚖️',t:'平衡与步态训练以预防跌倒；家庭安全评估'}:L==='ko'?{i:'⚖️',t:'낙상 예방을 위한 균형 및 보행 훈련; 가정 안전 평가'}:{i:'⚖️',t:'Balance & gait training to prevent falls; home safety assessment'});
+    }
+    if(recs.length === 0){
+      recs.push(L==='zh'?{i:'✅',t:'风险因素控制良好。继续保持规律锻炼和均衡饮食。'}:L==='ko'?{i:'✅',t:'위험 요소가 잘 관리되고 있습니다. 규칙적인 운동과 균형 잡힌 식단을 유지하세요.'}:{i:'✅',t:'Risk factors are well-managed. Continue regular exercise and balanced diet.'});
+    }
+    recList.innerHTML = recs.map(r=>`<div class="rc-rec-item"><span class="rc-rec-icon">${r.i}</span><span>${r.t}</span></div>`).join('');
+  }
+}
+
