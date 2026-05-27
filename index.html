@@ -284,16 +284,35 @@
         <div class="az-field">
           <label class="az-label" data-i18n="az.fracture_type">Fracture Type</label>
           <select id="az-fracture-sel" class="az-select">
-            <option value="avulsion">Avulsion / 撕脱性骨折 / 견열 골절</option>
-            <option value="comminuted">Comminuted / 粉碎性骨折 / 분쇄 골절</option>
-            <option value="dislocation">Dislocation / 骨折脱位 / 골절 탈구</option>
-            <option value="greenstick">Greenstick / 青枝骨折 / 청지 골절</option>
-            <option value="hairline">Hairline / 发际线骨折 / 미세 골절</option>
-            <option value="impacted">Impacted / 嵌插骨折 / 감입 골절</option>
-            <option value="longitudinal">Longitudinal / 纵向骨折 / 종적 골절</option>
-            <option value="oblique">Oblique / 斜形骨折 / 사형 골절</option>
-            <option value="pathological">Pathological / 病理性骨折 / 병리성 골절</option>
-            <option value="spiral">Spiral / 螺旋形骨折 / 나선형 골절</option>
+            <optgroup label="── Morphology Types ──">
+              <option value="avulsion">Avulsion / 撕脱骨折 / 견열 골절</option>
+              <option value="comminuted">Comminuted / 粉碎骨折 / 분쇄 골절</option>
+              <option value="greenstick">Greenstick / 青枝骨折 / 청지 골절</option>
+              <option value="hairline">Hairline / 发际线骨折 / 미세 골절</option>
+              <option value="impacted">Impacted / 嵌插骨折 / 감입 골절</option>
+              <option value="longitudinal">Longitudinal / 纵向骨折 / 종적 골절</option>
+              <option value="oblique">Oblique / 斜形骨折 / 사형 골절</option>
+              <option value="spiral">Spiral / 螺旋骨折 / 나선형 골절</option>
+              <option value="transverse">Transverse / 横形骨折 / 횡형 골절</option>
+              <option value="buckle">Buckle (Torus) / 隆突骨折 / 융기 골절</option>
+              <option value="compression">Compression / 压缩骨折 / 압박 골절</option>
+              <option value="stress">Stress / 应力骨折 / 피로 골절</option>
+            </optgroup>
+            <optgroup label="── Mechanism / Cause ──">
+              <option value="dislocation">Dislocation / 骨折脱位 / 골절 탈구</option>
+              <option value="pathological">Pathological / 病理骨折 / 병리성 골절</option>
+            </optgroup>
+            <optgroup label="── Named Fractures ──">
+              <option value="colles">Colles' / 柯氏骨折 / 콜리스 골절</option>
+              <option value="boxer">Boxer's / 拳击手骨折 / 권투선수 골절</option>
+              <option value="scaphoid">Scaphoid / 舟状骨骨折 / 주상골 골절</option>
+              <option value="jones">Jones' / 琼斯骨折 / 존스 골절</option>
+              <option value="jefferson">Jefferson (C1) / 杰弗逊骨折 / 제퍼슨 골절</option>
+            </optgroup>
+            <optgroup label="── Location-Specific ──">
+              <option value="hip">Hip (Femoral Neck) / 股骨颈骨折 / 고관절 골절</option>
+              <option value="tibial_plateau">Tibial Plateau / 胫骨平台骨折 / 경골고원 골절</option>
+            </optgroup>
           </select>
           <div class="az-fracture-desc" id="az-fracture-desc"></div>
         </div>

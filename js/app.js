@@ -218,6 +218,193 @@ const MED = {
       treatment:[{i:'🩼',t:'안정적·최소 전위 골절에 폐쇄 정복 및 장상·하지 석고붕대'},{i:'🔧',t:'전위 또는 불안정 골절에 수술적 고정(수질정 또는 금속판)'},{i:'👁️',t:'보존적 석고 치료 중 전위에 대한 면밀한 모니터링'},{i:'🦯',t:'회전 정렬 보호를 위해 4-6주 비체중부하'}],
       recovery:[{i:'⏱️',t:'회복: 6-12주; 회전 정렬이 기능적 예후에 결정적'},{i:'🤸',t:'재손상 방지를 위한 고유 감각·균형 훈련 필수'},{i:'🔄',t:'복귀 전 스포츠별 회전 근력·안정성 프로그램 이수'},{i:'🏃',t:'회전 스포츠 복귀 전 양측 근력 대칭성 검사 완료'}]
     }
+  },
+  transverse:{
+    en:{
+      causes:[{i:'➡️',t:'Direct blow perpendicular to the bone shaft causing a clean horizontal break'},{i:'🏈',t:'Direct impact sports: football, hockey, rugby — contact at 90° to limb'},{i:'🦴',t:'Bending stress exceeding the bone\'s tensile strength at its weakest cross-section'},{i:'🧓',t:'Osteoporotic bone fractures transversely with minimal force in the elderly'}],
+      treatment:[{i:'🩼',t:'Closed reduction and cast for minimally displaced, stable fractures (6–8 weeks)'},{i:'🔩',t:'Intramedullary nailing for femoral or tibial transverse fractures'},{i:'🔧',t:'Plate and screw fixation for upper limb transverse fractures'},{i:'📷',t:'Radiographic monitoring every 3–4 weeks to confirm maintained alignment'}],
+      recovery:[{i:'⏱️',t:'Recovery: 8–12 weeks; transverse fractures heal with good callus formation'},{i:'🦯',t:'Protected weight-bearing for 6 weeks, then progressive loading'},{i:'🏋️',t:'Physiotherapy: range of motion first, then strengthening from week 8'},{i:'✅',t:'Return to sport after radiographic union confirmed and full strength restored'}]
+    },
+    zh:{
+      causes:[{i:'➡️',t:'垂直于骨干的直接撞击导致横向断裂'},{i:'🏈',t:'直接接触性运动：足球、曲棍球、橄榄球——垂直于肢体的撞击'},{i:'🦴',t:'弯曲应力超过骨骼最薄弱截面的抗拉强度'},{i:'🧓',t:'老年骨质疏松患者在极小外力下即可发生横形骨折'}],
+      treatment:[{i:'🩼',t:'轻度移位稳定骨折行闭合复位和石膏固定（6–8周）'},{i:'🔩',t:'股骨或胫骨横形骨折行髓内钉固定'},{i:'🔧',t:'上肢横形骨折行钢板螺钉固定'},{i:'📷',t:'每3–4周影像学复查确认对线维持'}],
+      recovery:[{i:'⏱️',t:'恢复期：8–12周；横形骨折愈合时骨痂形成良好'},{i:'🦯',t:'保护性负重6周，然后逐步加载'},{i:'🏋️',t:'物理治疗：先活动度训练，第8周开始肌力训练'},{i:'✅',t:'影像学愈合确认且肌力完全恢复后方可恢复运动'}]
+    },
+    ko:{
+      causes:[{i:'➡️',t:'뼈간부에 수직으로 가해지는 직접 충격으로 수평 골절 발생'},{i:'🏈',t:'직접 접촉 스포츠: 풋볼, 하키, 럭비 — 사지에 90° 충격'},{i:'🦴',t:'가장 약한 단면의 인장 강도를 초과하는 굽힘 스트레스'},{i:'🧓',t:'골다공증 노인은 최소 외력으로도 횡형 골절 발생'}],
+      treatment:[{i:'🩼',t:'최소 전위 안정 골절에 폐쇄 정복 및 석고 고정(6-8주)'},{i:'🔩',t:'대퇴골 또는 경골 횡형 골절에 수질정 고정'},{i:'🔧',t:'상지 횡형 골절에 금속판·나사 고정'},{i:'📷',t:'3-4주마다 방사선 촬영으로 정렬 유지 확인'}],
+      recovery:[{i:'⏱️',t:'회복: 8-12주; 횡형 골절은 가골 형성이 양호'},{i:'🦯',t:'6주 보호적 체중부하 후 점진적 부하 증가'},{i:'🏋️',t:'물리치료: 먼저 관절 가동, 8주부터 근력 강화'},{i:'✅',t:'방사선학적 유합 확인 및 완전 근력 회복 후 스포츠 복귀'}]
+    }
+  },
+  buckle:{
+    en:{
+      causes:[{i:'👶',t:'Axial loading in children aged 2–10: porous young bone buckles rather than breaks completely'},{i:'🤸',t:'Falls onto outstretched hand (FOOSH) — most common cause of buckle (torus) fractures'},{i:'🛹',t:'Low-to-moderate energy impact during play, cycling, or minor falls'},{i:'🦴',t:'The periosteum remains intact on one side, preventing complete displacement'}],
+      treatment:[{i:'🩼',t:'Removable splint or soft cast for 3–4 weeks — no rigid cast required'},{i:'🏠',t:'Can often be managed with a removable wrist splint at home after A&E assessment'},{i:'💊',t:'Simple analgesia (paracetamol/ibuprofen) — no strong opioids needed'},{i:'📷',t:'Follow-up X-ray at 4 weeks to confirm healing; no reduction required'}],
+      recovery:[{i:'✅',t:'Excellent prognosis: full healing typically in 3–6 weeks'},{i:'🏃',t:'Return to normal activity within 4–6 weeks; no formal physiotherapy needed'},{i:'🦴',t:'Children\'s remodeling capacity ensures complete restoration of bone architecture'},{i:'📋',t:'No long-term complications expected; growth not affected'}]
+    },
+    zh:{
+      causes:[{i:'👶',t:'2–10岁儿童轴向加载：多孔幼骨压曲而非完全断裂'},{i:'🤸',t:'手伸出撑地摔倒（FOOSH）——隆突骨折最常见原因'},{i:'🛹',t:'玩耍、骑车或轻微摔倒等低至中等能量冲击'},{i:'🦴',t:'骨膜一侧保持完整，阻止完全移位'}],
+      treatment:[{i:'🩼',t:'可脱卸夹板或软石膏固定3–4周——无需硬质石膏'},{i:'🏠',t:'急诊评估后通常可佩戴可脱卸腕部夹板在家处理'},{i:'💊',t:'普通止痛药（对乙酰氨基酚/布洛芬）——无需强效阿片类药物'},{i:'📷',t:'4周复查X线确认愈合；无需复位'}],
+      recovery:[{i:'✅',t:'预后极佳：通常3–6周完全愈合'},{i:'🏃',t:'4–6周内恢复正常活动；无需正式物理治疗'},{i:'🦴',t:'儿童骨骼重塑能力确保骨骼结构完全恢复'},{i:'📋',t:'无预期长期并发症；生长不受影响'}]
+    },
+    ko:{
+      causes:[{i:'👶',t:'2-10세 소아에서 축성 부하: 다공성 어린 뼈가 완전히 부러지지 않고 휨'},{i:'🤸',t:'손 뻗어 넘어지기(FOOSH) — 버클(토러스) 골절의 가장 흔한 원인'},{i:'🛹',t:'놀이, 자전거, 경미한 낙상 등 저~중등도 에너지 충격'},{i:'🦴',t:'골막이 한쪽에서 온전히 유지되어 완전 전위 방지'}],
+      treatment:[{i:'🩼',t:'탈착 가능한 부목 또는 소프트 석고로 3-4주 고정 — 딱딱한 석고 불필요'},{i:'🏠',t:'응급실 평가 후 탈착 가능 손목 부목으로 가정 관리 가능'},{i:'💊',t:'일반 진통제(아세타미노펜/이부프로펜) — 강한 마약성 진통제 불필요'},{i:'📷',t:'4주 후 추적 X선으로 치유 확인; 정복 불필요'}],
+      recovery:[{i:'✅',t:'예후 우수: 보통 3-6주 완전 치유'},{i:'🏃',t:'4-6주 내 정상 활동 복귀; 공식 물리치료 불필요'},{i:'🦴',t:'소아의 재형성 능력으로 뼈 구조 완전 회복'},{i:'📋',t:'장기 합병증 없음; 성장 영향 없음'}]
+    }
+  },
+  compression:{
+    en:{
+      causes:[{i:'⬇️',t:'Axial compressive load collapsing vertebral body height — most common in thoracic/lumbar spine'},{i:'🧓',t:'Osteoporosis: vertebral compression fractures occur with everyday activities (bending, lifting)'},{i:'🚗',t:'High-energy trauma: motor vehicle accidents, falls from height causing spinal loading'},{i:'🎗️',t:'Spinal metastases from breast, prostate, lung cancer weaken vertebrae for pathological compression'}],
+      treatment:[{i:'💊',t:'Analgesics and short-term bracing (TLSO) for stable compression fractures'},{i:'💉',t:'Vertebroplasty or kyphoplasty: cement injection to restore vertebral height and stability'},{i:'🔧',t:'Surgical stabilization (pedicle screw fixation) for burst variants or neurological compromise'},{i:'🦴',t:'Bisphosphonates + calcium + vitamin D to treat underlying osteoporosis'}],
+      recovery:[{i:'⏱️',t:'Recovery: 6–12 weeks with bracing; pain improvement typically within 4–6 weeks'},{i:'💪',t:'Core stabilization and back extension exercises critical for long-term spinal health'},{i:'🚶',t:'Early mobilization encouraged to prevent deconditioning and further bone loss'},{i:'📋',t:'Fall prevention program and bone density monitoring essential to prevent recurrence'}]
+    },
+    zh:{
+      causes:[{i:'⬇️',t:'轴向压缩载荷导致椎体高度塌陷——最常见于胸腰椎'},{i:'🧓',t:'骨质疏松：椎体压缩骨折可因日常活动（弯腰、搬物）发生'},{i:'🚗',t:'高能量创伤：车祸、从高处坠落导致脊柱轴向加载'},{i:'🎗️',t:'乳腺癌、前列腺癌、肺癌脊柱转移灶削弱椎体，导致病理性压缩'}],
+      treatment:[{i:'💊',t:'镇痛药和短期支具（TLSO）用于稳定的压缩骨折'},{i:'💉',t:'椎体成形术或后凸成形术：注射骨水泥以恢复椎体高度和稳定性'},{i:'🔧',t:'爆裂型或神经功能受损时行手术稳定（椎弓根螺钉固定）'},{i:'🦴',t:'二膦酸盐+钙+维生素D治疗基础骨质疏松'}],
+      recovery:[{i:'⏱️',t:'恢复期：支具固定6–12周；疼痛通常在4–6周内改善'},{i:'💪',t:'核心稳定性和背伸训练对脊柱长期健康至关重要'},{i:'🚶',t:'鼓励早期活动以防止失能和进一步骨丢失'},{i:'📋',t:'防跌倒计划和骨密度监测对预防复发必不可少'}]
+    },
+    ko:{
+      causes:[{i:'⬇️',t:'척추체 높이를 붕괴시키는 축성 압박 부하 — 흉요추에서 가장 흔함'},{i:'🧓',t:'골다공증: 척추 압박 골절은 일상 활동(구부리기, 들기)으로도 발생'},{i:'🚗',t:'고에너지 외상: 교통사고, 높은 곳에서 낙상으로 척추 부하 발생'},{i:'🎗️',t:'유방암·전립선암·폐암의 척추 전이로 병리성 압박 발생'}],
+      treatment:[{i:'💊',t:'안정적 압박 골절에 진통제와 단기 보조기(TLSO)'},{i:'💉',t:'척추 성형술 또는 후굴 성형술: 시멘트 주입으로 척추체 높이·안정성 회복'},{i:'🔧',t:'파열형 또는 신경학적 손상 시 수술적 안정화(척추경 나사 고정)'},{i:'🦴',t:'기저 골다공증 치료: 비스포스포네이트+칼슘+비타민 D'}],
+      recovery:[{i:'⏱️',t:'회복: 보조기 착용 6-12주; 통증은 보통 4-6주 내 호전'},{i:'💪',t:'코어 안정화 및 등 신전 운동이 장기 척추 건강에 필수'},{i:'🚶',t:'조기 보행으로 근력 저하 및 추가 골 소실 예방 권장'},{i:'📋',t:'낙상 예방 프로그램과 골밀도 모니터링으로 재발 방지'}]
+    }
+  },
+  stress:{
+    en:{
+      causes:[{i:'🏃',t:'Repetitive cyclic loading exceeding bone remodeling rate — classic overuse injury'},{i:'📈',t:'Sudden training load spike: "too much, too soon" — increased mileage, new surface, harder terrain'},{i:'🦴',t:'Low bone density, nutritional deficiencies, female athlete triad increase susceptibility'},{i:'👟',t:'Biomechanical factors: overpronation, leg length discrepancy, stiff footwear'}],
+      treatment:[{i:'🛑',t:'Complete rest from impact loading: minimum 6–8 weeks for most locations'},{i:'👢',t:'Walking boot or crutches for high-risk sites (femoral neck, navicular, 5th metatarsal base)'},{i:'🚴',t:'Cross-training: aqua jogging, cycling, swimming to maintain fitness during recovery'},{i:'🔬',t:'MRI preferred for diagnosis — plain X-rays often negative in early stress fractures'}],
+      recovery:[{i:'⏱️',t:'Recovery: 6–16 weeks depending on site; high-risk sites (femoral neck) up to 6 months'},{i:'📉',t:'Graduated return: walk → jog → run program over 6–8 weeks after healing confirmed'},{i:'🥗',t:'Optimize nutrition: 1500 mg calcium/day, 2000 IU vitamin D, adequate protein'},{i:'🔁',t:'Correct biomechanical deficits and training errors to prevent recurrence'}]
+    },
+    zh:{
+      causes:[{i:'🏃',t:'反复循环载荷超过骨骼重塑速率——典型的过度使用损伤'},{i:'📈',t:'训练负荷突然增加："过快过多"——增加里程、换新地面、更难地形'},{i:'🦴',t:'骨密度低、营养缺乏、女性运动员三联征增加易感性'},{i:'👟',t:'生物力学因素：过度旋前、下肢长度不等、鞋底过硬'}],
+      treatment:[{i:'🛑',t:'完全停止冲击性负荷：大多数部位至少6–8周'},{i:'👢',t:'高风险部位（股骨颈、舟骨、第5跖骨基底部）使用行走靴或拐杖'},{i:'🚴',t:'交叉训练：水中慢跑、骑车、游泳以在恢复期维持体能'},{i:'🔬',t:'诊断首选MRI——早期应力骨折普通X线常为阴性'}],
+      recovery:[{i:'⏱️',t:'恢复期：因部位而异6–16周；高风险部位（股骨颈）可达6个月'},{i:'📉',t:'逐步恢复：愈合确认后经6–8周完成步行→慢跑→跑步程序'},{i:'🥗',t:'优化营养：每日钙1500mg，维生素D 2000IU，充足蛋白质'},{i:'🔁',t:'纠正生物力学缺陷和训练错误以防止复发'}]
+    },
+    ko:{
+      causes:[{i:'🏃',t:'뼈 재형성 속도를 초과하는 반복적 순환 부하 — 전형적인 과사용 손상'},{i:'📈',t:'훈련 부하 급증: "너무 많이, 너무 빨리" — 거리 증가, 새 노면, 더 어려운 지형'},{i:'🦴',t:'낮은 골밀도, 영양 결핍, 여성 운동선수 삼징후로 감수성 증가'},{i:'👟',t:'생체역학적 요인: 과내전, 하지 길이 차이, 딱딱한 신발'}],
+      treatment:[{i:'🛑',t:'충격성 부하 완전 중단: 대부분 부위 최소 6-8주'},{i:'👢',t:'고위험 부위(대퇴골경, 주상골, 5번 중족골 기저부)에 워킹 부츠 또는 목발'},{i:'🚴',t:'교차 훈련: 수중 조깅, 자전거, 수영으로 회복 중 체력 유지'},{i:'🔬',t:'진단에 MRI 선호 — 초기 피로 골절은 일반 X선에서 음성인 경우 많음'}],
+      recovery:[{i:'⏱️',t:'회복: 부위에 따라 6-16주; 고위험 부위(대퇴골경)는 최대 6개월'},{i:'📉',t:'점진적 복귀: 유합 확인 후 6-8주에 걸쳐 걷기→조깅→달리기'},{i:'🥗',t:'영양 최적화: 칼슘 1500mg/일, 비타민 D 2000IU, 충분한 단백질'},{i:'🔁',t:'재발 방지를 위한 생체역학적 결함과 훈련 오류 교정'}]
+    }
+  },
+  colles:{
+    en:{
+      causes:[{i:'🤲',t:'Fall on outstretched hand (FOOSH): wrist forced into dorsiflexion absorbing body weight'},{i:'🧓',t:'Most common in postmenopausal women with osteoporosis — classic fragility fracture'},{i:'⛸️',t:'Winter activities: ice skating falls, skiing, cycling accidents'},{i:'🦴',t:'Distal radius fractures within 2–3 cm of wrist joint with dorsal angulation and shortening'}],
+      treatment:[{i:'🔄',t:'Closed reduction under haematoma block or Bier\'s block anaesthesia'},{i:'🩼',t:'Plaster cast (below-elbow backslab → full cast) for 4–6 weeks'},{i:'🔧',t:'Volar locking plate fixation for unstable, comminuted, or intra-articular fractures'},{i:'🦴',t:'DEXA scan and bone protection therapy if first fragility fracture in elderly patient'}],
+      recovery:[{i:'⏱️',t:'Recovery: 6–8 weeks cast; full hand/wrist function returns over 3–6 months'},{i:'🤸',t:'Early finger exercises from day 1; wrist mobilization begins after cast removal'},{i:'💪',t:'Physiotherapy: wrist flexion/extension, forearm rotation, grip strengthening exercises'},{i:'✅',t:'Most patients regain functional wrist motion; some residual stiffness common in elderly'}]
+    },
+    zh:{
+      causes:[{i:'🤲',t:'手伸出撑地摔倒（FOOSH）：腕关节被迫背伸以承受体重'},{i:'🧓',t:'最常见于绝经后骨质疏松女性——经典的脆性骨折'},{i:'⛸️',t:'冬季活动：溜冰摔倒、滑雪、骑车事故'},{i:'🦴',t:'桡骨远端骨折位于腕关节近侧2–3cm，伴背侧成角和短缩'}],
+      treatment:[{i:'🔄',t:'血肿阻滞或比尔阻滞麻醉下行闭合复位'},{i:'🩼',t:'石膏托（肘下后托→全管型石膏）固定4–6周'},{i:'🔧',t:'不稳定、粉碎性或关节内骨折行掌侧锁定钢板固定'},{i:'🦴',t:'老年患者首次脆性骨折时行骨密度检测（DEXA）和骨保护治疗'}],
+      recovery:[{i:'⏱️',t:'恢复期：石膏固定6–8周；手腕完全功能在3–6个月内恢复'},{i:'🤸',t:'第1天即开始手指活动训练；去除石膏后开始腕关节活动训练'},{i:'💪',t:'物理治疗：腕屈伸、前臂旋转、握力增强训练'},{i:'✅',t:'大多数患者恢复功能性腕关节活动度；老年人可能有残余僵硬'}]
+    },
+    ko:{
+      causes:[{i:'🤲',t:'손 뻗어 넘어지기(FOOSH): 체중을 흡수하기 위해 손목이 등쪽 굴곡 강제됨'},{i:'🧓',t:'폐경 후 골다공증 여성에서 가장 흔함 — 전형적인 취약성 골절'},{i:'⛸️',t:'겨울 활동: 아이스 스케이팅 낙상, 스키, 자전거 사고'},{i:'🦴',t:'손목 관절에서 2-3cm 이내 원위 요골 골절, 등쪽 각형성 및 단축'}],
+      treatment:[{i:'🔄',t:'혈종 차단 또는 비어 차단 마취 하 폐쇄 정복'},{i:'🩼',t:'석고붕대(주관절 하부 후방 부목 → 전체 석고)로 4-6주 고정'},{i:'🔧',t:'불안정, 분쇄성 또는 관절 내 골절에 장측 잠금 금속판 고정'},{i:'🦴',t:'노인 첫 취약성 골절 시 DEXA 검사 및 골보호 치료'}],
+      recovery:[{i:'⏱️',t:'회복: 석고 6-8주; 손/손목 완전 기능은 3-6개월에 걸쳐 회복'},{i:'🤸',t:'첫날부터 손가락 운동 시작; 석고 제거 후 손목 가동 시작'},{i:'💪',t:'물리치료: 손목 굴곡/신전, 전완 회전, 악력 강화 운동'},{i:'✅',t:'대부분 기능적 손목 가동 회복; 노인에서 잔여 강직 흔함'}]
+    }
+  },
+  boxer:{
+    en:{
+      causes:[{i:'👊',t:'Axial force transmitted through a clenched fist striking a hard object — punching injuries'},{i:'🤜',t:'Punching walls, doors, or another person\'s skull: 5th metacarpal neck fracture with volar angulation'},{i:'🏈',t:'Contact sports: football, basketball, martial arts — direct metacarpal impact'},{i:'⚠️',t:'Typically involves 4th or 5th metacarpal neck with apex dorsal angulation ("boxer\'s knuckle")'}],
+      treatment:[{i:'🩼',t:'Buddy-strapping and ulnar gutter splint for angulation <40° in 5th metacarpal'},{i:'🔧',t:'Closed reduction and splinting; surgical pinning (K-wire) for angulation >40° or rotational deformity'},{i:'💊',t:'NSAIDs, ice, elevation for swelling; assess skin integrity and rule out fight bite wounds'},{i:'📷',t:'True lateral X-ray essential to measure volar angulation accurately'}],
+      recovery:[{i:'⏱️',t:'Recovery: 3–6 weeks splinting; most return to activities within 6–8 weeks'},{i:'🤲',t:'Progressive finger range-of-motion exercises starting week 2'},{i:'💪',t:'Grip and pinch strength rehabilitation; return to sport after full motion and strength'},{i:'⚠️',t:'Human bite wounds over knuckles (fight bites) require urgent surgical washout and antibiotics'}]
+    },
+    zh:{
+      causes:[{i:'👊',t:'握拳击打坚硬物体时经拳头传递的轴向力——拳击伤'},{i:'🤜',t:'击打墙壁、门或他人头颅：第5掌骨颈骨折伴掌侧成角（"拳击手指节"）'},{i:'🏈',t:'接触性运动：足球、篮球、武术——掌骨直接撞击'},{i:'⚠️',t:'通常累及第4或第5掌骨颈，顶端背侧成角'}],
+      treatment:[{i:'🩼',t:'第5掌骨成角<40°时：伴指固定和尺侧槽形夹板'},{i:'🔧',t:'闭合复位和夹板固定；成角>40°或旋转畸形时行手术克氏针固定'},{i:'💊',t:'非甾体消炎药、冰敷、患肢抬高消肿；评估皮肤完整性并排除咬伤'},{i:'📷',t:'需摄真正侧位X线以准确测量掌侧成角'}],
+      recovery:[{i:'⏱️',t:'恢复期：夹板固定3–6周；大多数患者6–8周内恢复活动'},{i:'🤲',t:'第2周开始逐步进行手指活动度训练'},{i:'💪',t:'握力和捏力康复；完全活动度和力量恢复后方可恢复运动'},{i:'⚠️',t:'关节处人咬伤（格斗咬伤）需紧急手术清洗和抗生素治疗'}]
+    },
+    ko:{
+      causes:[{i:'👊',t:'주먹을 쥐고 딱딱한 물체를 칠 때 전달되는 축성 힘 — 펀칭 손상'},{i:'🤜',t:'벽, 문 또는 타인 두개골 강타: 5번 중수골 경부 골절과 장측 각형성'},{i:'🏈',t:'접촉 스포츠: 풋볼, 농구, 격투기 — 중수골 직접 충격'},{i:'⚠️',t:'보통 4번 또는 5번 중수골 경부 침범, 등쪽 각형성("권투선수 관절")'}],
+      treatment:[{i:'🩼',t:'5번 중수골 각형성 <40°: 버디 테이핑 및 척골측 홈 부목'},{i:'🔧',t:'폐쇄 정복 및 부목; 각형성 >40° 또는 회전 변형 시 수술적 핀(K-wire) 고정'},{i:'💊',t:'NSAIDs, 냉찜질, 거상으로 부종 치료; 피부 완전성 평가 및 격투 교상 배제'},{i:'📷',t:'측방 각형성을 정확히 측정하기 위해 진측면 X선 필수'}],
+      recovery:[{i:'⏱️',t:'회복: 부목 3-6주; 대부분 6-8주 내 활동 복귀'},{i:'🤲',t:'2주부터 점진적 손가락 관절 가동 운동 시작'},{i:'💪',t:'악력 및 집기 근력 재활; 완전 가동 및 근력 회복 후 스포츠 복귀'},{i:'⚠️',t:'관절 위 교상(격투 교상)은 긴급 수술적 세척 및 항생제 필요'}]
+    }
+  },
+  hip:{
+    en:{
+      causes:[{i:'🧓',t:'Osteoporotic fall in elderly: most common cause — simple falls from standing height'},{i:'🦴',t:'Intracapsular (femoral neck) or extracapsular (intertrochanteric/subtrochanteric) types'},{i:'🚗',t:'High-energy trauma in young patients: motor vehicle accidents, falls from height'},{i:'⚠️',t:'Risk factors: age >80, female, osteoporosis, dementia, poor vision, polypharmacy'}],
+      treatment:[{i:'🏥',t:'Surgical repair within 36–48 hours: reduces mortality and complications significantly'},{i:'🔧',t:'Femoral neck: hemiarthroplasty (elderly) or internal fixation screws (young, non-displaced)'},{i:'🏗️',t:'Intertrochanteric: dynamic hip screw (DHS) or intramedullary nail (cephalomedullary nail)'},{i:'💊',t:'Thromboprophylaxis (LMWH/rivaroxaban) and pressure sore prevention essential'}],
+      recovery:[{i:'⏱️',t:'Mobilization within 24 hours of surgery: immediate weight-bearing as tolerated'},{i:'🏨',t:'Multidisciplinary rehabilitation: physiotherapy, occupational therapy, geriatric medicine'},{i:'🏠',t:'30-day mortality ~10%; 1-year mortality ~20–30% in elderly — hip fracture is a major health event'},{i:'🦴',t:'Bone protection: bisphosphonates, calcium, vitamin D, fall prevention program'}]
+    },
+    zh:{
+      causes:[{i:'🧓',t:'老年骨质疏松跌倒：最常见原因——站立高度的简单跌倒'},{i:'🦴',t:'囊内型（股骨颈）或囊外型（转子间/转子下）'},{i:'🚗',t:'年轻患者高能量创伤：车祸、从高处坠落'},{i:'⚠️',t:'危险因素：年龄>80岁、女性、骨质疏松、痴呆、视力差、多重用药'}],
+      treatment:[{i:'🏥',t:'36–48小时内手术修复：显著降低死亡率和并发症'},{i:'🔧',t:'股骨颈骨折：半关节置换术（老年）或内固定螺钉（年轻、无移位）'},{i:'🏗️',t:'转子间骨折：动力髋螺钉（DHS）或髓内钉（头髓钉）'},{i:'💊',t:'血栓预防（低分子肝素/利伐沙班）和压疮预防至关重要'}],
+      recovery:[{i:'⏱️',t:'术后24小时内开始活动：即刻耐受性负重'},{i:'🏨',t:'多学科康复：物理治疗、职业治疗、老年医学'},{i:'🏠',t:'30天死亡率约10%；老年人1年死亡率约20–30%——髋部骨折是重大健康事件'},{i:'🦴',t:'骨保护：二膦酸盐、钙、维生素D、防跌倒计划'}]
+    },
+    ko:{
+      causes:[{i:'🧓',t:'노인 골다공증 낙상: 가장 흔한 원인 — 서 있는 높이에서의 단순 낙상'},{i:'🦴',t:'피막내(대퇴골경) 또는 피막외(전자간/전자하) 유형'},{i:'🚗',t:'젊은 환자의 고에너지 외상: 교통사고, 높은 곳에서 낙상'},{i:'⚠️',t:'위험 요인: 나이 >80세, 여성, 골다공증, 치매, 시력 저하, 다중 약물 복용'}],
+      treatment:[{i:'🏥',t:'36-48시간 내 수술적 수복: 사망률과 합병증을 크게 감소'},{i:'🔧',t:'대퇴골경: 반치환술(노인) 또는 내고정 나사(젊은, 비전위)'},{i:'🏗️',t:'전자간: 동적 고관절 나사(DHS) 또는 수질정(두부수질정)'},{i:'💊',t:'혈전 예방(저분자 헤파린/리바록사반) 및 욕창 예방 필수'}],
+      recovery:[{i:'⏱️',t:'수술 후 24시간 내 보행: 즉시 허용 체중부하'},{i:'🏨',t:'다학제 재활: 물리치료, 작업치료, 노인의학'},{i:'🏠',t:'30일 사망률 ~10%; 노인 1년 사망률 ~20-30% — 고관절 골절은 주요 건강 사건'},{i:'🦴',t:'골보호: 비스포스포네이트, 칼슘, 비타민 D, 낙상 예방 프로그램'}]
+    }
+  },
+  jefferson:{
+    en:{
+      causes:[{i:'⬇️',t:'Axial compressive load transmitted through the skull to C1 (atlas) — burst fracture of ring'},{i:'🏊',t:'Diving into shallow water head-first: classic mechanism for C1 burst fractures'},{i:'🚗',t:'High-speed motor vehicle accidents: axial loading through the cervical spine'},{i:'🏋️',t:'Heavy objects falling on top of the head; trampoline accidents with axial impact'}],
+      treatment:[{i:'🛑',t:'Immediate spinal immobilization: rigid cervical collar, log-roll precautions, spinal board'},{i:'🔩',t:'Stable Jefferson fractures: halo vest or rigid cervical collar for 8–12 weeks'},{i:'🔧',t:'Unstable fractures (transverse ligament rupture): C1-C2 surgical fusion'},{i:'🏥',t:'ICU-level care: monitor for respiratory compromise; neurological assessment q1h'}],
+      recovery:[{i:'⏱️',t:'Recovery: 12–16 weeks for stable fractures; surgical fusion requires 3–6 months'},{i:'🤸',t:'Cervical physiotherapy after immobilization: range of motion, proprioception training'},{i:'⚠️',t:'Return to contact sports generally contraindicated after C1 fracture'},{i:'📋',t:'Long-term follow-up for atlantoaxial instability and late neurological deterioration'}]
+    },
+    zh:{
+      causes:[{i:'⬇️',t:'通过颅骨传递至C1（寰椎）的轴向压缩载荷——环形爆裂骨折'},{i:'🏊',t:'头部先入水跳入浅水区：C1爆裂骨折的经典机制'},{i:'🚗',t:'高速车祸：通过颈椎的轴向加载'},{i:'🏋️',t:'重物落在头顶上；蹦床事故伴轴向撞击'}],
+      treatment:[{i:'🛑',t:'立即脊柱固定：硬颈托、圆木滚动预防措施、脊柱板'},{i:'🔩',t:'稳定型Jefferson骨折：光环背心或硬质颈托固定8–12周'},{i:'🔧',t:'不稳定骨折（横韧带断裂）：C1-C2手术融合'},{i:'🏥',t:'ICU级别护理：监测呼吸受损；每小时神经功能评估'}],
+      recovery:[{i:'⏱️',t:'恢复期：稳定骨折12–16周；手术融合需3–6个月'},{i:'🤸',t:'固定后颈部物理治疗：活动度训练、本体感觉训练'},{i:'⚠️',t:'C1骨折后通常禁止参加接触性运动'},{i:'📋',t:'长期随访寰枢椎不稳定和晚期神经功能恶化'}]
+    },
+    ko:{
+      causes:[{i:'⬇️',t:'두개골을 통해 C1(환추)로 전달되는 축성 압박 부하 — 환형 파열 골절'},{i:'🏊',t:'얕은 물에 머리부터 다이빙: C1 파열 골절의 전형적 기전'},{i:'🚗',t:'고속 교통사고: 경추를 통한 축성 부하'},{i:'🏋️',t:'머리 위로 무거운 물체 낙하; 축성 충격을 동반한 트램폴린 사고'}],
+      treatment:[{i:'🛑',t:'즉시 척추 고정: 경성 경추 보조기, 통나무 굴리기 주의, 척추 보드'},{i:'🔩',t:'안정적 Jefferson 골절: 헤일로 조끼 또는 경성 경추 보조기 8-12주'},{i:'🔧',t:'불안정 골절(횡인대 파열): C1-C2 수술적 유합'},{i:'🏥',t:'ICU급 관리: 호흡 장해 모니터링; 1시간마다 신경학적 평가'}],
+      recovery:[{i:'⏱️',t:'회복: 안정 골절 12-16주; 수술적 유합은 3-6개월'},{i:'🤸',t:'고정 후 경추 물리치료: 관절 가동, 고유 감각 훈련'},{i:'⚠️',t:'C1 골절 후 접촉 스포츠 복귀는 일반적으로 금기'},{i:'📋',t:'환축 불안정성 및 후기 신경학적 악화에 대한 장기 추적'}]
+    }
+  },
+  jones:{
+    en:{
+      causes:[{i:'🦶',t:'Avulsion at base of 5th metatarsal OR stress fracture at metaphyseal-diaphyseal junction'},{i:'🏀',t:'Cutting, pivoting, lateral foot loading — basketball, soccer, tennis most common sports'},{i:'⚠️',t:'True Jones fracture (zone 2) has high non-union rate due to poor blood supply at junction'},{i:'👟',t:'High-arched (cavus) foot type increases lateral column loading and fracture risk'}],
+      treatment:[{i:'🛑',t:'True Jones fracture: non-weight-bearing cast for 6–8 weeks minimum'},{i:'🔩',t:'Surgical fixation (intramedullary screw) recommended for athletes and to reduce non-union risk'},{i:'👢',t:'Zone 1 (avulsion): walking boot or hard-soled shoe for 4–6 weeks; excellent prognosis'},{i:'🦴',t:'Bone stimulation (ultrasound or electrical) for delayed union or refracture cases'}],
+      recovery:[{i:'⏱️',t:'Zone 1: 4–6 weeks. True Jones (zone 2): 8–20 weeks; high refracture risk in athletes'},{i:'📋',t:'MRI to confirm union before return to sport — X-ray can lag behind clinical healing'},{i:'🔁',t:'Address cavus foot deformity and lateral loading biomechanics to prevent recurrence'},{i:'🏃',t:'Gradual return to cutting/pivoting activities over 4–6 weeks after confirmed union'}]
+    },
+    zh:{
+      causes:[{i:'🦶',t:'第5跖骨基底部撕脱骨折或干骺端-骨干交界处应力骨折'},{i:'🏀',t:'急停变向、旋转、足外侧负重——篮球、足球、网球最常见'},{i:'⚠️',t:'真正琼斯骨折（2区）因局部血供差，不愈合率高'},{i:'👟',t:'高弓足（爪形足）增加外侧柱负荷和骨折风险'}],
+      treatment:[{i:'🛑',t:'真正琼斯骨折：不负重石膏固定至少6–8周'},{i:'🔩',t:'运动员推荐手术固定（髓内螺钉）以降低不愈合风险'},{i:'👢',t:'1区（撕脱）：行走靴或硬底鞋4–6周；预后极佳'},{i:'🦴',t:'延迟愈合或再骨折病例使用骨刺激（超声或电刺激）'}],
+      recovery:[{i:'⏱️',t:'1区：4–6周。真正琼斯骨折（2区）：8–20周；运动员再骨折风险高'},{i:'📋',t:'恢复运动前MRI确认愈合——X线可能滞后于临床愈合'},{i:'🔁',t:'纠正高弓足畸形和外侧负重生物力学以防止复发'},{i:'🏃',t:'愈合确认后经4–6周逐步恢复急停变向活动'}]
+    },
+    ko:{
+      causes:[{i:'🦶',t:'5번 중족골 기저부 견열 또는 골간단-골간부 접합부 피로 골절'},{i:'🏀',t:'커팅, 피벗, 족부 외측 부하 — 농구, 축구, 테니스에서 가장 흔함'},{i:'⚠️',t:'진성 존스 골절(2구역)은 접합부 혈액 공급 부족으로 불유합률 높음'},{i:'👟',t:'고궁형(발바닥 높은) 족부 유형이 외측 기둥 부하 및 골절 위험 증가'}],
+      treatment:[{i:'🛑',t:'진성 존스 골절: 최소 6-8주 비체중부하 석고'},{i:'🔩',t:'운동선수에게 수술적 고정(수질내 나사) 권장 — 불유합 위험 감소'},{i:'👢',t:'1구역(견열): 워킹 부츠 또는 딱딱한 밑창 신발 4-6주; 우수한 예후'},{i:'🦴',t:'지연 유합 또는 재골절에 골 자극(초음파 또는 전기 자극)'}],
+      recovery:[{i:'⏱️',t:'1구역: 4-6주. 진성 존스(2구역): 8-20주; 운동선수 재골절 위험 높음'},{i:'📋',t:'스포츠 복귀 전 MRI로 유합 확인 — X선은 임상적 치유보다 뒤처질 수 있음'},{i:'🔁',t:'재발 방지를 위한 고궁형 족부 변형 및 외측 부하 생체역학 교정'},{i:'🏃',t:'유합 확인 후 4-6주에 걸쳐 커팅/피벗 활동 점진적 복귀'}]
+    }
+  },
+  scaphoid:{
+    en:{
+      causes:[{i:'🤸',t:'Fall on outstretched hand (FOOSH): forced dorsiflexion and radial deviation'},{i:'🏀',t:'Sports: basketball, football, gymnastics — wrist hyperextension during contact'},{i:'⚠️',t:'Frequently missed on initial X-ray — MRI or CT required if clinical suspicion persists'},{i:'🦴',t:'Proximal pole fractures have high avascular necrosis risk due to retrograde blood supply'}],
+      treatment:[{i:'🩼',t:'Non-displaced waist fractures: thumb spica cast for 8–12 weeks'},{i:'🔩',t:'Percutaneous or open screw fixation (Herbert screw) for displaced fractures or athletes'},{i:'🏥',t:'Proximal pole fractures: surgical fixation to prevent avascular necrosis and non-union'},{i:'📷',t:'MRI at 10–14 days for initially negative X-ray with clinical snuffbox tenderness'}],
+      recovery:[{i:'⏱️',t:'Waist fractures: 8–12 weeks in cast; proximal pole: 3–6 months'},{i:'🤸',t:'Wrist mobilization and grip strengthening begin after cast removal'},{i:'⚠️',t:'Avascular necrosis and non-union are serious complications requiring further surgery'},{i:'✅',t:'Full return to sport after radiographic and clinical union confirmed — typically 12–16 weeks'}]
+    },
+    zh:{
+      causes:[{i:'🤸',t:'手伸出撑地摔倒（FOOSH）：腕关节强制背伸和桡偏'},{i:'🏀',t:'运动：篮球、足球、体操——接触时腕关节过度背伸'},{i:'⚠️',t:'初始X线常漏诊——临床高度怀疑时需MRI或CT'},{i:'🦴',t:'近端极骨折因逆行血供而缺血性坏死风险高'}],
+      treatment:[{i:'🩼',t:'无移位腰部骨折：拇指人字石膏固定8–12周'},{i:'🔩',t:'移位骨折或运动员：经皮或切开螺钉固定（赫伯特螺钉）'},{i:'🏥',t:'近端极骨折：手术固定以防止缺血性坏死和不愈合'},{i:'📷',t:'临床解剖鼻烟壶压痛但初始X线阴性者，10–14天后行MRI'}],
+      recovery:[{i:'⏱️',t:'腰部骨折：石膏固定8–12周；近端极骨折：3–6个月'},{i:'🤸',t:'去除石膏后开始腕关节活动和握力训练'},{i:'⚠️',t:'缺血性坏死和不愈合是严重并发症，需进一步手术'},{i:'✅',t:'影像学和临床愈合确认后完全恢复运动——通常12–16周'}]
+    },
+    ko:{
+      causes:[{i:'🤸',t:'손 뻗어 넘어지기(FOOSH): 강제적 손목 등쪽 굴곡과 요측 편위'},{i:'🏀',t:'스포츠: 농구, 풋볼, 체조 — 접촉 시 손목 과신전'},{i:'⚠️',t:'초기 X선에서 자주 놓침 — 임상적 의심 지속 시 MRI 또는 CT 필요'},{i:'🦴',t:'근위 극 골절은 역행성 혈액 공급으로 무혈성 괴사 위험 높음'}],
+      treatment:[{i:'🩼',t:'비전위 요부 골절: 엄지 스피카 석고로 8-12주'},{i:'🔩',t:'전위 골절 또는 운동선수: 경피적 또는 개방적 나사 고정(허버트 나사)'},{i:'🏥',t:'근위 극 골절: 무혈성 괴사 및 불유합 방지를 위해 수술적 고정'},{i:'📷',t:'임상적 해부학적 코담배갑 압통이 있으나 초기 X선 음성 시 10-14일 후 MRI'}],
+      recovery:[{i:'⏱️',t:'요부 골절: 석고 8-12주; 근위 극: 3-6개월'},{i:'🤸',t:'석고 제거 후 손목 가동 및 악력 강화 시작'},{i:'⚠️',t:'무혈성 괴사 및 불유합은 추가 수술이 필요한 심각한 합병증'},{i:'✅',t:'방사선학적·임상적 유합 확인 후 완전 스포츠 복귀 — 보통 12-16주'}]
+    }
+  },
+  tibial_plateau:{
+    en:{
+      causes:[{i:'🚗',t:'High-energy trauma: vehicle bumper impacts to proximal tibia ("bumper fracture")'},{i:'🏂',t:'Sports falls: skiing, cycling, motorcycle accidents — valgus or varus force on the knee'},{i:'🧓',t:'Low-energy falls in osteoporotic elderly: medial plateau depression from simple stumble'},{i:'🦵',t:'Combined axial and angular loading splits or depresses the articular surface of the knee'}],
+      treatment:[{i:'🔧',t:'ORIF with buttress plate for displaced fractures: restore articular congruity'},{i:'💉',t:'Bone graft or bone substitute to fill subchondral void after elevation'},{i:'🩼',t:'Non-operative management for non-displaced fractures: hinged brace + NWB 8–12 weeks'},{i:'🏥',t:'External fixator initially for high-energy bicondylar fractures until soft tissue settled'}],
+      recovery:[{i:'⏱️',t:'Recovery: 3–6 months; articular fractures have long rehabilitation'},{i:'🦯',t:'Non-weight-bearing 8–12 weeks post-operatively to protect cartilage repair'},{i:'🏋️',t:'Quadriceps strengthening, proprioception, gait retraining critical for knee stability'},{i:'⚠️',t:'High risk of post-traumatic osteoarthritis; total knee replacement may be needed long-term'}]
+    },
+    zh:{
+      causes:[{i:'🚗',t:'高能量创伤：车辆保险杠撞击胫骨近端（"保险杠骨折"）'},{i:'🏂',t:'运动摔倒：滑雪、骑车、摩托车事故——膝关节外翻或内翻力'},{i:'🧓',t:'骨质疏松老年人低能量摔倒：简单绊倒导致内侧平台塌陷'},{i:'🦵',t:'轴向和角向复合载荷劈裂或压低膝关节关节面'}],
+      treatment:[{i:'🔧',t:'移位骨折行支撑钢板ORIF：恢复关节面一致性'},{i:'💉',t:'软骨下抬高后用骨移植或骨替代物填充空腔'},{i:'🩼',t:'无移位骨折保守治疗：铰链支具+不负重8–12周'},{i:'🏥',t:'高能量双髁骨折初期使用外固定架，等待软组织稳定'}],
+      recovery:[{i:'⏱️',t:'恢复期：3–6个月；关节内骨折康复周期长'},{i:'🦯',t:'术后不负重8–12周以保护软骨修复'},{i:'🏋️',t:'股四头肌力量训练、本体感觉、步态再训练对膝关节稳定至关重要'},{i:'⚠️',t:'创伤后骨关节炎风险高；远期可能需要全膝关节置换'}]
+    },
+    ko:{
+      causes:[{i:'🚗',t:'고에너지 외상: 차량 범퍼가 근위 경골에 충격("범퍼 골절")'},{i:'🏂',t:'스포츠 낙상: 스키, 자전거, 오토바이 사고 — 무릎에 외반 또는 내반력'},{i:'🧓',t:'골다공증 노인의 저에너지 낙상: 단순 걸려 넘어짐으로 내측 고원 함몰'},{i:'🦵',t:'축성 및 각도 복합 부하로 무릎 관절면 분열 또는 함몰'}],
+      treatment:[{i:'🔧',t:'전위 골절에 버트리스 금속판 ORIF: 관절면 일치성 회복'},{i:'💉',t:'거상 후 연골하 공간에 골 이식 또는 골 대체재 충전'},{i:'🩼',t:'비전위 골절 비수술적 치료: 힌지 보조기 + 비체중부하 8-12주'},{i:'🏥',t:'고에너지 양측 과 골절은 연조직 안정화될 때까지 초기에 외고정틀'}],
+      recovery:[{i:'⏱️',t:'회복: 3-6개월; 관절 내 골절은 재활 기간이 김'},{i:'🦯',t:'연골 수복 보호를 위해 수술 후 8-12주 비체중부하'},{i:'🏋️',t:'대퇴사두근 강화, 고유 감각, 보행 재훈련이 무릎 안정성에 중요'},{i:'⚠️',t:'외상 후 골관절염 위험 높음; 장기적으로 전슬관절 치환술 필요할 수 있음'}]
+    }
   }
 };
 
@@ -1152,22 +1339,37 @@ const MODEL_META={
 
 // Fracture display names for all 3 languages
 const FRAC_NAMES={
-  avulsion:    {en:'Avulsion',zh:'撕脱骨折',ko:'견열 골절'},
-  comminuted:  {en:'Comminuted',zh:'粉碎骨折',ko:'분쇄 골절'},
-  dislocation: {en:'Dislocation',zh:'骨折脱位',ko:'골절 탈구'},
-  greenstick:  {en:'Greenstick',zh:'青枝骨折',ko:'청지 골절'},
-  hairline:    {en:'Hairline',zh:'发际线骨折',ko:'미세 골절'},
-  impacted:    {en:'Impacted',zh:'嵌插骨折',ko:'감입 골절'},
-  longitudinal:{en:'Longitudinal',zh:'纵向骨折',ko:'종적 골절'},
-  oblique:     {en:'Oblique',zh:'斜形骨折',ko:'사형 골절'},
-  pathological:{en:'Pathological',zh:'病理骨折',ko:'병리성 골절'},
-  spiral:      {en:'Spiral',zh:'螺旋骨折',ko:'나선형 골절'}
+  avulsion:      {en:'Avulsion',         zh:'撕脱骨折',         ko:'견열 골절'},
+  comminuted:    {en:'Comminuted',       zh:'粉碎骨折',         ko:'분쇄 골절'},
+  dislocation:   {en:'Dislocation',      zh:'骨折脱位',         ko:'골절 탈구'},
+  greenstick:    {en:'Greenstick',       zh:'青枝骨折',         ko:'청지 골절'},
+  hairline:      {en:'Hairline',         zh:'发际线骨折',        ko:'미세 골절'},
+  impacted:      {en:'Impacted',         zh:'嵌插骨折',         ko:'감입 골절'},
+  longitudinal:  {en:'Longitudinal',     zh:'纵向骨折',         ko:'종적 골절'},
+  oblique:       {en:'Oblique',          zh:'斜形骨折',         ko:'사형 골절'},
+  pathological:  {en:'Pathological',     zh:'病理骨折',         ko:'병리성 골절'},
+  spiral:        {en:'Spiral',           zh:'螺旋骨折',         ko:'나선형 골절'},
+  transverse:    {en:'Transverse',       zh:'横形骨折',         ko:'횡형 골절'},
+  buckle:        {en:'Buckle (Torus)',   zh:'隆突骨折',         ko:'융기(토러스) 골절'},
+  compression:   {en:'Compression',      zh:'压缩骨折',         ko:'압박 골절'},
+  stress:        {en:'Stress',           zh:'应力骨折',         ko:'피로 골절'},
+  colles:        {en:"Colles'",          zh:'柯氏骨折',         ko:'콜리스 골절'},
+  boxer:         {en:"Boxer's",          zh:'拳击手骨折',        ko:'권투선수 골절'},
+  scaphoid:      {en:'Scaphoid',         zh:'舟状骨骨折',        ko:'주상골 골절'},
+  jefferson:     {en:'Jefferson (C1)',   zh:'杰弗逊骨折',        ko:'제퍼슨 골절'},
+  jones:         {en:"Jones'",           zh:'琼斯骨折',         ko:'존스 골절'},
+  hip:           {en:'Hip (Femoral Neck)',zh:'股骨颈骨折',       ko:'고관절 골절'},
+  tibial_plateau:{en:'Tibial Plateau',   zh:'胫骨平台骨折',      ko:'경골고원 골절'}
 };
 const FRAC_IDS=Object.keys(FRAC_NAMES);
 
-// Bar colors cycling through accent palette
-const BAR_COLORS=['#00B4FF','#9B5FFF','#00E5C8','#FF8C42','#FF3333',
-                  '#FFD600','#00E676','#FF6B9D','#7B68EE','#20B2AA'];
+// Bar colors — enough for all 21 types
+const BAR_COLORS=[
+  '#00B4FF','#9B5FFF','#00E5C8','#FF8C42','#FF3333',
+  '#FFD600','#00E676','#FF6B9D','#7B68EE','#20B2AA',
+  '#FF4500','#32CD32','#8A2BE2','#FF1493','#00CED1',
+  '#FFA500','#DC143C','#4169E1','#228B22','#FF6347','#6A5ACD'
+];
 
 // ── GradCAM Generation (Sobel + Jet colormap) ────────────
 function computeGradCAM(){
@@ -1371,12 +1573,13 @@ function renderPrediction(topFid,probs,inferMs,topPreds){
     +'<div style="font-size:10px;color:var(--text4);margin-top:3px">'+ciLabel+': '+ciLo+'% – '+ciHi+'%</div>'
     +'<div style="font-size:10px;color:var(--text4);margin-top:1px">p-value &lt; 0.001 · Cohen\'s κ = '+(0.91+Math.random()*.06).toFixed(3)+'</div>';
 
-  // Sort by probability descending
+  // Sort by probability descending, show top 10
   const sorted=FRAC_IDS.map(id=>({id,p:probs[id]})).sort((a,b)=>b.p-a.p);
+  const display=sorted.slice(0,10);
 
   // Build probability bars
   const list=document.getElementById('az-prob-list');
-  list.innerHTML=sorted.map((item,i)=>{
+  list.innerHTML=display.map((item,i)=>{
     const pct=(Math.round(item.p*1000)/10).toFixed(1);
     const isTop=item.id===topFid;
     const color=isTop?'linear-gradient(90deg,#00B4FF,#00E5C8)':BAR_COLORS[i]||'#6C7A89';
