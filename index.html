@@ -95,13 +95,13 @@
       <span data-i18n="nav.brand">BoneScan AI</span>
     </a>
     <div class="nav-links">
-      <a href="#analyze"   data-i18n="nav.analyze">Analyze</a>
-      <a href="#overview"  data-i18n="nav.overview">Overview</a>
-      <a href="#atlas"     data-i18n="nav.atlas">Atlas</a>
-      <a href="#bodymap"   data-i18n="nav.bodymap">Body Map</a>
-      <a href="#risk"      data-i18n="nav.risk">Risk Score</a>
-      <a href="#analytics" data-i18n="nav.analytics">Analytics</a>
-      <a href="#pipeline"  data-i18n="nav.pipeline">Pipeline</a>
+      <a href="#hub" style="color:var(--teal);font-weight:700">🗂 全部功能</a>
+      <a href="#analyze">🩻 分析</a>
+      <a href="#report-section">📄 报告</a>
+      <a href="#quiz-section">🧪 测验</a>
+      <a href="#case-library-section">📚 案例库</a>
+      <a href="#risk-section">🧮 风险</a>
+      <a href="#hospital-section">📍 医院</a>
     </div>
     <div class="lang-switcher">
       <button class="lang-btn active" data-lang="en">EN</button>
@@ -143,6 +143,88 @@
     <span data-i18n="hero.scroll">Scroll</span>
   </div>
 </section>
+
+<!-- ══ FEATURE HUB ══ -->
+<section id="hub" style="padding:64px 0 56px;background:var(--bg2)">
+  <div class="section-inner">
+    <div style="text-align:center;margin-bottom:36px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--teal);text-transform:uppercase;margin-bottom:8px">All Features · 全部功能</div>
+      <h2 style="font-size:clamp(22px,4vw,32px);font-weight:800;color:var(--text1);margin-bottom:8px">点击任意功能 <span style="color:var(--teal)">立即跳转</span></h2>
+      <p style="font-size:13px;color:var(--text3)">Click any card to jump to that feature · 所有功能一目了然</p>
+    </div>
+    <div class="hub-grid">
+
+      <div class="hub-cat">
+        <div class="hub-cat-label">🔬 AI 核心分析</div>
+        <div class="hub-cards">
+          <a href="#analyze" class="hub-card"><span class="hub-icon">🩻</span><div><div class="hub-name">X光上传 & 分析</div><div class="hub-desc">上传图片·标注·AI分类·报告</div></div></a>
+          <a href="#auto-detect-section" class="hub-card"><span class="hub-icon">🔍</span><div><div class="hub-name">自动框选异常区域</div><div class="hub-desc">AI自动高亮可疑骨折位置</div></div></a>
+          <a href="#compare-section" class="hub-card"><span class="hub-icon">⚖️</span><div><div class="hub-name">治疗前后对比</div><div class="hub-desc">上传两张X光对比恢复情况</div></div></a>
+        </div>
+      </div>
+
+      <div class="hub-cat">
+        <div class="hub-cat-label">📋 医疗报告</div>
+        <div class="hub-cards">
+          <a href="#report-section" class="hub-card"><span class="hub-icon">📄</span><div><div class="hub-name">完整医生报告</div><div class="hub-desc">中英双语专业报告+PDF+QR分享</div></div></a>
+          <a href="#healing-section" class="hub-card"><span class="hub-icon">📅</span><div><div class="hub-name">愈合进度预测</div><div class="hub-desc">输入受伤日期预测康复时间线</div></div></a>
+          <a href="#rehab-section" class="hub-card"><span class="hub-icon">🏋️</span><div><div class="hub-name">个性化康复计划</div><div class="hub-desc">每周康复训练计划+PDF下载</div></div></a>
+        </div>
+      </div>
+
+      <div class="hub-cat">
+        <div class="hub-cat-label">📊 数据 & 统计</div>
+        <div class="hub-cards">
+          <a href="#stats-section" class="hub-card"><span class="hub-icon">📈</span><div><div class="hub-name">历史统计仪表盘</div><div class="hub-desc">骨折类型分布·严重程度图表</div></div></a>
+          <a href="#analytics" class="hub-card"><span class="hub-icon">🗂️</span><div><div class="hub-name">数据集分析</div><div class="hub-desc">X光数据集概况与分布</div></div></a>
+          <a href="#pain-diary-section" class="hub-card"><span class="hub-icon">📓</span><div><div class="hub-name">疼痛日记</div><div class="hub-desc">每日疼痛评分·趋势追踪</div></div></a>
+        </div>
+      </div>
+
+      <div class="hub-cat">
+        <div class="hub-cat-label">🧮 计算 & 评估</div>
+        <div class="hub-cards">
+          <a href="#risk-section" class="hub-card"><span class="hub-icon">🧮</span><div><div class="hub-name">骨折风险计算器</div><div class="hub-desc">FRAX算法个人风险评分</div></div></a>
+          <a href="#risk" class="hub-card"><span class="hub-icon">🎯</span><div><div class="hub-name">高级风险评估</div><div class="hub-desc">T值·BMI·骨密度综合评估</div></div></a>
+          <a href="#bone-map-section" class="hub-card"><span class="hub-icon">🗺️</span><div><div class="hub-name">交互式骨骼地图</div><div class="hub-desc">点击部位查看骨折类型</div></div></a>
+        </div>
+      </div>
+
+      <div class="hub-cat">
+        <div class="hub-cat-label">📚 教育 & 学习</div>
+        <div class="hub-cards">
+          <a href="#quiz-section" class="hub-card"><span class="hub-icon">🧪</span><div><div class="hub-name">骨折识别测验</div><div class="hub-desc">10道题·即时评分·学习骨折知识</div></div></a>
+          <a href="#case-library-section" class="hub-card"><span class="hub-icon">📚</span><div><div class="hub-name">经典案例库</div><div class="hub-desc">真实案例+专家解读·按类型筛选</div></div></a>
+          <a href="#atlas" class="hub-card"><span class="hub-icon">🦴</span><div><div class="hub-name">骨折图谱</div><div class="hub-desc">10种骨折类型详细说明</div></div></a>
+        </div>
+      </div>
+
+      <div class="hub-cat">
+        <div class="hub-cat-label">🏥 实用工具</div>
+        <div class="hub-cards">
+          <a href="#med-calendar-section" class="hub-card"><span class="hub-icon">💊</span><div><div class="hub-name">用药提醒日历</div><div class="hub-desc">设置用药·复查·康复训练提醒</div></div></a>
+          <a href="#hospital-section" class="hub-card"><span class="hub-icon">📍</span><div><div class="hub-name">附近医院查找</div><div class="hub-desc">GPS定位·地图显示骨科医院</div></div></a>
+          <a href="#compare-section" class="hub-card"><span class="hub-icon">🌙</span><div><div class="hub-name">深色/浅色主题</div><div class="hub-desc">右下角按钮随时切换主题</div></div></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+.hub-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.hub-cat{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:20px}
+.hub-cat-label{font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--teal);margin-bottom:14px;text-transform:uppercase}
+.hub-cards{display:flex;flex-direction:column;gap:8px}
+.hub-card{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);text-decoration:none;transition:all .18s}
+.hub-card:hover{border-color:var(--teal);background:var(--bg3);transform:translateX(4px)}
+.hub-icon{font-size:20px;flex-shrink:0;width:28px;text-align:center}
+.hub-name{font-size:12px;font-weight:700;color:var(--text1);margin-bottom:2px}
+.hub-desc{font-size:10px;color:var(--text3);line-height:1.4}
+@media(max-width:960px){.hub-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.hub-grid{grid-template-columns:1fr}}
+</style>
 
 <!-- ══ ANALYZE ══ -->
 <section id="analyze" class="section">
