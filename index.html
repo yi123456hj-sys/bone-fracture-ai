@@ -158,6 +158,8 @@
       <div class="az-upload-title" data-i18n="az.drop">Drop X-ray image here</div>
       <div class="az-upload-sub" data-i18n="az.drop_sub">or click to browse · JPG / PNG / WEBP</div>
       <button class="az-upload-btn" id="az-browse-btn" data-i18n="az.browse">Choose Image</button>
+      <button class="az-upload-btn" id="az-camera-btn" style="background:linear-gradient(135deg,#059669,#10B981);margin-left:8px">📷 Camera</button>
+      <input type="file" id="az-camera-input" accept="image/*" capture="environment" style="display:none">
       <div class="az-samples-row">
         <span class="az-or" data-i18n="az.or_sample">or try a sample:</span>
         <button class="az-sample-btn" data-fid="spiral">Spiral</button>
@@ -692,6 +694,308 @@
 </section>
 
 <!-- ══ FOOTER ══ -->
+<!-- ══ NEW SECTIONS ══════════════════════════════════════ -->
+
+<!-- 1. Compare Section -->
+<section id="compare-section" class="section" style="background:var(--bg2)">
+  <div class="section-inner">
+    <div class="section-eyebrow reveal">Image Comparison / 图像对比</div>
+    <h2 class="section-title reveal reveal-d1">治疗前后 X光 <span style="color:var(--teal)">对比分析</span></h2>
+    <p class="section-sub reveal reveal-d2">上传两张X光片，AI自动对比骨折恢复情况。Before &amp; After analysis.</p>
+    <div class="cmp-layout reveal">
+      <div class="cmp-slot" id="cmp-slot-a">
+        <div class="cmp-label">BEFORE 治疗前</div>
+        <canvas id="cmp-canvas-a" class="cmp-canvas"></canvas>
+        <div class="cmp-upload-area" id="cmp-upload-a">
+          <input type="file" id="cmp-file-a" accept="image/*" style="display:none">
+          <div class="cmp-icon">📤</div>
+          <div class="cmp-hint">点击上传 / Click to upload</div>
+        </div>
+        <div class="cmp-result" id="cmp-result-a"></div>
+      </div>
+      <div class="cmp-divider">
+        <div class="cmp-vs">VS</div>
+        <button class="cmp-run-btn" id="cmp-run-btn">🔍 Compare</button>
+      </div>
+      <div class="cmp-slot" id="cmp-slot-b">
+        <div class="cmp-label">AFTER 治疗后</div>
+        <canvas id="cmp-canvas-b" class="cmp-canvas"></canvas>
+        <div class="cmp-upload-area" id="cmp-upload-b">
+          <input type="file" id="cmp-file-b" accept="image/*" style="display:none">
+          <div class="cmp-icon">📤</div>
+          <div class="cmp-hint">点击上传 / Click to upload</div>
+        </div>
+        <div class="cmp-result" id="cmp-result-b"></div>
+      </div>
+    </div>
+    <div class="cmp-summary" id="cmp-summary" style="display:none"></div>
+  </div>
+</section>
+
+<!-- 2. Bone Map Section -->
+<section id="bone-map-section" class="section">
+  <div class="section-inner">
+    <div class="section-eyebrow reveal">Interactive Bone Map / 交互骨骼图</div>
+    <h2 class="section-title reveal reveal-d1">点击部位 · 查看 <span style="color:var(--teal)">骨折详情</span></h2>
+    <p class="section-sub reveal reveal-d2">Click any bone region to see common fracture types, risk level, and treatment overview.</p>
+    <div class="bonemap-layout reveal">
+      <div class="bonemap-svg-wrap">
+        <svg id="bone-svg" viewBox="0 0 300 580" class="bone-svg">
+          <!-- Head/Skull -->
+          <ellipse cx="150" cy="45" rx="42" ry="38" class="bzone" data-region="skull" data-name="颅骨 Skull" data-risk="low" data-frac="linear,depressed,diastatic"/>
+          <!-- Neck -->
+          <rect x="135" y="83" width="30" height="22" rx="6" class="bzone" data-region="cervical" data-name="颈椎 Cervical Spine" data-risk="critical" data-frac="jefferson,hangman,compression"/>
+          <!-- Shoulder L -->
+          <ellipse cx="90" cy="125" rx="22" ry="18" class="bzone" data-region="shoulder-l" data-name="肩关节 Shoulder (L)" data-risk="medium" data-frac="dislocation,avulsion,comminuted"/>
+          <!-- Shoulder R -->
+          <ellipse cx="210" cy="125" rx="22" ry="18" class="bzone" data-region="shoulder-r" data-name="肩关节 Shoulder (R)" data-risk="medium" data-frac="dislocation,avulsion,comminuted"/>
+          <!-- Thorax -->
+          <rect x="115" y="107" width="70" height="90" rx="10" class="bzone" data-region="thorax" data-name="胸廓 Thorax" data-risk="medium" data-frac="rib,sternum,thoracic"/>
+          <!-- Humerus L -->
+          <rect x="72" y="143" width="18" height="70" rx="6" class="bzone" data-region="humerus-l" data-name="肱骨 Humerus (L)" data-risk="medium" data-frac="spiral,oblique,comminuted"/>
+          <!-- Humerus R -->
+          <rect x="210" y="143" width="18" height="70" rx="6" class="bzone" data-region="humerus-r" data-name="肱骨 Humerus (R)" data-risk="medium" data-frac="spiral,oblique,comminuted"/>
+          <!-- Lumbar/Pelvis -->
+          <rect x="118" y="198" width="64" height="45" rx="8" class="bzone" data-region="lumbar" data-name="腰椎/骨盆 Lumbar/Pelvis" data-risk="high" data-frac="compression,stress,impacted"/>
+          <!-- Forearm L -->
+          <rect x="66" y="213" width="16" height="65" rx="5" class="bzone" data-region="forearm-l" data-name="前臂 Forearm (L)" data-risk="medium" data-frac="colles,longitudinal,hairline"/>
+          <!-- Forearm R -->
+          <rect x="218" y="213" width="16" height="65" rx="5" class="bzone" data-region="forearm-r" data-name="前臂 Forearm (R)" data-risk="medium" data-frac="colles,longitudinal,hairline"/>
+          <!-- Hand L -->
+          <ellipse cx="74" cy="295" rx="16" ry="20" class="bzone" data-region="hand-l" data-name="手部 Hand (L)" data-risk="low" data-frac="boxer,avulsion,greenstick"/>
+          <!-- Hand R -->
+          <ellipse cx="226" cy="295" rx="16" ry="20" class="bzone" data-region="hand-r" data-name="手部 Hand (R)" data-risk="low" data-frac="boxer,avulsion,greenstick"/>
+          <!-- Hip L -->
+          <ellipse cx="120" cy="257" rx="22" ry="18" class="bzone" data-region="hip-l" data-name="髋关节 Hip (L)" data-risk="high" data-frac="hip,avulsion,stress"/>
+          <!-- Hip R -->
+          <ellipse cx="180" cy="257" rx="22" ry="18" class="bzone" data-region="hip-r" data-name="髋关节 Hip (R)" data-risk="high" data-frac="hip,avulsion,stress"/>
+          <!-- Femur L -->
+          <rect x="110" y="275" width="20" height="90" rx="6" class="bzone" data-region="femur-l" data-name="股骨 Femur (L)" data-risk="high" data-frac="spiral,oblique,comminuted"/>
+          <!-- Femur R -->
+          <rect x="170" y="275" width="20" height="90" rx="6" class="bzone" data-region="femur-r" data-name="股骨 Femur (R)" data-risk="high" data-frac="spiral,oblique,comminuted"/>
+          <!-- Knee L -->
+          <ellipse cx="120" cy="372" rx="18" ry="14" class="bzone" data-region="knee-l" data-name="膝关节 Knee (L)" data-risk="medium" data-frac="dislocation,impacted,avulsion"/>
+          <!-- Knee R -->
+          <ellipse cx="180" cy="372" rx="18" ry="14" class="bzone" data-region="knee-r" data-name="膝关节 Knee (R)" data-risk="medium" data-frac="dislocation,impacted,avulsion"/>
+          <!-- Tibia L -->
+          <rect x="112" y="386" width="16" height="90" rx="5" class="bzone" data-region="tibia-l" data-name="胫骨 Tibia (L)" data-risk="medium" data-frac="stress,longitudinal,transverse"/>
+          <!-- Tibia R -->
+          <rect x="172" y="386" width="16" height="90" rx="5" class="bzone" data-region="tibia-r" data-name="胫骨 Tibia (R)" data-risk="medium" data-frac="stress,longitudinal,transverse"/>
+          <!-- Foot L -->
+          <ellipse cx="118" cy="488" rx="22" ry="14" class="bzone" data-region="foot-l" data-name="足部 Foot (L)" data-risk="low" data-frac="stress,avulsion,hairline"/>
+          <!-- Foot R -->
+          <ellipse cx="182" cy="488" rx="22" ry="14" class="bzone" data-region="foot-r" data-name="足部 Foot (R)" data-risk="low" data-frac="stress,avulsion,hairline"/>
+          <!-- Silhouette lines -->
+          <line x1="150" y1="83" x2="150" y2="107" stroke="var(--text4)" stroke-width="2"/>
+          <line x1="150" y1="197" x2="150" y2="243" stroke="var(--text4)" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="bonemap-info" id="bonemap-info">
+        <div class="bmi-placeholder">← 点击左侧骨骼部位<br>Click a bone region</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Stats Dashboard -->
+<section id="stats-section" class="section" style="background:var(--bg2)">
+  <div class="section-inner">
+    <div class="section-eyebrow reveal">Analytics Dashboard / 统计仪表盘</div>
+    <h2 class="section-title reveal reveal-d1">历史分析 <span style="color:var(--teal)">数据统计</span></h2>
+    <p class="section-sub reveal reveal-d2">Your local case history visualized. All data stays in your browser.</p>
+    <div class="stats-grid reveal">
+      <div class="stats-card">
+        <div class="stats-num" id="stat-total-cases">0</div>
+        <div class="stats-label">总分析次数</div>
+      </div>
+      <div class="stats-card">
+        <div class="stats-num" id="stat-fracture-rate">—</div>
+        <div class="stats-label">骨折检出率</div>
+      </div>
+      <div class="stats-card">
+        <div class="stats-num" id="stat-avg-conf">—</div>
+        <div class="stats-label">平均置信度</div>
+      </div>
+      <div class="stats-card">
+        <div class="stats-num" id="stat-top-type">—</div>
+        <div class="stats-label">最常见类型</div>
+      </div>
+    </div>
+    <div class="stats-charts reveal">
+      <div class="stats-chart-wrap">
+        <div class="stats-chart-title">骨折类型分布</div>
+        <canvas id="chart-type" height="240"></canvas>
+      </div>
+      <div class="stats-chart-wrap">
+        <div class="stats-chart-title">严重程度分布</div>
+        <canvas id="chart-severity" height="240"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Risk Calculator -->
+<section id="risk-section" class="section">
+  <div class="section-inner">
+    <div class="section-eyebrow reveal">Risk Calculator / 风险计算器</div>
+    <h2 class="section-title reveal reveal-d1">骨折风险 <span style="color:var(--teal)">个人评估</span></h2>
+    <p class="section-sub reveal reveal-d2">Enter your profile to receive an AI-powered personal fracture risk score and prevention recommendations.</p>
+    <div class="risk-layout reveal">
+      <div class="risk-form">
+        <div class="risk-row">
+          <label class="risk-label">年龄 Age</label>
+          <input type="number" id="risk-age" class="risk-input" value="45" min="1" max="120">
+        </div>
+        <div class="risk-row">
+          <label class="risk-label">BMI</label>
+          <input type="number" id="risk-bmi" class="risk-input" value="22" step="0.1" min="10" max="50">
+        </div>
+        <div class="risk-row">
+          <label class="risk-label">性别 Sex</label>
+          <select id="risk-sex" class="risk-select">
+            <option value="f">女 Female</option>
+            <option value="m">男 Male</option>
+          </select>
+        </div>
+        <div class="risk-row">
+          <label class="risk-label">骨密度 Bone Density</label>
+          <select id="risk-density" class="risk-select">
+            <option value="0">正常 Normal</option>
+            <option value="1">骨量减少 Osteopenia</option>
+            <option value="2">骨质疏松 Osteoporosis</option>
+          </select>
+        </div>
+        <div class="risk-row">
+          <label class="risk-label">运动量 Activity</label>
+          <select id="risk-activity" class="risk-select">
+            <option value="0">高强度 High</option>
+            <option value="1">中等 Moderate</option>
+            <option value="2">久坐 Sedentary</option>
+          </select>
+        </div>
+        <div class="risk-row">
+          <label class="risk-label">既往骨折 Prior Fracture</label>
+          <select id="risk-prior" class="risk-select">
+            <option value="0">无 None</option>
+            <option value="1">1次</option>
+            <option value="2">2次+</option>
+          </select>
+        </div>
+        <div class="risk-row">
+          <label class="risk-label">吸烟 Smoking</label>
+          <select id="risk-smoke" class="risk-select">
+            <option value="0">不吸烟 No</option>
+            <option value="1">吸烟 Yes</option>
+          </select>
+        </div>
+        <button class="risk-calc-btn" onclick="calcFractureRisk()">🧮 Calculate Risk</button>
+      </div>
+      <div class="risk-result" id="risk-result">
+        <div class="risk-placeholder">← 填写信息后点击计算<br>Fill the form and calculate</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Rehab Planner -->
+<section id="rehab-section" class="section" style="background:var(--bg2)">
+  <div class="section-inner">
+    <div class="section-eyebrow reveal">Rehab Planner / 康复计划</div>
+    <h2 class="section-title reveal reveal-d1">个性化 <span style="color:var(--teal)">康复周计划</span></h2>
+    <p class="section-sub reveal reveal-d2">Generate a personalized weekly rehabilitation schedule based on fracture type, location, and age.</p>
+    <div class="rehab-controls reveal">
+      <select id="rehab-frac" class="risk-select">
+        <option value="hairline">Hairline 微小骨折</option>
+        <option value="greenstick">Greenstick 青枝骨折</option>
+        <option value="avulsion">Avulsion 撕脱骨折</option>
+        <option value="colles">Colles 桡骨远端骨折</option>
+        <option value="oblique">Oblique 斜形骨折</option>
+        <option value="spiral">Spiral 螺旋骨折</option>
+        <option value="comminuted">Comminuted 粉碎骨折</option>
+        <option value="hip">Hip 髋部骨折</option>
+      </select>
+      <select id="rehab-age" class="risk-select">
+        <option value="child">儿童 Child (&lt;18)</option>
+        <option value="adult" selected>成人 Adult (18-60)</option>
+        <option value="elder">老年 Elderly (60+)</option>
+      </select>
+      <button class="risk-calc-btn" onclick="generateRehabPlan()">📋 Generate Plan</button>
+      <button class="risk-calc-btn" id="rehab-pdf-btn" style="display:none;background:linear-gradient(135deg,#059669,#10B981)" onclick="downloadRehabPDF()">📥 Download PDF</button>
+    </div>
+    <div id="rehab-output" class="rehab-output" style="display:none"></div>
+  </div>
+</section>
+
+<style>
+/* ── Compare ─────────────────────────────── */
+.cmp-layout{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+.cmp-slot{flex:1;min-width:220px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.cmp-label{padding:10px 16px;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;background:var(--bg3)}
+.cmp-canvas{width:100%;max-height:240px;object-fit:contain;display:none}
+.cmp-upload-area{padding:40px 20px;text-align:center;cursor:pointer;transition:.2s}
+.cmp-upload-area:hover{background:rgba(255,255,255,.04)}
+.cmp-icon{font-size:32px;margin-bottom:8px}
+.cmp-hint{font-size:12px;color:var(--text3)}
+.cmp-result{padding:12px 16px;font-size:12px;color:var(--text2);border-top:1px solid var(--border);display:none}
+.cmp-divider{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px 0}
+.cmp-vs{font-size:22px;font-weight:900;color:var(--text4)}
+.cmp-run-btn{padding:10px 20px;background:linear-gradient(135deg,#00B4FF,#0070CC);color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px;white-space:nowrap}
+.cmp-summary{margin-top:24px;padding:20px;background:var(--bg3);border-radius:14px;border:1px solid var(--border);font-size:13px;line-height:1.8;color:var(--text2)}
+/* ── Bone Map ────────────────────────────── */
+.bonemap-layout{display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap}
+.bonemap-svg-wrap{flex:0 0 300px;max-width:300px}
+.bone-svg{width:100%}
+.bzone{fill:rgba(0,180,255,.12);stroke:rgba(0,180,255,.5);stroke-width:1.5;cursor:pointer;transition:all .2s;rx:4}
+.bzone:hover,.bzone.active{fill:rgba(0,229,200,.25);stroke:#00E5C8;stroke-width:2.5}
+.bzone[data-risk="critical"]{fill:rgba(239,68,68,.15);stroke:rgba(239,68,68,.6)}
+.bzone[data-risk="high"]{fill:rgba(249,115,22,.12);stroke:rgba(249,115,22,.5)}
+.bzone[data-risk="medium"]{fill:rgba(59,130,246,.12);stroke:rgba(59,130,246,.5)}
+.bzone[data-risk="low"]{fill:rgba(16,185,129,.1);stroke:rgba(16,185,129,.4)}
+.bonemap-info{flex:1;min-width:260px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px}
+.bmi-placeholder{color:var(--text4);font-size:14px;text-align:center;padding:40px 0;line-height:2}
+.bmi-region{font-size:18px;font-weight:800;color:var(--text1);margin-bottom:6px}
+.bmi-risk-badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;margin-bottom:14px}
+.bmi-frac-title{font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
+.bmi-frac-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.bmi-frac-tag{font-size:11px;padding:4px 10px;border-radius:20px;background:rgba(0,180,255,.12);color:var(--teal);border:1px solid rgba(0,180,255,.25)}
+/* ── Stats ───────────────────────────────── */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+.stats-card{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center}
+.stats-num{font-size:32px;font-weight:900;color:var(--teal);margin-bottom:6px}
+.stats-label{font-size:12px;color:var(--text3)}
+.stats-charts{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.stats-chart-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:20px}
+.stats-chart-title{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:16px}
+/* ── Risk ────────────────────────────────── */
+.risk-layout{display:grid;grid-template-columns:360px 1fr;gap:32px;align-items:start}
+.risk-form{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px}
+.risk-row{margin-bottom:14px}
+.risk-label{display:block;font-size:12px;color:var(--text3);margin-bottom:5px;font-weight:600}
+.risk-input,.risk-select{width:100%;padding:9px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);color:var(--text1);font-size:13px;outline:none;box-sizing:border-box}
+.risk-calc-btn{width:100%;padding:12px;background:linear-gradient(135deg,#00B4FF,#0070CC);color:#fff;border:none;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;margin-top:6px;transition:.2s}
+.risk-calc-btn:hover{opacity:.9;transform:translateY(-1px)}
+.risk-result{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;min-height:300px;display:flex;align-items:center;justify-content:center}
+.risk-placeholder{color:var(--text4);font-size:13px;text-align:center;line-height:2}
+/* ── Rehab ───────────────────────────────── */
+.rehab-controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+.rehab-controls .risk-select{flex:1;min-width:160px;width:auto}
+.rehab-controls .risk-calc-btn{width:auto;padding:10px 20px}
+.rehab-output{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:24px;margin-top:8px}
+.rehab-week{margin-bottom:20px}
+.rehab-week-title{font-size:14px;font-weight:700;color:var(--teal);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.rehab-day{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px}
+.rehab-day-label{font-weight:700;color:var(--text3);min-width:80px}
+.rehab-day-tasks{color:var(--text2);line-height:1.6}
+@media(max-width:768px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .stats-charts{grid-template-columns:1fr}
+  .risk-layout{grid-template-columns:1fr}
+  .bonemap-svg-wrap{flex:0 0 100%;max-width:100%}
+  .cmp-layout{flex-direction:column}
+  .cmp-divider{flex-direction:row}
+}
+</style>
+
 <footer>
   <div class="footer-inner">
     <div>

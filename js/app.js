@@ -2771,9 +2771,430 @@ function showBodyRegion(regionKey, el, color){
 }
 
 /* ══════════════════════════════════════════
+   CAMERA UPLOAD
+   ══════════════════════════════════════════ */
+function initCameraUpload(){
+  const cameraBtn = document.getElementById('az-camera-btn');
+  const cameraInput = document.getElementById('az-camera-input');
+  if(!cameraBtn||!cameraInput) return;
+  cameraBtn.addEventListener('click',()=>cameraInput.click());
+  cameraInput.addEventListener('change',e=>{
+    const f=e.target.files[0];
+    if(!f) return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      const img=new Image();
+      img.onload=()=>{ azImg=img; _cachedImgSrc=null; showWorkspace(); azRedraw(); };
+      img.src=ev.target.result;
+    };
+    reader.readAsDataURL(f);
+  });
+}
+
+/* ══════════════════════════════════════════
+   VOICE READOUT
+   ══════════════════════════════════════════ */
+function speakResult(text){
+  if(!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utt=new SpeechSynthesisUtterance(text);
+  utt.lang = lang==='zh'?'zh-CN':lang==='ko'?'ko-KR':'en-US';
+  utt.rate=0.92; utt.pitch=1;
+  window.speechSynthesis.speak(utt);
+}
+function addVoiceButton(){
+  const mi=document.getElementById('az-model-info');
+  if(!mi||document.getElementById('voice-btn')) return;
+  const btn=document.createElement('button');
+  btn.id='voice-btn';
+  btn.innerHTML='🔊 Voice';
+  btn.style.cssText='margin-top:8px;padding:7px 14px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);border-radius:8px;font-size:12px;cursor:pointer;font-weight:600;';
+  btn.onclick=()=>{
+    const top1=document.getElementById('az-top1-name');
+    const pct=document.querySelector('.ai-conf-num');
+    const status=document.querySelector('.ai-status-text');
+    if(top1){
+      const t=`${status?status.textContent:''} Type: ${top1.textContent}. Confidence: ${pct?pct.textContent:''}`;
+      speakResult(t);
+    }
+  };
+  mi.after(btn);
+}
+
+/* ══════════════════════════════════════════
+   SEVERITY SCORE SYSTEM (0-100)
+   ══════════════════════════════════════════ */
+function computeSeverityScore(f, hasFracture){
+  if(!hasFracture||!f) return 0;
+  let score=20;
+  if(f.edgeDensity>25) score+=10;
+  if(f.edgeDensity>40) score+=10;
+  if(f.lapMean>12) score+=10;
+  if(f.lapMean>22) score+=10;
+  if(f.varDisparity>1500) score+=15;
+  if(f.highVarRegions>4) score+=15;
+  if(f.stdDev>55) score+=10;
+  return Math.min(100,score);
+}
+function renderSeverityScore(score){
+  const el=document.getElementById('az-severity-score');
+  if(!el) return;
+  const color=score<30?'#10B981':score<55?'#EAB308':score<75?'#F97316':'#EF4444';
+  const label=score<30?'轻微 Mild':score<55?'中度 Moderate':score<75?'重度 Severe':'危急 Critical';
+  el.innerHTML=`<div style="margin-top:12px;padding:12px;background:var(--bg3);border-radius:10px;border-left:4px solid ${color}">
+    <div style="font-size:11px;color:var(--text3);margin-bottom:4px">骨折严重程度评分 Severity Score</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:28px;font-weight:900;color:${color}">${score}</span>
+      <span style="font-size:11px;color:${color};font-weight:700">/100 · ${label}</span>
+    </div>
+    <div style="height:6px;background:var(--border);border-radius:3px;margin-top:6px;overflow:hidden">
+      <div style="width:${score}%;height:100%;background:${color};border-radius:3px;transition:width 1s"></div>
+    </div>
+  </div>`;
+}
+
+/* ══════════════════════════════════════════
+   BONE AGE ESTIMATION
+   ══════════════════════════════════════════ */
+function estimateBoneAge(f){
+  if(!f||!f.isXray) return null;
+  // Heuristic: younger bone → more uniform texture, less dynamic range
+  let ageScore = 40; // baseline adult
+  if(f.dynamicRange < 90)  ageScore -= 10; // dense young bone
+  if(f.dynamicRange > 160) ageScore += 15; // osteoporotic (elder)
+  if(f.stdDev < 30)        ageScore -= 8;
+  if(f.stdDev > 60)        ageScore += 12;
+  if(f.lapMean < 5)        ageScore -= 5;
+  ageScore = Math.max(10, Math.min(80, ageScore));
+  const range = `${Math.max(5,ageScore-8)}–${ageScore+8}`;
+  return { est: ageScore, range };
+}
+function renderBoneAge(boneAge){
+  const el=document.getElementById('az-bone-age');
+  if(!el||!boneAge) return;
+  el.innerHTML=`<div style="margin-top:8px;padding:10px;background:var(--bg3);border-radius:10px;border-left:4px solid #8B5CF6">
+    <div style="font-size:11px;color:var(--text3);margin-bottom:2px">骨龄估算 Estimated Bone Age</div>
+    <div style="font-size:20px;font-weight:800;color:#8B5CF6">${boneAge.range} 岁</div>
+    <div style="font-size:10px;color:var(--text4)">Based on image texture features · For reference only</div>
+  </div>`;
+}
+
+/* ══════════════════════════════════════════
+   IMAGE COMPARE
+   ══════════════════════════════════════════ */
+function initCompare(){
+  ['a','b'].forEach(side=>{
+    const area=document.getElementById(`cmp-upload-${side}`);
+    const input=document.getElementById(`cmp-file-${side}`);
+    const canvas=document.getElementById(`cmp-canvas-${side}`);
+    if(!area||!input||!canvas) return;
+    area.addEventListener('click',()=>input.click());
+    input.addEventListener('change',e=>{
+      const f=e.target.files[0]; if(!f) return;
+      const reader=new FileReader();
+      reader.onload=ev=>{
+        const img=new Image();
+        img.onload=()=>{
+          canvas.width=img.naturalWidth; canvas.height=img.naturalHeight;
+          const ctx=canvas.getContext('2d');
+          ctx.drawImage(img,0,0);
+          canvas.style.display='block';
+          area.style.display='none';
+          canvas._img=img;
+          document.getElementById(`cmp-result-${side}`).style.display='none';
+        };
+        img.src=ev.target.result;
+      };
+      reader.readAsDataURL(f);
+    });
+  });
+  const btn=document.getElementById('cmp-run-btn');
+  if(btn) btn.addEventListener('click',runCompare);
+}
+function runCompare(){
+  const cvA=document.getElementById('cmp-canvas-a');
+  const cvB=document.getElementById('cmp-canvas-b');
+  if(!cvA._img||!cvB._img){ alert('Please upload both images first.'); return; }
+  // Analyze both
+  const analyze=(img)=>{
+    const c=document.createElement('canvas');
+    c.width=Math.min(256,img.naturalWidth); c.height=Math.min(256,img.naturalHeight);
+    const ctx=c.getContext('2d'); ctx.drawImage(img,0,0,c.width,c.height);
+    const data=ctx.getImageData(0,0,c.width,c.height).data;
+    let sum=0,sq=0,n=c.width*c.height;
+    const lum=new Float32Array(n);
+    for(let i=0;i<n;i++){lum[i]=data[i*4]*0.299+data[i*4+1]*0.587+data[i*4+2]*0.114;sum+=lum[i];sq+=lum[i]*lum[i];}
+    const mean=sum/n,std=Math.sqrt(Math.max(0,sq/n-mean*mean));
+    let edge=0;
+    for(let y=1;y<c.height-1;y++) for(let x=1;x<c.width-1;x++){
+      const gx=-lum[(y-1)*c.width+x-1]+lum[(y-1)*c.width+x+1]-2*lum[y*c.width+x-1]+2*lum[y*c.width+x+1]-lum[(y+1)*c.width+x-1]+lum[(y+1)*c.width+x+1];
+      const gy=-lum[(y-1)*c.width+x-1]-2*lum[(y-1)*c.width+x]-lum[(y-1)*c.width+x+1]+lum[(y+1)*c.width+x-1]+2*lum[(y+1)*c.width+x]+lum[(y+1)*c.width+x+1];
+      edge+=Math.sqrt(gx*gx+gy*gy);
+    }
+    edge/=(c.width-2)*(c.height-2);
+    return {mean:mean.toFixed(1),std:std.toFixed(1),edge:edge.toFixed(1)};
+  };
+  const ra=analyze(cvA._img), rb=analyze(cvB._img);
+  const edgeDiff=parseFloat(rb.edge)-parseFloat(ra.edge);
+  const stdDiff=parseFloat(rb.std)-parseFloat(ra.std);
+  const recovery=edgeDiff<-3&&stdDiff<-5?'明显改善 Significant improvement':
+                  edgeDiff<0?'轻度改善 Mild improvement':
+                  edgeDiff<3?'基本稳定 Stable':
+                  '需要关注 Requires attention';
+  const color=edgeDiff<-3?'#10B981':edgeDiff<0?'#EAB308':'#EF4444';
+  ['a','b'].forEach((side,i)=>{
+    const r=i===0?ra:rb;
+    const el=document.getElementById(`cmp-result-${side}`);
+    el.style.display='block';
+    el.innerHTML=`<strong>Edge:</strong> ${r.edge} · <strong>σ:</strong> ${r.std} · <strong>Mean:</strong> ${r.mean}`;
+  });
+  const sum=document.getElementById('cmp-summary');
+  sum.style.display='block';
+  sum.innerHTML=`<div style="font-weight:700;font-size:15px;color:${color};margin-bottom:8px">📊 对比结论: ${recovery}</div>
+    <div>边缘密度变化 Edge density change: <strong style="color:${color}">${edgeDiff>0?'+':''}${edgeDiff.toFixed(1)}</strong>
+    （治疗后骨折线${edgeDiff<0?'减少':'增加'}）</div>
+    <div>纹理标准差变化 Texture σ change: <strong>${stdDiff>0?'+':''}${stdDiff.toFixed(1)}</strong></div>
+    <div style="margin-top:8px;font-size:11px;color:var(--text4)">⚠ AI辅助参考，请结合临床医生判断。For reference only — consult your physician.</div>`;
+}
+
+/* ══════════════════════════════════════════
+   BONE MAP INTERACTIVE
+   ══════════════════════════════════════════ */
+function initBoneMap(){
+  const zones=document.querySelectorAll('.bzone');
+  const info=document.getElementById('bonemap-info');
+  if(!zones.length||!info) return;
+  zones.forEach(z=>{
+    z.addEventListener('click',()=>{
+      zones.forEach(x=>x.classList.remove('active'));
+      z.classList.add('active');
+      const risk=z.dataset.risk;
+      const riskColor={critical:'#EF4444',high:'#F97316',medium:'#3B82F6',low:'#10B981'}[risk]||'#3B82F6';
+      const riskLabel={critical:'危急 Critical',high:'高风险 High',medium:'中等 Medium',low:'低风险 Low'}[risk]||'Medium';
+      const fracs=(z.dataset.frac||'').split(',').map(s=>s.trim()).filter(Boolean);
+      info.innerHTML=`
+        <div class="bmi-region">${z.dataset.name}</div>
+        <div class="bmi-risk-badge" style="background:${riskColor}22;color:${riskColor}">${riskLabel}</div>
+        <div class="bmi-frac-title">常见骨折类型 Common Fracture Types</div>
+        <div class="bmi-frac-tags">${fracs.map(f=>`<span class="bmi-frac-tag">${f}</span>`).join('')}</div>
+        <div style="font-size:11px;color:var(--text3)">点击上方X光分析器上传该部位的X光片进行AI检测。<br>Upload an X-ray of this region to the analyzer above for AI detection.</div>`;
+    });
+  });
+}
+
+/* ══════════════════════════════════════════
+   STATS DASHBOARD
+   ══════════════════════════════════════════ */
+let chartType=null, chartSev=null;
+function initStatsDashboard(){
+  updateStatsDashboard();
+}
+function updateStatsDashboard(){
+  const hist=JSON.parse(localStorage.getItem('bonescan_history')||'[]');
+  document.getElementById('stat-total-cases').textContent=hist.length||0;
+  if(!hist.length){
+    document.getElementById('stat-fracture-rate').textContent='—';
+    document.getElementById('stat-avg-conf').textContent='—';
+    document.getElementById('stat-top-type').textContent='—';
+    return;
+  }
+  const fracCount=hist.filter(h=>h.detected).length;
+  document.getElementById('stat-fracture-rate').textContent=Math.round(fracCount/hist.length*100)+'%';
+  const avgConf=hist.reduce((s,h)=>s+(h.confidence||0),0)/hist.length;
+  document.getElementById('stat-avg-conf').textContent=avgConf.toFixed(1)+'%';
+  // Top type
+  const typeCounts={};
+  hist.forEach(h=>{if(h.type)typeCounts[h.type]=(typeCounts[h.type]||0)+1;});
+  const topType=Object.entries(typeCounts).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('stat-top-type').textContent=topType?topType[0]:'—';
+  // Charts
+  const FRAC_IDS_ALL=['avulsion','comminuted','dislocation','greenstick','hairline','impacted','longitudinal','oblique','pathological','spiral','unclear'];
+  const typeData=FRAC_IDS_ALL.map(id=>typeCounts[id]||0);
+  const sevCounts={none:0,mild:0,moderate:0,severe:0};
+  hist.forEach(h=>{if(h.severity)sevCounts[h.severity]=(sevCounts[h.severity]||0)+1;});
+  const chartCfg={responsive:true,plugins:{legend:{labels:{color:'#94A3B8',font:{size:11}}}}};
+  if(chartType) chartType.destroy();
+  if(chartSev) chartSev.destroy();
+  const ctxT=document.getElementById('chart-type');
+  const ctxS=document.getElementById('chart-severity');
+  if(ctxT) chartType=new Chart(ctxT,{type:'bar',data:{labels:FRAC_IDS_ALL,datasets:[{label:'Count',data:typeData,backgroundColor:'rgba(0,180,255,.7)',borderRadius:4}]},options:{...chartCfg,scales:{x:{ticks:{color:'#64748B',font:{size:9}}},y:{ticks:{color:'#64748B'}}}}});
+  if(ctxS) chartSev=new Chart(ctxS,{type:'doughnut',data:{labels:Object.keys(sevCounts),datasets:[{data:Object.values(sevCounts),backgroundColor:['#10B981','#EAB308','#F97316','#EF4444']}]},options:{...chartCfg}});
+}
+
+/* ══════════════════════════════════════════
    FRACTURE RISK CALCULATOR
    ══════════════════════════════════════════ */
+function calcFractureRisk(){
+  const age=parseInt(document.getElementById('risk-age').value)||45;
+  const bmi=parseFloat(document.getElementById('risk-bmi').value)||22;
+  const sex=document.getElementById('risk-sex').value;
+  const density=parseInt(document.getElementById('risk-density').value)||0;
+  const activity=parseInt(document.getElementById('risk-activity').value)||0;
+  const prior=parseInt(document.getElementById('risk-prior').value)||0;
+  const smoke=parseInt(document.getElementById('risk-smoke').value)||0;
+  // FRAX-inspired scoring
+  let score=0;
+  score += Math.max(0,(age-40)*0.6);
+  if(sex==='f') score+=8;
+  if(bmi<18.5) score+=6; else if(bmi<22) score+=2;
+  score += density*12;
+  score += activity*5;
+  score += prior*14;
+  score += smoke*5;
+  score = Math.min(100,Math.round(score));
+  const color=score<20?'#10B981':score<45?'#EAB308':score<70?'#F97316':'#EF4444';
+  const level=score<20?'低风险 Low':score<45?'中等风险 Moderate':score<70?'高风险 High':'极高风险 Very High';
+  const tips=score<20?
+    ['保持规律运动（每周≥150分钟）','补充钙质（每日1000mg）和维生素D','定期体检']:
+    score<45?
+    ['增加负重运动（散步、跑步）','每日补钙1200mg + 维生素D 800IU','3年内进行骨密度检查（DEXA）']:
+    score<70?
+    ['立即进行DEXA骨密度检查','咨询医生关于双磷酸盐治疗方案','防跌倒措施：家居安全改造','营养干预：蛋白质 + 钙 + 维生素D']:
+    ['紧急咨询骨科或内分泌科医生','立即开始抗骨质疏松药物治疗','全面防跌倒评估','定期骨折风险监测'];
+  const el=document.getElementById('risk-result');
+  el.style.alignItems='flex-start';
+  el.innerHTML=`<div style="width:100%">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:12px;color:var(--text3);margin-bottom:6px">骨折风险评分 Fracture Risk Score</div>
+      <div style="font-size:56px;font-weight:900;color:${color}">${score}</div>
+      <div style="font-size:14px;font-weight:700;color:${color};padding:4px 18px;background:${color}22;border-radius:20px;display:inline-block">${level}</div>
+    </div>
+    <div style="height:8px;background:var(--border);border-radius:4px;margin-bottom:20px;overflow:hidden">
+      <div style="width:${score}%;height:100%;background:${color};border-radius:4px;transition:width 1.2s"></div>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px">🩺 建议措施 Recommendations</div>
+    ${tips.map(t=>`<div style="font-size:12px;color:var(--text3);padding:7px 0;border-bottom:1px solid var(--border);display:flex;gap:8px"><span style="color:${color}">›</span>${t}</div>`).join('')}
+    <div style="margin-top:14px;font-size:10px;color:var(--text4)">⚠ 基于FRAX启发算法，仅供参考，请咨询专业医生。FRAX-inspired algorithm for reference only.</div>
+  </div>`;
+}
 
+/* ══════════════════════════════════════════
+   REHAB PLAN GENERATOR
+   ══════════════════════════════════════════ */
+const REHAB_DB={
+  hairline:{
+    weeks:[
+      {title:'Week 1-2 · 休息期 Rest',days:[
+        {d:'周一/三/五',t:'冰敷20分钟×3次，抬高患肢，完全休息'},
+        {d:'周二/四',t:'温水泡脚（足部），轻度关节活动（无痛范围）'},
+        {d:'周末',t:'休息，营养补充：钙1200mg + 维生素D 800IU'},
+      ]},
+      {title:'Week 3-4 · 轻度活动 Light Activity',days:[
+        {d:'每日',t:'步行10-15分钟，低冲击性活动'},
+        {d:'周三/六',t:'水中行走（泳池）30分钟'},
+        {d:'每日',t:'拉伸运动5分钟，增强本体感觉'},
+      ]},
+      {title:'Week 5-8 · 渐进恢复 Progressive Recovery',days:[
+        {d:'隔日',t:'慢跑15分钟→逐渐增加至30分钟'},
+        {d:'每日',t:'力量训练：轻阻力×3组，避免冲击'},
+        {d:'每周',t:'复查X光确认愈合进度'},
+      ]},
+    ]
+  },
+  comminuted:{
+    weeks:[
+      {title:'Week 1-6 · 手术后固定期 Post-Op Immobilization',days:[
+        {d:'每日',t:'抬高患肢，冰敷消肿，手指/趾关节活动'},
+        {d:'周一/三/五',t:'物理治疗（医院）：关节活动度训练'},
+        {d:'每日',t:'等长肌肉收缩练习（不移动关节）'},
+      ]},
+      {title:'Week 7-12 · 部分负重 Partial Weight-Bearing',days:[
+        {d:'每日',t:'助行器辅助下部分负重行走'},
+        {d:'隔日',t:'水中康复：浮力减重步行'},
+        {d:'每周',t:'手术部位X光复查，确认骨痂形成'},
+      ]},
+      {title:'Week 13-24 · 功能恢复 Functional Recovery',days:[
+        {d:'每日',t:'渐进性负重→完全负重'},
+        {d:'隔日',t:'肌力训练：股四头肌/腓肠肌×3组'},
+        {d:'每周',t:'功能评估，平衡与协调训练'},
+      ]},
+    ]
+  },
+  hip:{
+    weeks:[
+      {title:'Week 1 · 术后24小时内',days:[
+        {d:'术后',t:'在物理治疗师协助下站立，床边平衡练习'},
+        {d:'每日',t:'踝泵练习预防DVT（每小时10次），呼吸训练'},
+        {d:'每日',t:'髋关节保护体位（内旋<45°，屈曲<90°）'},
+      ]},
+      {title:'Week 2-6 · 辅助步行 Assisted Walking',days:[
+        {d:'每日',t:'助行器步行 3×10分钟，逐步增加距离'},
+        {d:'隔日',t:'卧位髋外展，仰卧直腿抬高，坐位伸膝'},
+        {d:'每日',t:'血栓预防药物，伤口护理'},
+      ]},
+      {title:'Week 7-12 · 独立步行 Independent Walking',days:[
+        {d:'每日',t:'弃助行器→独立步行，爬楼梯练习'},
+        {d:'隔日',t:'站立位髋外展×3组，坐站训练'},
+        {d:'每日',t:'平衡训练：单腿站立5-10秒'},
+      ]},
+    ]
+  },
+};
+// Default plan for unlisted types
+function getRehabPlan(fracType){
+  if(REHAB_DB[fracType]) return REHAB_DB[fracType];
+  // Generic plan
+  return {weeks:[
+    {title:'Week 1-2 · 保护期 Protection',days:[
+      {d:'每日',t:'固定/冰敷/抬高，完全休息'},
+      {d:'隔日',t:'邻近关节轻度活动（无痛）'},
+    ]},
+    {title:'Week 3-6 · 功能训练 Function',days:[
+      {d:'每日',t:'渐进性关节活动度训练'},
+      {d:'隔日',t:'等长→等张肌力训练'},
+    ]},
+    {title:'Week 7-12 · 全功能恢复 Full Recovery',days:[
+      {d:'每日',t:'渐进性负重，有氧运动'},
+      {d:'每周',t:'专项功能测试，影像学复查'},
+    ]},
+  ]};
+}
+let currentRehabPlan=null;
+function generateRehabPlan(){
+  const frac=document.getElementById('rehab-frac').value;
+  const age=document.getElementById('rehab-age').value;
+  const plan=getRehabPlan(frac);
+  currentRehabPlan={frac,age,plan};
+  const out=document.getElementById('rehab-output');
+  const ageNote=age==='child'?'<div style="padding:10px;background:rgba(139,92,246,.1);border-radius:8px;margin-bottom:16px;font-size:12px;color:#8B5CF6">👶 儿童方案：减少负重时间，增加游戏化康复元素，须家长监督。</div>':
+                age==='elder'?'<div style="padding:10px;background:rgba(249,115,22,.1);border-radius:8px;margin-bottom:16px;font-size:12px;color:#F97316">🧓 老年方案：防跌倒为优先，每步须评估，须专人陪护。</div>':'';
+  out.style.display='block';
+  out.innerHTML=ageNote+plan.weeks.map(w=>`
+    <div class="rehab-week">
+      <div class="rehab-week-title">${w.title}</div>
+      ${w.days.map(d=>`<div class="rehab-day"><div class="rehab-day-label">${d.d}</div><div class="rehab-day-tasks">${d.t}</div></div>`).join('')}
+    </div>`).join('');
+  document.getElementById('rehab-pdf-btn').style.display='inline-block';
+}
+function downloadRehabPDF(){
+  if(!currentRehabPlan) return;
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF();
+  doc.setFontSize(18); doc.setTextColor(0,100,200);
+  doc.text('BoneScan AI - Rehabilitation Plan',20,20);
+  doc.setFontSize(12); doc.setTextColor(80,80,80);
+  doc.text(`Fracture Type: ${currentRehabPlan.frac}  |  Age Group: ${currentRehabPlan.age}`,20,32);
+  doc.setDrawColor(0,180,255); doc.line(20,36,190,36);
+  let y=46;
+  currentRehabPlan.plan.weeks.forEach(w=>{
+    doc.setFontSize(12); doc.setTextColor(0,100,200);
+    doc.text(w.title,20,y); y+=8;
+    w.days.forEach(d=>{
+      doc.setFontSize(10); doc.setTextColor(60,60,60);
+      doc.text(`${d.d}: ${d.t}`,24,y,{maxWidth:165});
+      y+=8;
+    });
+    y+=4;
+    if(y>270){doc.addPage();y=20;}
+  });
+  doc.setFontSize(8); doc.setTextColor(150,150,150);
+  doc.text('Generated by BoneScan AI · For reference only · Consult your physician.',20,285);
+  doc.save(`Rehab_Plan_${currentRehabPlan.frac}.pdf`);
+}
+
+/* ══════════════════════════════════════════
+   FRACTURE RISK CALCULATOR
+   ══════════════════════════════════════════ */
 function initRiskCalc(){
   // Slider value display
   const ageInput = document.getElementById('rc-age');
@@ -2957,5 +3378,48 @@ function calcRisk(){
     }
     recList.innerHTML = recs.map(r=>`<div class="rc-rec-item"><span class="rc-rec-icon">${r.i}</span><span>${r.t}</span></div>`).join('');
   }
+}
+
+/* ══════════════════════════════════════════
+   INIT ALL NEW FEATURES
+   ══════════════════════════════════════════ */
+function initNewFeatures(){
+  initCameraUpload();
+  initCompare();
+  initBoneMap();
+  initStatsDashboard();
+
+  // Inject severity score + bone age placeholders into analyze panel
+  const mi = document.getElementById('az-model-info');
+  if(mi && !document.getElementById('az-severity-score')){
+    const sev=document.createElement('div'); sev.id='az-severity-score'; mi.after(sev);
+    const ba=document.createElement('div');  ba.id='az-bone-age';        sev.after(ba);
+  }
+
+  // Hook into existing renderPrediction to add new outputs
+  const origRender = window.renderPrediction || renderPrediction;
+  window.renderPrediction = function(topFid,probs,inferMs,topPreds){
+    origRender(topFid,probs,inferMs,topPreds);
+    // Severity score
+    const f=getFeatures();
+    const probs2=probs||{};
+    const hasFrac = probs2[topFid]>0.5;
+    const sevScore = computeSeverityScore(f, hasFrac);
+    renderSeverityScore(sevScore);
+    // Bone age
+    const boneAge = estimateBoneAge(f);
+    renderBoneAge(boneAge);
+    // Voice button
+    addVoiceButton();
+    // Update stats
+    updateStatsDashboard();
+  };
+}
+
+// Boot
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded', initNewFeatures);
+} else {
+  initNewFeatures();
 }
 
