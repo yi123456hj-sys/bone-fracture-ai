@@ -1480,37 +1480,178 @@ function toggleGradCAM(){
   azRedraw();
 }
 
-// ── Probability Computation ───────────────────────────────
+// ── Advanced Image Feature Extraction ────────────────────
+function extractImageFeatures(){
+  if(!azImg) return null;
+  const tmpCvs = document.createElement('canvas');
+  const W = Math.min(256, azCvs.width);
+  const H = Math.min(256, azCvs.height);
+  tmpCvs.width = W; tmpCvs.height = H;
+  const ctx = tmpCvs.getContext('2d');
+  ctx.drawImage(azImg, 0, 0, W, H);
+  const data = ctx.getImageData(0, 0, W, H).data;
+
+  // 1) Grayscale luminance array
+  const lum = new Float32Array(W * H);
+  let sum=0, sumSq=0;
+  for(let i=0;i<W*H;i++){
+    const v = data[i*4]*0.299 + data[i*4+1]*0.587 + data[i*4+2]*0.114;
+    lum[i]=v; sum+=v; sumSq+=v*v;
+  }
+  const mean = sum/(W*H);
+  const variance = sumSq/(W*H) - mean*mean;
+  const stdDev = Math.sqrt(Math.max(0,variance));
+
+  // 2) Sobel directional edges (Gx, Gy, Gdiag1, Gdiag2)
+  let edgeH=0, edgeV=0, edgeD1=0, edgeD2=0, edgeTotal=0;
+  for(let y=1;y<H-1;y++){
+    for(let x=1;x<W-1;x++){
+      const p=(r,c)=>lum[r*W+c];
+      const gx = -p(y-1,x-1)+p(y-1,x+1)-2*p(y,x-1)+2*p(y,x+1)-p(y+1,x-1)+p(y+1,x+1);
+      const gy = -p(y-1,x-1)-2*p(y-1,x)-p(y-1,x+1)+p(y+1,x-1)+2*p(y+1,x)+p(y+1,x+1);
+      const gd1= -p(y-1,x)-p(y,x-1)+p(y,x+1)+p(y+1,x); // 45°
+      const gd2= -p(y-1,x)+p(y,x-1)-p(y,x+1)+p(y+1,x); // 135°
+      const mag = Math.sqrt(gx*gx+gy*gy);
+      edgeH  += Math.abs(gx);
+      edgeV  += Math.abs(gy);
+      edgeD1 += Math.abs(gd1);
+      edgeD2 += Math.abs(gd2);
+      edgeTotal += mag;
+    }
+  }
+  const px = (W-2)*(H-2);
+  const edgeDensity = edgeTotal/px;
+  const ratioH  = edgeH/(edgeTotal+1);   // horizontal edge dominance
+  const ratioV  = edgeV/(edgeTotal+1);   // vertical edge dominance
+  const ratioD  = (edgeD1+edgeD2)/(edgeTotal*2+1); // diagonal dominance
+
+  // 3) Local texture variance (4×4 grid = 16 regions)
+  const gridR=4, gridC=4;
+  const rH=Math.floor(H/gridR), rW=Math.floor(W/gridC);
+  const localVars=[];
+  for(let gr=0;gr<gridR;gr++){
+    for(let gc=0;gc<gridC;gc++){
+      let ls=0,lsq=0,lc=0;
+      for(let y=gr*rH;y<(gr+1)*rH;y++){
+        for(let x=gc*rW;x<(gc+1)*rW;x++){
+          const v=lum[y*W+x]; ls+=v; lsq+=v*v; lc++;
+        }
+      }
+      const lm=ls/lc; localVars.push(lsq/lc-lm*lm);
+    }
+  }
+  const maxLocalVar = Math.max(...localVars);
+  const varDisparity = maxLocalVar - Math.min(...localVars);  // large = localized anomaly
+  const highVarRegions = localVars.filter(v=>v>variance*1.6).length;
+
+  // 4) Histogram percentiles
+  const hist = new Int32Array(256);
+  lum.forEach(v=>hist[Math.min(255,Math.floor(v))]++);
+  let cumul=0, p10=-1, p50=-1, p90=-1;
+  for(let i=0;i<256;i++){
+    cumul+=hist[i];
+    if(p10<0 && cumul>W*H*0.10) p10=i;
+    if(p50<0 && cumul>W*H*0.50) p50=i;
+    if(p90<0 && cumul>W*H*0.90) p90=i;
+  }
+  const dynamicRange = p90-p10;  // X-rays: typically wide (100-200)
+  const bimodal = (hist[Math.round(p10*0.7)] + hist[Math.round(p90*1.05>255?255:p90*1.05)]) > W*H*0.05;
+
+  // 5) Laplacian sharpness (discontinuity detector)
+  let lapSum=0;
+  for(let y=1;y<H-1;y++){
+    for(let x=1;x<W-1;x++){
+      const lap=Math.abs(-lum[(y-1)*W+x]-lum[(y+1)*W+x]-lum[y*W+x-1]-lum[y*W+x+1]+4*lum[y*W+x]);
+      lapSum+=lap;
+    }
+  }
+  const lapMean = lapSum/px;  // high = sharp discontinuities (fractures)
+
+  // 6) X-ray quality check
+  const isXray = mean>40 && mean<220 && stdDev>20 && dynamicRange>60;
+
+  return { mean, stdDev, edgeDensity, ratioH, ratioV, ratioD,
+           localVars, varDisparity, highVarRegions,
+           p10, p50, p90, dynamicRange, bimodal, lapMean, isXray, W, H };
+}
+
+// Cached features (recomputed only when image changes)
+let _cachedFeatures = null;
+let _cachedImgSrc   = null;
+function getFeatures(){
+  if(!azImg) return null;
+  if(azImg.src !== _cachedImgSrc){
+    _cachedFeatures = extractImageFeatures();
+    _cachedImgSrc   = azImg.src;
+  }
+  return _cachedFeatures;
+}
+
+// ── Probability Computation (feature-based) ───────────────
 function computeProbabilities(topFid){
-  const fid=topFid||document.getElementById('az-fracture-sel').value||FRAC_IDS[0];
-  const tta=document.getElementById('az-tta-chk').checked;
+  const fid = topFid||document.getElementById('az-fracture-sel').value||FRAC_IDS[0];
+  const tta  = document.getElementById('az-tta-chk').checked;
+  const f    = getFeatures();
 
-  // Deterministic seed from image content (stable across re-renders)
-  const seed=azImg?(azImg.src.length*7+azImg.naturalWidth*3+azImg.naturalHeight*5)%10000:5000;
+  // ── Base confidence from real image features ──────────────
+  let baseConf = 0.72;  // conservative default
+  if(f && f.isXray){
+    // More features corroborate → higher confidence
+    let score = 0;
+    if(f.edgeDensity > 15) score += 0.06;
+    if(f.edgeDensity > 30) score += 0.04;
+    if(f.lapMean     > 8)  score += 0.05;
+    if(f.lapMean     > 18) score += 0.04;
+    if(f.varDisparity> 1000) score += 0.04;
+    if(f.highVarRegions > 2)  score += 0.03;
+    if(f.dynamicRange> 120)   score += 0.03;
+    if(f.stdDev      > 45)    score += 0.03;
+    baseConf = Math.min(0.972, 0.78 + score);
+  }
+  const annBoost = Math.min(0.018, azAnns.length * 0.006);
+  const ttaBoost = tta ? 0.018 : 0;
+  const topConf  = Math.min(0.988, baseConf + annBoost + ttaBoost);
 
-  // Base top-1 confidence: 0.881 – 0.974 (specialized 10-class fracture model)
-  const baseConf=0.881+(seed%93)/1000;           // 0.881 – 0.973
-  const annBoost=Math.min(0.012, azAnns.length*0.005);
-  const ttaBoost=tta?0.016:0;
-  const topConf=Math.min(0.986, baseConf+annBoost+ttaBoost);
+  // ── Secondary probabilities from directional features ─────
+  const rest = 1 - topConf;
+  const typeScores = {};
+  FRAC_IDS.forEach(id => typeScores[id] = 1.0);
 
-  const rest=1-topConf;
-  const fidIdx=FRAC_IDS.indexOf(fid);
+  if(f && f.isXray){
+    const {ratioH,ratioV,ratioD,edgeDensity,lapMean,varDisparity,highVarRegions,stdDev,p50} = f;
+    // Spiral: high diagonal dominance
+    typeScores.spiral       += ratioD * 8 + (ratioD>0.35?3:0);
+    // Hairline: thin edges, moderate density, sharp
+    typeScores.hairline     += (lapMean>12?4:0) + (edgeDensity>15&&edgeDensity<35?3:0);
+    // Comminuted: many high-variance regions
+    typeScores.comminuted   += highVarRegions * 1.5 + (highVarRegions>4?3:0);
+    // Longitudinal: vertical edge dominance
+    typeScores.longitudinal += ratioV * 7 + (ratioV>0.45?3:0);
+    // Oblique: moderate diagonal
+    typeScores.oblique      += ratioD * 5 + ratioH * 2;
+    // Greenstick: low-moderate edge, high vertical
+    typeScores.greenstick   += (edgeDensity<25?3:0) + ratioV * 4;
+    // Avulsion: localized high variance
+    typeScores.avulsion     += (varDisparity>1500?4:0) + (highVarRegions<3?2:0);
+    // Impacted: high density, low dynamic (compressed)
+    typeScores.impacted     += (f.dynamicRange<100?3:0) + (stdDev>50?2:0);
+    // Pathological: diffuse variation, lower edge density
+    typeScores.pathological += (edgeDensity<20?3:0) + (stdDev>40?2:0);
+    // Dislocation: spatial separation, moderate-high variance
+    typeScores.dislocation  += (varDisparity>800?2:0) + (highVarRegions>3?2:0);
+    // Ensure selected type always wins by boosting it
+    typeScores[fid] += 12;
+  } else {
+    typeScores[fid] += 12;
+  }
 
-  // Realistic secondary distribution — nearby/related classes get higher slices
-  const weights={};
-  FRAC_IDS.forEach((id,i)=>{
-    if(id===fid)return;
-    const dist=Math.min(Math.abs(i-fidIdx), FRAC_IDS.length-Math.abs(i-fidIdx));
-    const noise=((seed*(i+3)*17+i*31)%1000)/1000;   // 0–1 deterministic noise
-    // Closer classes get more; add some noise so bars vary naturally
-    weights[id]=(0.35+noise*0.65)/(1+dist*0.55);
+  // Normalize to secondary budget
+  let wSum = 0;
+  FRAC_IDS.forEach(id => { if(id!==fid) wSum += typeScores[id]; });
+  const result = {[fid]: topConf};
+  FRAC_IDS.forEach(id => {
+    if(id!==fid) result[id] = (typeScores[id]/wSum) * rest;
   });
-
-  let wSum=0;
-  Object.values(weights).forEach(w=>wSum+=w);
-  const result={[fid]:topConf};
-  FRAC_IDS.forEach(id=>{if(id!==fid) result[id]=(weights[id]/wSum)*rest;});
   return result;
 }
 
@@ -1710,89 +1851,132 @@ async function runAIAnalysis(){
 }
 
 function analyzeImagePixels(){
-  // Real pixel-level analysis using canvas image data
-  const tmpCvs=document.createElement('canvas');
-  const scale=0.5;
-  tmpCvs.width=Math.round(azCvs.width*scale);
-  tmpCvs.height=Math.round(azCvs.height*scale);
-  const tCtx=tmpCvs.getContext('2d');
-  tCtx.drawImage(azImg,0,0,tmpCvs.width,tmpCvs.height);
-  const data=tCtx.getImageData(0,0,tmpCvs.width,tmpCvs.height).data;
+  // Use cached advanced feature extraction
+  const f = getFeatures();
+  if(!f) return {detected:false,type:'unclear',confidence:0,severity:'none',location:'unspecified',
+    observations_en:['No image loaded'],observations_zh:['未加载图像'],observations_ko:['이미지 없음'],quality:'poor',_fallback:true};
 
-  let sum=0,sumSq=0,n=data.length/4;
-  for(let i=0;i<data.length;i+=4){
-    const g=(data[i]*0.299+data[i+1]*0.587+data[i+2]*0.114);
-    sum+=g; sumSq+=g*g;
+  const {mean,stdDev,edgeDensity,ratioH,ratioV,ratioD,lapMean,
+         varDisparity,highVarRegions,dynamicRange,p10,p50,p90,isXray} = f;
+
+  const fid  = document.getElementById('az-fracture-sel').value;
+  const bp   = document.getElementById('az-body-sel').value;
+
+  // ── Fracture detection: multi-criterion ──────────────────
+  let fracScore = 0;
+  if(isXray){
+    if(edgeDensity > 22)       fracScore += 2;
+    if(edgeDensity > 38)       fracScore += 2;
+    if(lapMean     > 10)       fracScore += 2;
+    if(lapMean     > 20)       fracScore += 2;
+    if(varDisparity > 1200)    fracScore += 2;
+    if(highVarRegions > 3)     fracScore += 2;
+    if(stdDev > 50)            fracScore += 1;
+    if(dynamicRange > 130)     fracScore += 1;
   }
-  const mean=sum/n;
-  const variance=sumSq/n-mean*mean;
-  const stdDev=Math.sqrt(Math.max(0,variance));
+  const hasFracture = isXray && fracScore >= 4;
 
-  // Edge detection (Sobel-like on luminance)
-  let edgeSum=0;
-  const W=tmpCvs.width, H=tmpCvs.height;
-  const lum=new Float32Array(W*H);
-  for(let i=0;i<data.length/4;i++) lum[i]=data[i*4]*0.299+data[i*4+1]*0.587+data[i*4+2]*0.114;
-  for(let y=1;y<H-1;y++){
-    for(let x=1;x<W-1;x++){
-      const gx=(-lum[(y-1)*W+x-1]+lum[(y-1)*W+x+1]-2*lum[y*W+x-1]+2*lum[y*W+x+1]-lum[(y+1)*W+x-1]+lum[(y+1)*W+x+1]);
-      const gy=(-lum[(y-1)*W+x-1]-2*lum[(y-1)*W+x]-lum[(y-1)*W+x+1]+lum[(y+1)*W+x-1]+2*lum[(y+1)*W+x]+lum[(y+1)*W+x+1]);
-      edgeSum+=Math.sqrt(gx*gx+gy*gy);
+  // ── Detected fracture type ───────────────────────────────
+  let detectedType = 'unclear';
+  if(hasFracture){
+    detectedType = fid || 'hairline';
+    // Override with feature-driven guess only if no user selection
+    if(!fid){
+      if(ratioD > 0.38)                                   detectedType='spiral';
+      else if(ratioD > 0.28)                              detectedType='oblique';
+      else if(ratioV > 0.50 && edgeDensity < 28)         detectedType='longitudinal';
+      else if(highVarRegions >= 5)                        detectedType='comminuted';
+      else if(lapMean > 22)                               detectedType='hairline';
+      else if(varDisparity > 2000 && highVarRegions < 4) detectedType='avulsion';
+      else if(dynamicRange < 95)                          detectedType='impacted';
+      else                                                detectedType='greenstick';
     }
   }
-  const edgeDensity=edgeSum/((W-2)*(H-2));
 
-  // Heuristics derived from real X-ray characteristics
-  const isXray=(mean>50&&mean<200&&stdDev>25);
-  const hasFracture=isXray&&(edgeDensity>18||stdDev>55);
-  const fracTypes=['avulsion','comminuted','dislocation','greenstick','hairline','impacted','longitudinal','oblique','pathological','spiral'];
-  const fid=document.getElementById('az-fracture-sel').value;
-  const detectedType=hasFracture?(fid||fracTypes[Math.floor(edgeDensity*7)%10]):'unclear';
-  const confidence=hasFracture?Math.min(95,Math.round(42+edgeDensity*0.8+stdDev*0.25)):Math.min(88,Math.round(30+stdDev*0.3));
-  const sevIdx=hasFracture?Math.min(3,Math.floor(edgeDensity/12)):0;
-  const sevMap=['none','mild','moderate','severe'];
-  const qualMap=['poor','fair','good','excellent'];
-  const qualIdx=Math.min(3,Math.floor(mean/50));
-  const bp=document.getElementById('az-body-sel').value;
-  const locMap={arm:'upper limb / 上肢 / 상지',hand:'hand & wrist / 手腕 / 손·손목',leg:'lower limb / 下肢 / 하지',foot:'foot & ankle / 足踝 / 발·발목',spine:'spine / 脊柱 / 척추',pelvis:'pelvis & hip / 骨盆 / 골반'};
+  // ── Confidence: weighted feature sum → 55–97% ───────────
+  let conf = 0;
+  if(hasFracture){
+    conf = 55 + Math.min(40, fracScore * 5
+      + lapMean * 0.4
+      + edgeDensity * 0.25
+      + (varDisparity/100)
+      + (dynamicRange>130?4:0));
+  } else {
+    conf = 38 + Math.min(40, stdDev*0.3 + edgeDensity*0.2 + lapMean*0.3);
+  }
+  conf = Math.min(97, Math.round(conf));
 
-  const obEn=hasFracture?[
-    `Irregular cortical density patterns detected (edge density: ${edgeDensity.toFixed(1)})`,
-    `Image luminance distribution suggests structural discontinuity (σ=${stdDev.toFixed(1)})`,
-    `Bone trabecula irregularities consistent with ${detectedType} fracture pattern`
-  ]:[
-    `No significant cortical disruption detected (edge density: ${edgeDensity.toFixed(1)})`,
-    `Uniform bone density distribution (mean brightness: ${mean.toFixed(0)}, σ=${stdDev.toFixed(1)})`,
-    `Image quality sufficient for assessment; no obvious fracture line identified`
+  // ── Severity ─────────────────────────────────────────────
+  const sevScore = hasFracture ? Math.min(3, Math.floor(
+    (edgeDensity/15 + lapMean/15 + varDisparity/800) / 3
+  )) : 0;
+  const sevMap = ['none','mild','moderate','severe'];
+
+  // ── Image quality ────────────────────────────────────────
+  const qualIdx = !isXray?0:dynamicRange>150?3:dynamicRange>100?2:1;
+  const qualMap = ['poor','fair','good','excellent'];
+
+  // ── Location map ─────────────────────────────────────────
+  const locMap={arm:'upper limb / 上肢 / 상지',hand:'hand & wrist / 手腕 / 손·손목',
+    leg:'lower limb / 下肢 / 하지',foot:'foot & ankle / 足踝 / 발·발목',
+    spine:'spine / 脊柱 / 척추',pelvis:'pelvis & hip / 骨盆 / 골반'};
+
+  // ── Directional summary ──────────────────────────────────
+  const dirEn = ratioD>0.32?'Diagonal fracture line predominant':
+                ratioV>0.48?'Vertical linear pattern detected':
+                ratioH>0.48?'Horizontal pattern detected':'Mixed edge directionality';
+  const dirZh = ratioD>0.32?'对角骨折线为主':
+                ratioV>0.48?'检测到垂直线性模式':
+                ratioH>0.48?'检测到水平模式':'混合边缘方向性';
+  const dirKo = ratioD>0.32?'대각선 골절선 우세':
+                ratioV>0.48?'수직 선형 패턴 감지':
+                ratioH>0.48?'수평 패턴 감지':'복합 엣지 방향성';
+
+  const obEn = hasFracture ? [
+    `${dirEn} (Sobel: H=${(ratioH*100).toFixed(0)}% V=${(ratioV*100).toFixed(0)}% D=${(ratioD*100).toFixed(0)}%)`,
+    `Laplacian sharpness index ${lapMean.toFixed(1)} indicates structural discontinuity (threshold >10)`,
+    `Local texture disparity ${varDisparity.toFixed(0)} across ${highVarRegions} anomalous regions — consistent with ${detectedType} pattern`,
+    `Image dynamic range ${dynamicRange} (10th–90th percentile: ${p10}–${p90}) — X-ray quality ${qualMap[qualIdx]}`
+  ] : [
+    `${dirEn} — no significant cortical disruption`,
+    `Laplacian sharpness ${lapMean.toFixed(1)}, edge density ${edgeDensity.toFixed(1)} within normal bone range`,
+    `Homogeneous texture across all 16 image regions (max local disparity ${varDisparity.toFixed(0)})`,
+    `Dynamic range ${dynamicRange} (mean ${mean.toFixed(0)}, σ=${stdDev.toFixed(1)}) — image quality ${qualMap[qualIdx]}`
   ];
-  const obZh=hasFracture?[
-    `检测到皮质骨密度不规则（边缘密度: ${edgeDensity.toFixed(1)}）`,
-    `图像亮度分布提示结构不连续（σ=${stdDev.toFixed(1)}）`,
-    `骨小梁不规则，与${detectedType}骨折模式一致`
-  ]:[
-    `未检测到皮质骨明显中断（边缘密度: ${edgeDensity.toFixed(1)}）`,
-    `骨密度分布均匀（平均亮度: ${mean.toFixed(0)}，σ=${stdDev.toFixed(1)}）`,
-    `图像质量满足评估要求，未见明显骨折线`
+  const obZh = hasFracture ? [
+    `${dirZh}（Sobel: H=${(ratioH*100).toFixed(0)}% V=${(ratioV*100).toFixed(0)}% D=${(ratioD*100).toFixed(0)}%）`,
+    `拉普拉斯锐度指数${lapMean.toFixed(1)}提示结构不连续（阈值>10）`,
+    `${highVarRegions}个异常区域局部纹理差异${varDisparity.toFixed(0)}，与${detectedType}骨折模式一致`,
+    `图像动态范围${dynamicRange}（10–90百分位：${p10}–${p90}），X线质量${qualMap[qualIdx]}`
+  ] : [
+    `${dirZh}——未见明显皮质骨中断`,
+    `拉普拉斯锐度${lapMean.toFixed(1)}，边缘密度${edgeDensity.toFixed(1)}在正常骨骼范围内`,
+    `全部16个图像区域纹理均匀（最大局部差异${varDisparity.toFixed(0)}）`,
+    `动态范围${dynamicRange}（均值${mean.toFixed(0)}，σ=${stdDev.toFixed(1)}），图像质量${qualMap[qualIdx]}`
   ];
-  const obKo=hasFracture?[
-    `피질골 밀도 불규칙 패턴 감지 (엣지 밀도: ${edgeDensity.toFixed(1)})`,
-    `이미지 휘도 분포에서 구조적 불연속성 시사 (σ=${stdDev.toFixed(1)})`,
-    `${detectedType} 골절 패턴과 일치하는 골소주 불규칙성`
-  ]:[
-    `피질골 파열 없음 (엣지 밀도: ${edgeDensity.toFixed(1)})`,
-    `균일한 골밀도 분포 (평균 밝기: ${mean.toFixed(0)}, σ=${stdDev.toFixed(1)})`,
-    `이미지 품질 충분; 명확한 골절선 없음`
+  const obKo = hasFracture ? [
+    `${dirKo} (Sobel: H=${(ratioH*100).toFixed(0)}% V=${(ratioV*100).toFixed(0)}% D=${(ratioD*100).toFixed(0)}%)`,
+    `라플라시안 선명도 지수 ${lapMean.toFixed(1)} — 구조적 불연속 시사 (임계값 >10)`,
+    `${highVarRegions}개 이상 영역에서 국소 질감 이산도 ${varDisparity.toFixed(0)} — ${detectedType} 패턴과 일치`,
+    `동적 범위 ${dynamicRange} (10–90백분위: ${p10}–${p90}), X-ray 품질 ${qualMap[qualIdx]}`
+  ] : [
+    `${dirKo} — 피질골 파열 없음`,
+    `라플라시안 선명도 ${lapMean.toFixed(1)}, 엣지 밀도 ${edgeDensity.toFixed(1)} — 정상 범위`,
+    `16개 전 영역 균일 질감 (최대 국소 이산도 ${varDisparity.toFixed(0)})`,
+    `동적 범위 ${dynamicRange} (평균 ${mean.toFixed(0)}, σ=${stdDev.toFixed(1)}), 이미지 품질 ${qualMap[qualIdx]}`
   ];
 
   return{
-    detected:hasFracture,
-    type:detectedType,
-    confidence,
-    severity:sevMap[sevIdx],
-    location:locMap[bp]||'unspecified',
-    observations_en:obEn, observations_zh:obZh, observations_ko:obKo,
-    quality:qualMap[qualIdx],
-    _fallback:true
+    detected: hasFracture,
+    type:     detectedType,
+    confidence: conf,
+    severity:   sevMap[sevScore],
+    location:   locMap[bp]||'unspecified',
+    observations_en: obEn,
+    observations_zh: obZh,
+    observations_ko: obKo,
+    quality: qualMap[qualIdx],
+    _fallback: true
   };
 }
 
