@@ -4,8 +4,42 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <meta name="theme-color" content="#060912">
+
+<!-- ── PWA & iOS App Meta ── -->
+<link rel="manifest" href="manifest.json">
+
+<!-- iOS Safari PWA -->
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>BoneScan AI — Bone Fracture Intelligence Dataset</title>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BoneScan AI">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="BoneScan AI">
+<meta name="format-detection" content="telephone=no">
+
+<!-- iOS App Icons -->
+<link rel="apple-touch-icon" href="icons/icon-152.png">
+<link rel="apple-touch-icon" sizes="72x72"   href="icons/icon-72.png">
+<link rel="apple-touch-icon" sizes="96x96"   href="icons/icon-96.png">
+<link rel="apple-touch-icon" sizes="128x128" href="icons/icon-128.png">
+<link rel="apple-touch-icon" sizes="144x144" href="icons/icon-144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png">
+
+<!-- iOS Splash Screens -->
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-startup-image" href="icons/icon-512.png">
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+<link rel="shortcut icon" href="icons/icon-192.png">
+
+<!-- MS Tile -->
+<meta name="msapplication-TileImage" content="icons/icon-144.png">
+<meta name="msapplication-TileColor" content="#060912">
+
+<title>BoneScan AI — Bone Fracture Intelligence</title>
 <meta name="description" content="Interactive bone fracture X-ray dataset with annotation tool, causes, treatment & recovery guides. 10 fracture types, 3 languages.">
 <link rel="alternate" hreflang="en" href="?lang=en">
 <link rel="alternate" hreflang="zh" href="?lang=zh">
@@ -16,6 +50,38 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+
+<!-- iOS Install Banner -->
+<div id="ios-install-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:99999;background:linear-gradient(135deg,#0d1b3e,#060912);border-top:1px solid rgba(0,180,255,.3);padding:14px 20px 24px;box-shadow:0 -8px 32px rgba(0,0,0,.5)">
+  <div style="display:flex;align-items:center;gap:14px">
+    <img src="icons/icon-96.png" style="width:52px;height:52px;border-radius:12px;flex-shrink:0">
+    <div style="flex:1">
+      <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:2px">安装 BoneScan AI</div>
+      <div style="font-size:12px;color:#94A3B8">点击下方 <strong style="color:#00B4FF">分享</strong> 按钮，然后选择 <strong style="color:#00B4FF">添加到主屏幕</strong></div>
+      <div style="font-size:11px;color:#64748B;margin-top:2px">Tap Share → Add to Home Screen</div>
+    </div>
+    <button onclick="document.getElementById('ios-install-banner').style.display='none';localStorage.setItem('bsai-ios-banner','1')" style="background:none;border:none;color:#64748B;font-size:20px;cursor:pointer;padding:4px">✕</button>
+  </div>
+  <div style="display:flex;justify-content:center;margin-top:10px">
+    <div style="font-size:20px;animation:bounceDown .8s ease-in-out infinite alternate">↓</div>
+  </div>
+</div>
+<style>@keyframes bounceDown{0%{transform:translateY(0)}100%{transform:translateY(6px)}}</style>
+
+<!-- Android Install Banner -->
+<div id="android-install-banner" style="display:none;position:fixed;top:70px;left:12px;right:12px;z-index:99999;background:linear-gradient(135deg,#0d1b3e,#060912);border:1px solid rgba(0,180,255,.3);border-radius:14px;padding:14px 16px;box-shadow:0 8px 32px rgba(0,0,0,.5)">
+  <div style="display:flex;align-items:center;gap:12px">
+    <img src="icons/icon-96.png" style="width:48px;height:48px;border-radius:12px;flex-shrink:0">
+    <div style="flex:1">
+      <div style="font-size:13px;font-weight:700;color:#fff">安装 BoneScan AI App</div>
+      <div style="font-size:11px;color:#94A3B8">添加到主屏幕，离线也能用</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button id="android-install-btn" style="padding:8px 14px;background:linear-gradient(135deg,#00B4FF,#0070CC);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer">安装</button>
+      <button onclick="document.getElementById('android-install-banner').style.display='none';localStorage.setItem('bsai-android-banner','1')" style="background:none;border:none;color:#64748B;font-size:18px;cursor:pointer">✕</button>
+    </div>
+  </div>
+</div>
 
 <!-- LOADER -->
 <div id="loader">

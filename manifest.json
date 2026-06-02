@@ -1,0 +1,59 @@
+{
+  "name": "BoneScan AI — Bone Fracture Intelligence",
+  "short_name": "BoneScan AI",
+  "description": "AI-powered bone fracture detection, analysis, and rehabilitation planning. Upload X-ray images for instant diagnosis.",
+  "id": "/bone-fracture-ai/",
+  "start_url": "/bone-fracture-ai/",
+  "scope": "/bone-fracture-ai/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#060912",
+  "theme_color": "#060912",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "categories": ["medical", "health", "education"],
+  "prefer_related_applications": false,
+  "icons": [
+    { "src": "icons/icon-72.png",  "sizes": "72x72",   "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-96.png",  "sizes": "96x96",   "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-144.png", "sizes": "144x144", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-152.png", "sizes": "152x152", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "X光分析 Analyze",
+      "short_name": "Analyze",
+      "description": "Upload and analyze X-ray image",
+      "url": "/bone-fracture-ai/#analyze",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "骨折测验 Quiz",
+      "short_name": "Quiz",
+      "description": "Test your fracture knowledge",
+      "url": "/bone-fracture-ai/#quiz-section",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "风险评估 Risk",
+      "short_name": "Risk",
+      "description": "Calculate fracture risk score",
+      "url": "/bone-fracture-ai/#risk-section",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "BoneScan AI Home"
+    }
+  ]
+}

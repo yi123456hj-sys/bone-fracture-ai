@@ -590,13 +590,62 @@ function showMockHospitals(list,lat,lng){
 }
 
 /* ──────────────────────────────────────────────────
-   PWA — Service Worker Registration
+   PWA — Service Worker + Install Banners
 ────────────────────────────────────────────────── */
+// Register Service Worker
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('/bone-fracture-ai/sw.js').catch(()=>{});
+    navigator.serviceWorker.register('/bone-fracture-ai/sw.js')
+      .then(reg => console.log('SW registered:', reg.scope))
+      .catch(()=>{});
   });
 }
+
+// iOS Install Banner
+(function(){
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone === true;
+  const shown = localStorage.getItem('bsai-ios-banner');
+  if(isIOS && !isStandalone && !shown){
+    setTimeout(()=>{
+      document.getElementById('ios-install-banner').style.display='block';
+    }, 3000);
+  }
+})();
+
+// Android Install Banner (beforeinstallprompt)
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const shown = localStorage.getItem('bsai-android-banner');
+  if(!shown){
+    setTimeout(()=>{
+      document.getElementById('android-install-banner').style.display='block';
+    }, 2000);
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const installBtn = document.getElementById('android-install-btn');
+  if(installBtn){
+    installBtn.addEventListener('click', async () => {
+      if(!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if(outcome === 'accepted'){
+        localStorage.setItem('bsai-android-banner','1');
+        document.getElementById('android-install-banner').style.display='none';
+      }
+      deferredPrompt = null;
+    });
+  }
+});
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('android-install-banner').style.display='none';
+  localStorage.setItem('bsai-android-banner','1');
+});
 
 /* ──────────────────────────────────────────────────
    INIT ALL
