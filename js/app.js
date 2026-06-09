@@ -1694,6 +1694,17 @@ function runPredict(){
       if(gcamBtn)gcamBtn.classList.add('active');
       azRedraw();
       renderPrediction(winFid,probs,ms,topPreds);
+      // Auto-circle fracture area based on pixel feature hotspots
+      const f=getFeatures();
+      const fakeResult={detected:true, type:winFid, confidence:Math.round(probs[winFid]*100)};
+      if(f&&f.localVars){
+        const GRID=4;
+        fakeResult.regions=[...f.localVars.map((v,i)=>({v,i}))]
+          .sort((a,b)=>b.v-a.v).slice(0,2)
+          .map(({i})=>{const gr=Math.floor(i/GRID),gc=i%GRID;
+            return{bbox:[gc*25,gr*25,(gc+1)*25,(gr+1)*25],shape:'rect'};});
+      }
+      autoCircleFracture(fakeResult);
       btn.disabled=false;
       spinner.style.display='none';
       label.textContent=lang==='zh'?'重新预测':lang==='ko'?'재예측':'Re-Predict';
