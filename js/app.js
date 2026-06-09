@@ -2553,30 +2553,27 @@ function mobileNetToFractureWeights(predictions){
 }
 
 // Override computeProbabilities with TF.js-enhanced version when model available
-async function computeProbabilitiesWithTF(topFid){
-  const base=computeProbabilities(topFid);
+async function computeProbabilitiesWithTF(hintFid){
+  const base=computeProbabilities(hintFid);
+  // Use actual winner from feature analysis, NOT the dropdown hint
+  const topFid=Object.keys(base).reduce((a,b)=>base[a]>=base[b]?a:b);
   const tfResult=await runMobileNetOnImage();
-  // TF.js (ImageNet) only reorders secondary classes — top-1 confidence is NEVER reduced
-  if(!tfResult)return{probs:base,ms:null};
+  if(!tfResult)return{probs:base,ms:null,topPreds:[]};
   const weights=mobileNetToFractureWeights(tfResult.predictions);
 
-  // Keep top-1 confidence exactly as computed (85–98%)
   const topConf=base[topFid];
   const restBudget=1-topConf;
 
-  // Reorder secondary probabilities using TF weight hints (top-1 untouched)
   let wSum=0;
   FRAC_IDS.forEach(id=>{if(id!==topFid)wSum+=weights[id];});
   const enhanced={[topFid]:topConf};
   FRAC_IDS.forEach(id=>{
     if(id===topFid)return;
     const tfShare=wSum>0?weights[id]/wSum:1/9;
-    const baseShare=base[id]/restBudget;
-    // 60% original distribution + 40% TF reordering, only within secondary
+    const baseShare=restBudget>0?base[id]/restBudget:1/9;
     enhanced[id]=(baseShare*0.6+tfShare*0.4)*restBudget;
   });
 
-  // Re-normalize secondary only (keeps top-1 locked)
   let secSum=0;
   FRAC_IDS.forEach(id=>{if(id!==topFid)secSum+=enhanced[id];});
   if(secSum>0) FRAC_IDS.forEach(id=>{if(id!==topFid)enhanced[id]=enhanced[id]/secSum*restBudget;});
