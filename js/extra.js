@@ -108,8 +108,9 @@ Rules:
       signal:AbortSignal.timeout(30000)
     });
     const data=await resp.json();
+    console.log('Gemini response:', JSON.stringify(data).slice(0,300));
     if(!resp.ok || !data.candidates || !data.candidates[0]){
-      const msg=data.error?.message||JSON.stringify(data).slice(0,120);
+      const msg=data.error?.message||JSON.stringify(data).slice(0,200);
       throw new Error(msg);
     }
     const raw=data.candidates[0].content.parts[0].text.replace(/^```json?\s*/,'').replace(/\s*```$/,'').trim();
