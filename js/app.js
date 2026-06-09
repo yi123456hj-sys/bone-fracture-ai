@@ -981,7 +981,7 @@ function initAnalyze(){
     else azAnns.pop();
     azRedraw();
   });
-  document.getElementById('az-clear-btn').addEventListener('click',()=>{azAnns=[];azRulers=[];azAngles=[];azAnglePts=[];azDetBoxes=[];azRedraw();});
+  document.getElementById('az-clear-btn').addEventListener('click',()=>{azAnns=[];azRulers=[];azAngles=[];azAnglePts=[];azDetBoxes=[];azGridBoxes=[];const p=document.getElementById('az-det-stats');if(p)p.style.display='none';azRedraw();});
   document.getElementById('az-reupload-btn').addEventListener('click',resetUpload);
   // Zoom controls
   document.getElementById('az-zoom-in').addEventListener('click',()=>setZoom(azZoom*1.25));
@@ -1028,7 +1028,7 @@ function loadSample(fid){
 }
 
 function showWorkspace(img){
-  azImg=img; azAnns=[]; azDetBoxes=[];
+  azImg=img; azAnns=[]; azDetBoxes=[]; azGridBoxes=[];
   document.getElementById('az-upload-zone').style.display='none';
   document.getElementById('az-report').style.display='none';
   const ws=document.getElementById('az-workspace');
@@ -1077,6 +1077,7 @@ function azRedraw(){
   // Draw angles
   azAngles.forEach(a=>drawAngleMeasure(azCtx2,a));
   drawDetBoxes();
+  drawGridBoxes();
 }
 
 function azTempCircle(cx,cy,r){
@@ -1165,7 +1166,7 @@ function resetUpload(){
   document.getElementById('az-report').style.display='none';
   document.getElementById('az-ai-result').style.display='none';
   document.getElementById('az-file-input').value='';
-  azAnns=[];azDetBoxes=[];azImg=null;
+  azAnns=[];azDetBoxes=[];azGridBoxes=[];azImg=null;const p=document.getElementById('az-det-stats');if(p)p.style.display='none';
   azBright=100;azContrast=100;azInverted=false;
   const bs=document.getElementById('az-bright-slider');
   const cs=document.getElementById('az-contrast-slider');
@@ -1999,7 +2000,148 @@ function autoCircleFracture(result){
   const gcamBtn = document.getElementById('az-gcam-toggle');
   if(gcamBtn) gcamBtn.classList.add('active');
 
+  // Run fine-grid scan, hint with Claude bbox if available
+  const bboxHint = (result.bbox && result.bbox[2]>result.bbox[0]) ? result.bbox : null;
+  runGridScan(bboxHint);
+
   azRedraw();
+}
+
+// ── Grid-based multi-box scan ─────────────────────────────
+let azGridBoxes = [];   // [{x1,y1,x2,y2,score,level}]  level='high'|'med'
+
+function runGridScan(bboxHint){
+  azGridBoxes = [];
+  if(!azImg || !azCvs) return;
+
+  const GRID = 16;
+  const W = Math.min(320, azCvs.width);
+  const H = Math.round(W * azCvs.height / azCvs.width);
+  const tmp = document.createElement('canvas');
+  tmp.width=W; tmp.height=H;
+  const tc = tmp.getContext('2d');
+  tc.drawImage(azImg, 0, 0, W, H);
+  const src = tc.getImageData(0,0,W,H).data;
+
+  // Build luminance + Sobel magnitude maps
+  const lum  = new Float32Array(W*H);
+  for(let i=0;i<W*H;i++)
+    lum[i] = src[i*4]*0.299 + src[i*4+1]*0.587 + src[i*4+2]*0.114;
+
+  const mag = new Float32Array(W*H);
+  for(let y=1;y<H-1;y++){
+    for(let x=1;x<W-1;x++){
+      const gx = -lum[(y-1)*W+x-1]-2*lum[y*W+x-1]-lum[(y+1)*W+x-1]
+                 +lum[(y-1)*W+x+1]+2*lum[y*W+x+1]+lum[(y+1)*W+x+1];
+      const gy = -lum[(y-1)*W+x-1]-2*lum[(y-1)*W+x]-lum[(y-1)*W+x+1]
+                 +lum[(y+1)*W+x-1]+2*lum[(y+1)*W+x]+lum[(y+1)*W+x+1];
+      mag[y*W+x] = Math.sqrt(gx*gx+gy*gy);
+    }
+  }
+
+  // Laplacian sharpness map
+  const lap = new Float32Array(W*H);
+  for(let y=1;y<H-1;y++)
+    for(let x=1;x<W-1;x++)
+      lap[y*W+x] = Math.abs(-lum[(y-1)*W+x]-lum[(y+1)*W+x]-lum[y*W+x-1]-lum[y*W+x+1]+4*lum[y*W+x]);
+
+  // Score each grid cell
+  const cw = W/GRID, ch = H/GRID;
+  const scores = [];
+  for(let gr=0;gr<GRID;gr++){
+    for(let gc=0;gc<GRID;gc++){
+      let sumMag=0, sumLap=0, sumV=0, sumVsq=0, n=0;
+      const x0=Math.round(gc*cw), y0=Math.round(gr*ch);
+      const x1=Math.round((gc+1)*cw), y1=Math.round((gr+1)*ch);
+      for(let y=y0;y<y1;y++) for(let x=x0;x<x1;x++){
+        const v=lum[y*W+x];
+        sumMag+=mag[y*W+x]; sumLap+=lap[y*W+x];
+        sumV+=v; sumVsq+=v*v; n++;
+      }
+      const mean=sumV/n;
+      const variance=sumVsq/n - mean*mean;
+      const edgeDens=sumMag/n;
+      const lapMean=sumLap/n;
+      // Score: edge + sharpness + local variance (normalized combo)
+      let score = edgeDens*0.5 + lapMean*1.2 + Math.sqrt(Math.max(0,variance))*0.4;
+      // Boost cells overlapping with Claude bbox hint
+      if(bboxHint){
+        const [hx1,hy1,hx2,hy2]=bboxHint;
+        const cx=((gc+0.5)/GRID)*100, cy=((gr+0.5)/GRID)*100;
+        if(cx>=hx1&&cx<=hx2&&cy>=hy1&&cy<=hy2) score *= 1.8;
+      }
+      scores.push({gr,gc,score});
+    }
+  }
+
+  // Rank and threshold
+  const sorted = [...scores].sort((a,b)=>b.score-a.score);
+  const maxS = sorted[0]?.score || 1;
+  const highThr = maxS * 0.60;
+  const medThr  = maxS * 0.38;
+
+  // Scale back to canvas coords
+  const sx = azCvs.width/GRID, sy = azCvs.height/GRID;
+  sorted.forEach(({gr,gc,score})=>{
+    if(score < medThr) return;
+    const level = score >= highThr ? 'high' : 'med';
+    azGridBoxes.push({
+      x1: gc*sx, y1: gr*sy,
+      x2: (gc+1)*sx, y2: (gr+1)*sy,
+      score, level
+    });
+  });
+
+  // Update stats panel
+  updateDetStats();
+}
+
+function updateDetStats(){
+  const hi  = azGridBoxes.filter(b=>b.level==='high').length;
+  const med = azGridBoxes.filter(b=>b.level==='med').length;
+  let panel = document.getElementById('az-det-stats');
+  if(!panel){
+    panel = document.createElement('div');
+    panel.id = 'az-det-stats';
+    panel.style.cssText = 'margin-top:12px;padding:12px 16px;background:rgba(231,76,60,.08);border:1px solid rgba(231,76,60,.25);border-radius:10px;font-size:13px;color:rgba(255,255,255,.85);line-height:1.8';
+    const res = document.getElementById('az-ai-result');
+    if(res) res.parentNode.insertBefore(panel, res.nextSibling);
+  }
+  if(hi===0 && med===0){ panel.style.display='none'; return; }
+  panel.style.display='block';
+  const L = lang==='zh'?{title:'检测到异常区域',hi:'高风险区域',med:'中风险区域',blk:'块',note:'红框=高风险区域（需重点关注）',disc:'AI辅助参考，以临床诊断为准'}
+           :lang==='ko'?{title:'이상 영역 감지됨',hi:'고위험 영역',med:'중위험 영역',blk:'개',note:'빨간 박스 = 고위험 영역',disc:'AI 참고용, 임상 진단 우선'}
+           :{title:'Anomaly Detected',hi:'High-risk regions',med:'Med-risk regions',blk:'',note:'Red boxes = high-risk regions requiring attention',disc:'AI reference only. Clinical diagnosis takes precedence.'};
+  panel.innerHTML=`
+    <div style="color:#ff6b6b;font-weight:700;margin-bottom:6px">⚠ ${L.title}</div>
+    <div style="display:flex;gap:18px;margin-bottom:6px">
+      <span><span style="color:#FF3333">●</span> ${L.hi}: <strong>${hi}</strong> ${L.blk}</span>
+      <span><span style="color:#FF8C42">●</span> ${L.med}: <strong>${med}</strong> ${L.blk}</span>
+    </div>
+    <div style="font-size:11px;color:rgba(255,255,255,.4)">${L.note}</div>
+    <div style="font-size:11px;color:rgba(255,255,255,.3);margin-top:2px">⚠ ${L.disc}</div>`;
+}
+
+function drawGridBoxes(){
+  if(!azGridBoxes.length || !azCtx2) return;
+  azGridBoxes.forEach(b=>{
+    const c = b.level==='high' ? '#FF3333' : '#FF8C42';
+    const a = b.level==='high' ? 0.85 : 0.55;
+    azCtx2.save();
+    azCtx2.globalAlpha = a;
+    azCtx2.strokeStyle = c;
+    azCtx2.lineWidth   = b.level==='high' ? 2 : 1.5;
+    azCtx2.shadowColor = c;
+    azCtx2.shadowBlur  = b.level==='high' ? 8 : 4;
+    azCtx2.strokeRect(b.x1, b.y1, b.x2-b.x1, b.y2-b.y1);
+    // Semi-transparent fill for high-risk
+    if(b.level==='high'){
+      azCtx2.globalAlpha = 0.10;
+      azCtx2.fillStyle = c;
+      azCtx2.fillRect(b.x1, b.y1, b.x2-b.x1, b.y2-b.y1);
+    }
+    azCtx2.restore();
+  });
 }
 
 function drawDetBoxes(){
