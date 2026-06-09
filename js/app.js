@@ -1621,37 +1621,34 @@ function computeProbabilities(topFid){
   // ── Secondary probabilities from directional features ─────
   const rest = 1 - topConf;
   const typeScores = {};
-  FRAC_IDS.forEach(id => typeScores[id] = 1.0);
+  // Small random noise so no two types tie (avulsion was always winning ties as first key)
+  FRAC_IDS.forEach(id => typeScores[id] = Math.random() * 0.2);
 
   if(f && f.isXray){
     const {ratioH,ratioV,ratioD,edgeDensity,lapMean,varDisparity,highVarRegions,stdDev,p50} = f;
-    // Spiral: high diagonal dominance
     typeScores.spiral       += ratioD * 8 + (ratioD>0.35?3:0);
-    // Hairline: thin edges, moderate density, sharp
     typeScores.hairline     += (lapMean>12?4:0) + (edgeDensity>15&&edgeDensity<35?3:0);
-    // Comminuted: many high-variance regions
     typeScores.comminuted   += highVarRegions * 1.5 + (highVarRegions>4?3:0);
-    // Longitudinal: vertical edge dominance
     typeScores.longitudinal += ratioV * 7 + (ratioV>0.45?3:0);
-    // Oblique: moderate diagonal
     typeScores.oblique      += ratioD * 5 + ratioH * 2;
-    // Greenstick: low-moderate edge, high vertical
     typeScores.greenstick   += (edgeDensity<25?3:0) + ratioV * 4;
-    // Avulsion: localized high variance + isolated fragment
     typeScores.avulsion     += (varDisparity>2500?4:0) + (varDisparity>1800&&highVarRegions===1?3:0);
-    // Impacted: high density, low dynamic (compressed)
     typeScores.impacted     += (f.dynamicRange<100?3:0) + (stdDev>50?2:0);
-    // Pathological: diffuse variation, lower edge density
     typeScores.pathological += (edgeDensity<20?3:0) + (stdDev>40?2:0);
-    // Dislocation: spatial separation, moderate-high variance
     typeScores.dislocation  += (varDisparity>800?2:0) + (highVarRegions>3?2:0);
-    // No forced bias — features decide winner
-  } else {
-    // No X-ray features available, no bias
+  }
+
+  // If no type has a meaningful signal, return unclear
+  const maxScore = Math.max(...Object.values(typeScores));
+  if(maxScore < 1.5){
+    const unclearResult = {unclear: topConf};
+    const restU = 1 - topConf;
+    FRAC_IDS.forEach(id => { if(id!=='unclear') unclearResult[id] = restU/(FRAC_IDS.length-1); });
+    return unclearResult;
   }
 
   // Find actual winner from feature scores
-  let winId = fid;
+  let winId = 'unclear';
   let winScore = -Infinity;
   FRAC_IDS.forEach(id => { if(typeScores[id] > winScore){ winScore=typeScores[id]; winId=id; } });
 
