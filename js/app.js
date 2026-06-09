@@ -1641,18 +1641,23 @@ function computeProbabilities(topFid){
     typeScores.pathological += (edgeDensity<20?3:0) + (stdDev>40?2:0);
     // Dislocation: spatial separation, moderate-high variance
     typeScores.dislocation  += (varDisparity>800?2:0) + (highVarRegions>3?2:0);
-    // Ensure selected type always wins by boosting it
-    typeScores[fid] += 12;
+    // Small hint from user selection, but features decide
+    typeScores[fid] += 2;
   } else {
-    typeScores[fid] += 12;
+    typeScores[fid] += 2;
   }
 
-  // Normalize to secondary budget
+  // Find actual winner from feature scores
+  let winId = fid;
+  let winScore = -Infinity;
+  FRAC_IDS.forEach(id => { if(typeScores[id] > winScore){ winScore=typeScores[id]; winId=id; } });
+
+  // Normalize: winner gets topConf, rest split remainder
   let wSum = 0;
-  FRAC_IDS.forEach(id => { if(id!==fid) wSum += typeScores[id]; });
-  const result = {[fid]: topConf};
+  FRAC_IDS.forEach(id => { if(id!==winId) wSum += typeScores[id]; });
+  const result = {[winId]: topConf};
   FRAC_IDS.forEach(id => {
-    if(id!==fid) result[id] = (typeScores[id]/wSum) * rest;
+    if(id!==winId) result[id] = wSum>0 ? (typeScores[id]/wSum) * rest : rest/(FRAC_IDS.length-1);
   });
   return result;
 }
@@ -1673,8 +1678,10 @@ function runPredict(){
   const tta=document.getElementById('az-tta-chk').checked;
   const delay=tta?1400:780;
   // Use TF.js when available, fall back to pixel analysis
-  const fid=document.getElementById('az-fracture-sel').value||FRAC_IDS[0];
-  computeProbabilitiesWithTF(fid).then(({probs,ms,topPreds})=>{
+  const hintFid=document.getElementById('az-fracture-sel').value||FRAC_IDS[0];
+  computeProbabilitiesWithTF(hintFid).then(({probs,ms,topPreds})=>{
+    // Find actual top-1 from computed probabilities
+    const winFid=Object.keys(probs).reduce((a,b)=>probs[a]>=probs[b]?a:b);
     setTimeout(()=>{
       stopScanBeam();
       playSuccessSnd();
@@ -1683,7 +1690,7 @@ function runPredict(){
       const gcamBtn=document.getElementById('az-gcam-toggle');
       if(gcamBtn)gcamBtn.classList.add('active');
       azRedraw();
-      renderPrediction(fid,probs,ms,topPreds);
+      renderPrediction(winFid,probs,ms,topPreds);
       btn.disabled=false;
       spinner.style.display='none';
       label.textContent=lang==='zh'?'重新预测':lang==='ko'?'재예측':'Re-Predict';
@@ -1967,21 +1974,18 @@ function analyzeImagePixels(){
   }
   const hasFracture = isXray && fracScore >= 4;
 
-  // ── Detected fracture type ───────────────────────────────
+  // ── Detected fracture type (feature-driven, dropdown is hint only) ──
   let detectedType = 'unclear';
   if(hasFracture){
-    detectedType = fid || 'hairline';
-    // Override with feature-driven guess only if no user selection
-    if(!fid){
-      if(ratioD > 0.38)                                   detectedType='spiral';
-      else if(ratioD > 0.28)                              detectedType='oblique';
-      else if(ratioV > 0.50 && edgeDensity < 28)         detectedType='longitudinal';
-      else if(highVarRegions >= 5)                        detectedType='comminuted';
-      else if(lapMean > 22)                               detectedType='hairline';
-      else if(varDisparity > 2000 && highVarRegions < 4) detectedType='avulsion';
-      else if(dynamicRange < 95)                          detectedType='impacted';
-      else                                                detectedType='greenstick';
-    }
+    if(ratioD > 0.38)                                   detectedType='spiral';
+    else if(ratioD > 0.28)                              detectedType='oblique';
+    else if(ratioV > 0.50 && edgeDensity < 28)         detectedType='longitudinal';
+    else if(highVarRegions >= 5)                        detectedType='comminuted';
+    else if(lapMean > 22)                               detectedType='hairline';
+    else if(varDisparity > 2000 && highVarRegions < 4) detectedType='avulsion';
+    else if(dynamicRange < 95)                          detectedType='impacted';
+    else if(ratioV > 0.40 && ratioD < 0.25)            detectedType='greenstick';
+    else                                                detectedType='oblique';
   }
 
   // ── Confidence: weighted feature sum → 55–97% ───────────
