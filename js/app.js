@@ -1859,22 +1859,27 @@ async function callAnthropicDirect(imageB64){
       'anthropic-dangerous-direct-browser-access':'true'
     },
     body:JSON.stringify({
-      model:'claude-haiku-4-5-20251001',
-      max_tokens:600,
+      model:'claude-sonnet-4-6',
+      max_tokens:1024,
       messages:[{
         role:'user',
         content:[
           {type:'image',source:{type:'base64',media_type:'image/jpeg',data:imageB64}},
-          {type:'text',text:`You are an expert radiologist AI. Analyze this bone X-ray image with high precision. Follow these steps:
-1. Determine if this is actually an X-ray image of bone(s).
-2. Look carefully for any fracture lines, cortical breaks, bone discontinuity, abnormal density, or displacement.
-3. Identify the specific fracture type based on the fracture line pattern.
-4. Locate the exact fracture zone(s) in the image.
+          {type:'text',text:`You are a highly experienced radiologist AI specializing in bone fracture diagnosis. Analyze this X-ray image with maximum precision.
 
-Return ONLY a single valid JSON object with NO markdown, NO explanation, NO extra text:
-{"detected":boolean,"type":"avulsion|comminuted|dislocation|greenstick|hairline|impacted|longitudinal|oblique|pathological|spiral|unclear","confidence":integer_0_to_100,"severity":"none|mild|moderate|severe","location":"specific anatomical location in English (e.g. distal radius, 5th metatarsal)","cause":"1-2 sentence injury mechanism in English","cause_zh":"1-2句中文骨折原因","cause_ko":"1-2문장 한국어 골절 원인","observations":["specific radiological finding 1","specific finding 2","specific finding 3"],"quality":"poor|fair|good|excellent","regions":[{"bbox":[x1_percent,y1_percent,x2_percent,y2_percent],"label":"fracture label","shape":"rect"}]}
+Step 1 — Image validation: Is this a bone X-ray? If not, set detected=false.
+Step 2 — Fracture detection: Carefully scan every bone for cortical breaks, fracture lines, bone discontinuity, displacement, angulation, or abnormal density changes.
+Step 3 — Classification: Identify the exact fracture type from the pattern of the fracture line(s).
+Step 4 — Localization: Determine the precise anatomical location and draw a tight bounding box around each fracture zone as percentages of the image dimensions.
 
-Rules: regions must have 1-3 entries covering each fracture zone (bbox as % of image 0-100). If no fracture: detected=false, regions=[], type="unclear". Be precise with bbox — it must tightly surround the actual fracture area visible in the image.`}
+Return ONLY a single valid JSON object, no markdown, no extra text:
+{"detected":boolean,"type":"avulsion|comminuted|dislocation|greenstick|hairline|impacted|longitudinal|oblique|pathological|spiral|unclear","confidence":integer_0_to_100,"severity":"none|mild|moderate|severe","location":"specific anatomical location e.g. distal radius, proximal phalanx","cause":"1-2 sentence mechanism of injury in English","cause_zh":"1-2句中文骨折原因说明","cause_ko":"1-2문장 한국어 골절 원인","observations":["precise radiological finding 1","finding 2","finding 3"],"quality":"poor|fair|good|excellent","regions":[{"bbox":[x1_pct,y1_pct,x2_pct,y2_pct],"label":"short label","shape":"rect"}]}
+
+Critical rules:
+- regions: 1–3 entries, each bbox MUST tightly surround visible fracture area (percentages 0–100)
+- confidence: be honest — only >85 if fracture is clearly visible
+- If no fracture found: detected=false, regions=[], confidence=integer showing certainty of no-fracture
+- observations must be specific radiological findings, not generic statements`}
         ]
       }]
     }),
@@ -1926,7 +1931,12 @@ async function runAIAnalysis(){
   label.textContent=lang==='zh'?'AI 分析中…':lang==='ko'?'AI 분석 중…':'AI Analyzing…';
   resultEl.style.display='none';
 
-  const b64=azCvs.toDataURL('image/jpeg',.85).split(',')[1];
+  // Upscale to 1024px wide before sending for better AI accuracy
+  const hiCvs=document.createElement('canvas');
+  const hiW=Math.max(azCvs.width,1024), hiH=Math.round(hiW*azCvs.height/azCvs.width);
+  hiCvs.width=hiW; hiCvs.height=hiH;
+  hiCvs.getContext('2d').drawImage(azImg,0,0,hiW,hiH);
+  const b64=hiCvs.toDataURL('image/jpeg',.95).split(',')[1];
   let result=null;
   let errorMsg=null;
 
