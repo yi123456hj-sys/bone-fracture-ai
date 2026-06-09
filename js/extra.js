@@ -108,8 +108,19 @@ Rules:
       signal:AbortSignal.timeout(30000)
     });
     const data=await resp.json();
+    if(!resp.ok || !data.candidates || !data.candidates[0]){
+      const msg=data.error?.message||JSON.stringify(data).slice(0,120);
+      throw new Error(msg);
+    }
     const raw=data.candidates[0].content.parts[0].text.replace(/^```json?\s*/,'').replace(/\s*```$/,'').trim();
-    const result=JSON.parse(raw);
+    let result;
+    try{ result=JSON.parse(raw); }
+    catch(e){
+      // Gemini returned text instead of JSON — try to extract JSON block
+      const m=raw.match(/\{[\s\S]*\}/);
+      if(m) result=JSON.parse(m[0]);
+      else throw new Error('AI返回格式错误: '+raw.slice(0,80));
+    }
 
     // Redraw image clean
     ctx.drawImage(img,0,0,W,H);
