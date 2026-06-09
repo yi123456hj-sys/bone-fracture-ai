@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <meta name="theme-color" content="#060912">
 
-<!-- ── PWA & iOS App Meta ── -->
+<!-- 鈹€鈹€ PWA & iOS App Meta 鈹€鈹€ -->
 <link rel="manifest" href="manifest.json">
 
 <!-- iOS Safari PWA -->
@@ -39,7 +39,7 @@
 <meta name="msapplication-TileImage" content="icons/icon-144.png">
 <meta name="msapplication-TileColor" content="#060912">
 
-<title>BoneScan AI — Bone Fracture Intelligence</title>
+<title>BoneScan AI 鈥?Bone Fracture Intelligence</title>
 <meta name="description" content="Interactive bone fracture X-ray dataset with annotation tool, causes, treatment & recovery guides. 10 fracture types, 3 languages.">
 <link rel="alternate" hreflang="en" href="?lang=en">
 <link rel="alternate" hreflang="zh" href="?lang=zh">
@@ -56,14 +56,14 @@
   <div style="display:flex;align-items:center;gap:14px">
     <img src="icons/icon-96.png" style="width:52px;height:52px;border-radius:12px;flex-shrink:0">
     <div style="flex:1">
-      <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:2px">安装 BoneScan AI</div>
-      <div style="font-size:12px;color:#94A3B8">点击下方 <strong style="color:#00B4FF">分享</strong> 按钮，然后选择 <strong style="color:#00B4FF">添加到主屏幕</strong></div>
-      <div style="font-size:11px;color:#64748B;margin-top:2px">Tap Share → Add to Home Screen</div>
+      <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:2px">瀹夎 BoneScan AI</div>
+      <div style="font-size:12px;color:#94A3B8">鐐瑰嚮涓嬫柟 <strong style="color:#00B4FF">鍒嗕韩</strong> 鎸夐挳锛岀劧鍚庨€夋嫨 <strong style="color:#00B4FF">娣诲姞鍒颁富灞忓箷</strong></div>
+      <div style="font-size:11px;color:#64748B;margin-top:2px">Tap Share 鈫?Add to Home Screen</div>
     </div>
-    <button onclick="document.getElementById('ios-install-banner').style.display='none';localStorage.setItem('bsai-ios-banner','1')" style="background:none;border:none;color:#64748B;font-size:20px;cursor:pointer;padding:4px">✕</button>
+    <button onclick="document.getElementById('ios-install-banner').style.display='none';localStorage.setItem('bsai-ios-banner','1')" style="background:none;border:none;color:#64748B;font-size:20px;cursor:pointer;padding:4px">鉁?/button>
   </div>
   <div style="display:flex;justify-content:center;margin-top:10px">
-    <div style="font-size:20px;animation:bounceDown .8s ease-in-out infinite alternate">↓</div>
+    <div style="font-size:20px;animation:bounceDown .8s ease-in-out infinite alternate">鈫?/div>
   </div>
 </div>
 <style>@keyframes bounceDown{0%{transform:translateY(0)}100%{transform:translateY(6px)}}</style>
@@ -73,19 +73,19 @@
   <div style="display:flex;align-items:center;gap:12px">
     <img src="icons/icon-96.png" style="width:48px;height:48px;border-radius:12px;flex-shrink:0">
     <div style="flex:1">
-      <div style="font-size:13px;font-weight:700;color:#fff">安装 BoneScan AI App</div>
-      <div style="font-size:11px;color:#94A3B8">添加到主屏幕，离线也能用</div>
+      <div style="font-size:13px;font-weight:700;color:#fff">瀹夎 BoneScan AI App</div>
+      <div style="font-size:11px;color:#94A3B8">娣诲姞鍒颁富灞忓箷锛岀绾夸篃鑳界敤</div>
     </div>
     <div style="display:flex;gap:8px">
-      <button id="android-install-btn" style="padding:8px 14px;background:linear-gradient(135deg,#00B4FF,#0070CC);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer">安装</button>
-      <button onclick="document.getElementById('android-install-banner').style.display='none';localStorage.setItem('bsai-android-banner','1')" style="background:none;border:none;color:#64748B;font-size:18px;cursor:pointer">✕</button>
+      <button id="android-install-btn" style="padding:8px 14px;background:linear-gradient(135deg,#00B4FF,#0070CC);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer">瀹夎</button>
+      <button onclick="document.getElementById('android-install-banner').style.display='none';localStorage.setItem('bsai-android-banner','1')" style="background:none;border:none;color:#64748B;font-size:18px;cursor:pointer">鉁?/button>
     </div>
   </div>
 </div>
 
 <!-- LOADER -->
 <div id="loader">
-  <div class="ld-logo">🦴</div>
+  <div class="ld-logo">馃Υ</div>
   <div class="ld-text">BoneScan AI</div>
   <div class="ld-bar"><div class="ld-fill"></div></div>
 </div>
@@ -94,7 +94,7 @@
 <div id="detail-modal" role="dialog" aria-modal="true">
   <div class="dm-overlay"></div>
   <div class="dm-container">
-    <button class="dm-close" id="dm-close-btn" aria-label="Close">✕</button>
+    <button class="dm-close" id="dm-close-btn" aria-label="Close">鉁?/button>
 
     <!-- Left: X-ray + Annotation -->
     <div class="dm-image-side">
@@ -111,10 +111,10 @@
           <div class="color-btn" data-color="#00E676" style="background:#00E676" title="Green" role="button" tabindex="0"></div>
         </div>
         <div class="toolbar-spacer"></div>
-        <button class="toolbar-btn" id="dm-undo-btn">↩ Undo</button>
+        <button class="toolbar-btn" id="dm-undo-btn">鈫?Undo</button>
         <button class="toolbar-btn" id="dm-clear-btn">Clear All</button>
       </div>
-      <div class="dm-annot-hint" id="dm-draw-hint">Drag to circle the fracture area · Tap color to change</div>
+      <div class="dm-annot-hint" id="dm-draw-hint">Drag to circle the fracture area 路 Tap color to change</div>
     </div>
 
     <!-- Right: Medical Info -->
@@ -126,15 +126,15 @@
         <!-- Stats row -->
         <div class="dm-stats-row">
           <div class="dm-stat-box" id="dm-stat-train" style="border-top:2px solid #00B4FF">
-            <div class="dm-stat-n" id="dm-sn-train">—</div>
+            <div class="dm-stat-n" id="dm-sn-train">鈥?/div>
             <div class="dm-stat-l" id="dm-sl-train">Train</div>
           </div>
           <div class="dm-stat-box" id="dm-stat-test" style="border-top:2px solid #00B4FF">
-            <div class="dm-stat-n" id="dm-sn-test">—</div>
+            <div class="dm-stat-n" id="dm-sn-test">鈥?/div>
             <div class="dm-stat-l" id="dm-sl-test">Test</div>
           </div>
           <div class="dm-stat-box" id="dm-stat-total" style="border-top:2px solid #00B4FF">
-            <div class="dm-stat-n" id="dm-sn-total">—</div>
+            <div class="dm-stat-n" id="dm-sn-total">鈥?/div>
             <div class="dm-stat-l" id="dm-sl-total">Total</div>
           </div>
         </div>
@@ -157,42 +157,42 @@
 <nav id="nav">
   <div class="nav-inner">
     <a class="nav-logo" href="#hero">
-      <div class="nav-logo-icon">🔬</div>
+      <div class="nav-logo-icon">馃敩</div>
       <span data-i18n="nav.brand">BoneScan AI</span>
     </a>
     <div class="nav-links">
-      <a href="#hub" style="color:var(--teal);font-weight:700">🗂 全部功能</a>
-      <a href="#analyze">🩻 分析</a>
-      <a href="#report-section">📄 报告</a>
-      <a href="#quiz-section">🧪 测验</a>
-      <a href="#case-library-section">📚 案例库</a>
-      <a href="#risk-section">🧮 风险</a>
-      <a href="#hospital-section">📍 医院</a>
+      <a href="#hub" style="color:var(--teal);font-weight:700">馃梻 鍏ㄩ儴鍔熻兘</a>
+      <a href="#analyze">馃┗ 鍒嗘瀽</a>
+      <a href="#report-section">馃搫 鎶ュ憡</a>
+      <a href="#quiz-section">馃И 娴嬮獙</a>
+      <a href="#case-library-section">馃摎 妗堜緥搴?/a>
+      <a href="#risk-section">馃М 椋庨櫓</a>
+      <a href="#hospital-section">馃搷 鍖婚櫌</a>
     </div>
     <div class="lang-switcher">
       <button class="lang-btn active" data-lang="en">EN</button>
-      <button class="lang-btn" data-lang="zh">中文</button>
-      <button class="lang-btn" data-lang="ko">한국어</button>
+      <button class="lang-btn" data-lang="zh">涓枃</button>
+      <button class="lang-btn" data-lang="ko">頃滉淡鞏?/button>
     </div>
-    <button class="nav-history-btn" id="nav-history-btn" title="Case History">📋<span class="nav-hist-badge" id="nav-hist-badge" style="display:none">0</span></button>
-    <button class="nav-history-btn" id="nav-apikey-btn" title="Set API Key" style="font-size:14px">🔑</button>
+    <button class="nav-history-btn" id="nav-history-btn" title="Case History">馃搵<span class="nav-hist-badge" id="nav-hist-badge" style="display:none">0</span></button>
+    <button class="nav-history-btn" id="nav-apikey-btn" title="Set API Key" style="font-size:14px">馃攽</button>
   </div>
 </nav>
-<!-- ══ ANALYZE ══ -->
+<!-- 鈺愨晲 ANALYZE 鈺愨晲 -->
 <section id="analyze" class="section" style="padding-top:80px">
   <div class="section-inner">
     <div class="section-eyebrow reveal" data-i18n="az.eyebrow">AI Analyzer</div>
     <h2 class="section-title reveal reveal-d1" data-i18n="az.title">Upload &amp; Analyze Your X-Ray</h2>
-    <p class="section-sub reveal reveal-d2" data-i18n="az.sub">Upload your own X-ray image, circle the fracture area, then get a full medical analysis report — causes, treatment &amp; rehabilitation.</p>
+    <p class="section-sub reveal reveal-d2" data-i18n="az.sub">Upload your own X-ray image, circle the fracture area, then get a full medical analysis report 鈥?causes, treatment &amp; rehabilitation.</p>
 
     <!-- Upload Zone -->
     <div class="az-upload-zone reveal" id="az-upload-zone">
       <input type="file" id="az-file-input" accept="image/*" style="display:none">
-      <div class="az-upload-icon">🩻</div>
+      <div class="az-upload-icon">馃┗</div>
       <div class="az-upload-title" data-i18n="az.drop">Drop X-ray image here</div>
-      <div class="az-upload-sub" data-i18n="az.drop_sub">or click to browse · JPG / PNG / WEBP</div>
+      <div class="az-upload-sub" data-i18n="az.drop_sub">or click to browse 路 JPG / PNG / WEBP</div>
       <button class="az-upload-btn" id="az-browse-btn" data-i18n="az.browse">Choose Image</button>
-      <button class="az-upload-btn" id="az-camera-btn" style="background:linear-gradient(135deg,#059669,#10B981);margin-left:8px">📷 Camera</button>
+      <button class="az-upload-btn" id="az-camera-btn" style="background:linear-gradient(135deg,#059669,#10B981);margin-left:8px">馃摲 Camera</button>
       <input type="file" id="az-camera-input" accept="image/*" capture="environment" style="display:none">
       <div class="az-samples-row">
         <span class="az-or" data-i18n="az.or_sample">or try a sample:</span>
@@ -205,7 +205,7 @@
     <!-- Workspace (shown after image load) -->
     <div class="az-workspace" id="az-workspace" style="display:none">
 
-      <!-- ── LEFT: Image + GradCAM + Controls ── -->
+      <!-- 鈹€鈹€ LEFT: Image + GradCAM + Controls 鈹€鈹€ -->
       <div class="az-gcam-panel">
         <div class="az-panel-hdr"><span class="az-ph-num">1</span><span data-i18n="az.img_input">Image Input</span></div>
 
@@ -217,27 +217,27 @@
         <!-- Enhancement Bar -->
         <div class="az-enhance-bar" id="az-enhance-bar">
           <div class="az-enh-group">
-            <span class="az-enh-icon">☀️</span>
+            <span class="az-enh-icon">鈽€锔?/span>
             <input type="range" class="az-enh-slider" id="az-bright-slider" min="30" max="250" value="100">
             <span class="az-enh-val" id="az-bright-val">100%</span>
           </div>
           <div class="az-enh-group">
-            <span class="az-enh-icon">◑</span>
+            <span class="az-enh-icon">鈼?/span>
             <input type="range" class="az-enh-slider" id="az-contrast-slider" min="30" max="350" value="100">
             <span class="az-enh-val" id="az-contrast-val">100%</span>
           </div>
-          <button class="az-enh-toggle" id="az-invert-btn" data-i18n="az.enh_invert">⇄ Invert</button>
-          <button class="az-enh-toggle" id="az-gcam-toggle">🌡 GradCAM</button>
-          <button class="az-enh-toggle" id="az-reset-enh-btn" data-i18n="az.enh_reset">↺ Reset</button>
+          <button class="az-enh-toggle" id="az-invert-btn" data-i18n="az.enh_invert">鈬?Invert</button>
+          <button class="az-enh-toggle" id="az-gcam-toggle">馃尅 GradCAM</button>
+          <button class="az-enh-toggle" id="az-reset-enh-btn" data-i18n="az.enh_reset">鈫?Reset</button>
         </div>
 
         <!-- Annotation toolbar -->
         <div class="az-toolbar">
           <!-- Mode toggle -->
           <div class="az-mode-btns">
-            <button class="az-mode-btn active" id="az-mode-circle" data-mode="circle" title="Draw circles">⬤</button>
-            <button class="az-mode-btn" id="az-mode-ruler" data-mode="ruler" title="Measure distance">📏</button>
-            <button class="az-mode-btn" id="az-mode-angle" data-mode="angle" title="Measure angle">∠</button>
+            <button class="az-mode-btn active" id="az-mode-circle" data-mode="circle" title="Draw circles">猬?/button>
+            <button class="az-mode-btn" id="az-mode-ruler" data-mode="ruler" title="Measure distance">馃搹</button>
+            <button class="az-mode-btn" id="az-mode-angle" data-mode="angle" title="Measure angle">鈭?/button>
           </div>
           <div class="az-tb-sep"></div>
           <span class="az-toolbar-label" data-i18n="az.color">Color:</span>
@@ -248,29 +248,29 @@
             <div class="az-color-btn" data-color="#00E676" style="background:#00E676"></div>
           </div>
           <div class="az-tb-spacer"></div>
-          <button class="az-tb-btn" id="az-undo-btn" data-i18n="az.undo">↩ Undo</button>
+          <button class="az-tb-btn" id="az-undo-btn" data-i18n="az.undo">鈫?Undo</button>
           <button class="az-tb-btn" id="az-clear-btn" data-i18n="az.clear">Clear</button>
-          <button class="az-tb-btn az-reupload-btn" id="az-reupload-btn" data-i18n="az.reupload">↑ New</button>
+          <button class="az-tb-btn az-reupload-btn" id="az-reupload-btn" data-i18n="az.reupload">鈫?New</button>
         </div>
         <!-- Zoom controls -->
         <div class="az-zoom-bar">
-          <button class="az-zoom-btn" id="az-zoom-out">－</button>
+          <button class="az-zoom-btn" id="az-zoom-out">锛?/button>
           <span class="az-zoom-val" id="az-zoom-val">100%</span>
-          <button class="az-zoom-btn" id="az-zoom-in">＋</button>
-          <button class="az-zoom-btn" id="az-zoom-fit" title="Fit to screen">⊡</button>
+          <button class="az-zoom-btn" id="az-zoom-in">锛?/button>
+          <button class="az-zoom-btn" id="az-zoom-fit" title="Fit to screen">鈯?/button>
         </div>
 
         <!-- Model selector + TTA -->
         <div class="az-model-bar">
           <select id="az-model-sel" class="az-model-sel">
-            <option value="efficientnet">EfficientNet-B3 · 16 MB</option>
-            <option value="resnet50">ResNet-50 · 98 MB</option>
-            <option value="densenet121">DenseNet-121 · 32 MB</option>
-            <option value="vgg16">VGG-16 · 528 MB</option>
+            <option value="efficientnet">EfficientNet-B3 路 16 MB</option>
+            <option value="resnet50">ResNet-50 路 98 MB</option>
+            <option value="densenet121">DenseNet-121 路 32 MB</option>
+            <option value="vgg16">VGG-16 路 528 MB</option>
           </select>
           <label class="az-tta-label">
             <input type="checkbox" id="az-tta-chk" class="az-tta-chk">
-            <span>TTA 5× <span class="az-tta-badge">acc ↑~5%</span></span>
+            <span>TTA 5脳 <span class="az-tta-badge">acc 鈫憕5%</span></span>
           </label>
         </div>
 
@@ -278,7 +278,7 @@
         <div class="az-pred-btns">
           <button class="az-predict-btn" id="az-predict-btn">
             <span class="az-ai-spinner" id="az-pred-spinner" style="display:none"></span>
-            <span>🔍</span>
+            <span>馃攳</span>
             <span id="az-pred-label" data-i18n="az.predict">Predict</span>
           </button>
           <button class="az-compare-btn" id="az-compare-btn" data-i18n="az.compare">Compare All</button>
@@ -286,15 +286,15 @@
         <div class="az-draw-hint" data-i18n="az.hint">Drag on the image to circle fracture areas</div>
       </div>
 
-      <!-- ── RIGHT: Prediction Results + Form ── -->
+      <!-- 鈹€鈹€ RIGHT: Prediction Results + Form 鈹€鈹€ -->
       <div class="az-pred-panel" id="az-pred-panel">
         <div class="az-panel-hdr"><span class="az-ph-num">2</span><span data-i18n="az.pred_results">Prediction Results</span></div>
 
         <!-- TOP-1 card -->
         <div class="az-top1-card" id="az-top1-card" style="display:none">
           <div class="az-top1-rank">TOP-1</div>
-          <div class="az-top1-name" id="az-top1-name">—</div>
-          <div class="az-top1-pct" id="az-top1-pct">—</div>
+          <div class="az-top1-name" id="az-top1-name">鈥?/div>
+          <div class="az-top1-pct" id="az-top1-pct">鈥?/div>
         </div>
 
         <!-- Probability bars -->
@@ -311,8 +311,8 @@
             <span class="az-mi-tag" id="az-mi-tag3"></span>
           </div>
           <div class="az-mi-stats">
-            <div class="az-mi-stat"><div class="az-mi-sv" id="az-mi-acc">—</div><div class="az-mi-sk">Test ACC</div></div>
-            <div class="az-mi-stat"><div class="az-mi-sv" id="az-mi-f1">—</div><div class="az-mi-sk">Test F1-macro</div></div>
+            <div class="az-mi-stat"><div class="az-mi-sv" id="az-mi-acc">鈥?/div><div class="az-mi-sk">Test ACC</div></div>
+            <div class="az-mi-stat"><div class="az-mi-sv" id="az-mi-f1">鈥?/div><div class="az-mi-sk">Test F1-macro</div></div>
           </div>
         </div>
 
@@ -322,34 +322,34 @@
         <div class="az-field">
           <label class="az-label" data-i18n="az.fracture_type">Fracture Type</label>
           <select id="az-fracture-sel" class="az-select">
-            <optgroup label="── Morphology Types ──">
-              <option value="avulsion">Avulsion / 撕脱骨折 / 견열 골절</option>
-              <option value="comminuted">Comminuted / 粉碎骨折 / 분쇄 골절</option>
-              <option value="greenstick">Greenstick / 青枝骨折 / 청지 골절</option>
-              <option value="hairline">Hairline / 发际线骨折 / 미세 골절</option>
-              <option value="impacted">Impacted / 嵌插骨折 / 감입 골절</option>
-              <option value="longitudinal">Longitudinal / 纵向骨折 / 종적 골절</option>
-              <option value="oblique">Oblique / 斜形骨折 / 사형 골절</option>
-              <option value="spiral">Spiral / 螺旋骨折 / 나선형 골절</option>
-              <option value="transverse">Transverse / 横形骨折 / 횡형 골절</option>
-              <option value="buckle">Buckle (Torus) / 隆突骨折 / 융기 골절</option>
-              <option value="compression">Compression / 压缩骨折 / 압박 골절</option>
-              <option value="stress">Stress / 应力骨折 / 피로 골절</option>
+            <optgroup label="鈹€鈹€ Morphology Types 鈹€鈹€">
+              <option value="avulsion">Avulsion / 鎾曡劚楠ㄦ姌 / 瓴棿 瓿爤</option>
+              <option value="comminuted">Comminuted / 绮夌楠ㄦ姌 / 攵勳噭 瓿爤</option>
+              <option value="greenstick">Greenstick / 闈掓灊楠ㄦ姌 / 觳 瓿爤</option>
+              <option value="hairline">Hairline / 鍙戦檯绾块鎶?/ 氙胳劯 瓿爤</option>
+              <option value="impacted">Impacted / 宓屾彃楠ㄦ姌 / 臧愳瀰 瓿爤</option>
+              <option value="longitudinal">Longitudinal / 绾靛悜楠ㄦ姌 / 膦呾爜 瓿爤</option>
+              <option value="oblique">Oblique / 鏂滃舰楠ㄦ姌 / 靷槙 瓿爤</option>
+              <option value="spiral">Spiral / 铻烘棆楠ㄦ姌 / 雮橃劆順?瓿爤</option>
+              <option value="transverse">Transverse / 妯舰楠ㄦ姌 / 須№槙 瓿爤</option>
+              <option value="buckle">Buckle (Torus) / 闅嗙獊楠ㄦ姌 / 鞙店赴 瓿爤</option>
+              <option value="compression">Compression / 鍘嬬缉楠ㄦ姌 / 鞎曤皶 瓿爤</option>
+              <option value="stress">Stress / 搴斿姏楠ㄦ姌 / 頂茧 瓿爤</option>
             </optgroup>
-            <optgroup label="── Mechanism / Cause ──">
-              <option value="dislocation">Dislocation / 骨折脱位 / 골절 탈구</option>
-              <option value="pathological">Pathological / 病理骨折 / 병리성 골절</option>
+            <optgroup label="鈹€鈹€ Mechanism / Cause 鈹€鈹€">
+              <option value="dislocation">Dislocation / 楠ㄦ姌鑴变綅 / 瓿爤 韮堦惮</option>
+              <option value="pathological">Pathological / 鐥呯悊楠ㄦ姌 / 氤戨Μ靹?瓿爤</option>
             </optgroup>
-            <optgroup label="── Named Fractures ──">
-              <option value="colles">Colles' / 柯氏骨折 / 콜리스 골절</option>
-              <option value="boxer">Boxer's / 拳击手骨折 / 권투선수 골절</option>
-              <option value="scaphoid">Scaphoid / 舟状骨骨折 / 주상골 골절</option>
-              <option value="jones">Jones' / 琼斯骨折 / 존스 골절</option>
-              <option value="jefferson">Jefferson (C1) / 杰弗逊骨折 / 제퍼슨 골절</option>
+            <optgroup label="鈹€鈹€ Named Fractures 鈹€鈹€">
+              <option value="colles">Colles' / 鏌皬楠ㄦ姌 / 旖滊Μ鞀?瓿爤</option>
+              <option value="boxer">Boxer's / 鎷冲嚮鎵嬮鎶?/ 甓岉埇靹犾垬 瓿爤</option>
+              <option value="scaphoid">Scaphoid / 鑸熺姸楠ㄩ鎶?/ 欤检儊瓿?瓿爤</option>
+              <option value="jones">Jones' / 鐞兼柉楠ㄦ姌 / 臁挫姢 瓿爤</option>
+              <option value="jefferson">Jefferson (C1) / 鏉板紬閫婇鎶?/ 鞝滍嵓鞀?瓿爤</option>
             </optgroup>
-            <optgroup label="── Location-Specific ──">
-              <option value="hip">Hip (Femoral Neck) / 股骨颈骨折 / 고관절 골절</option>
-              <option value="tibial_plateau">Tibial Plateau / 胫骨平台骨折 / 경골고원 골절</option>
+            <optgroup label="鈹€鈹€ Location-Specific 鈹€鈹€">
+              <option value="hip">Hip (Femoral Neck) / 鑲￠棰堥鎶?/ 瓿犼磤鞝?瓿爤</option>
+              <option value="tibial_plateau">Tibial Plateau / 鑳骞冲彴楠ㄦ姌 / 瓴疥敞瓿犾洂 瓿爤</option>
             </optgroup>
           </select>
           <div class="az-fracture-desc" id="az-fracture-desc"></div>
@@ -358,32 +358,32 @@
         <div class="az-field">
           <label class="az-label" data-i18n="az.body_region">Body Region</label>
           <select id="az-body-sel" class="az-select">
-            <option value="arm">Upper Limb / 上肢 / 상지</option>
-            <option value="hand">Hand &amp; Wrist / 手腕 / 손·손목</option>
-            <option value="leg">Lower Limb / 下肢 / 하지</option>
-            <option value="foot">Foot &amp; Ankle / 足踝 / 발·발목</option>
-            <option value="spine">Spine / 脊柱 / 척추</option>
-            <option value="pelvis">Pelvis &amp; Hip / 骨盆髋 / 골반·고관절</option>
+            <option value="arm">Upper Limb / 涓婅偄 / 靸侅</option>
+            <option value="hand">Hand &amp; Wrist / 鎵嬭厱 / 靻惵缝啇氇?/option>
+            <option value="leg">Lower Limb / 涓嬭偄 / 頃橃</option>
+            <option value="foot">Foot &amp; Ankle / 瓒宠笣 / 氚溌冯皽氇?/option>
+            <option value="spine">Spine / 鑴婃煴 / 觳欖稊</option>
+            <option value="pelvis">Pelvis &amp; Hip / 楠ㄧ泦楂?/ 瓿皹路瓿犼磤鞝?/option>
           </select>
         </div>
 
         <button class="az-ai-btn" id="az-ai-btn">
           <span class="az-ai-spinner" id="az-ai-spinner" style="display:none"></span>
-          <span id="az-ai-icon">🤖</span>
+          <span id="az-ai-icon">馃</span>
           <span id="az-ai-label" data-i18n="az.ai_analyze">AI Smart Analyze</span>
         </button>
         <div class="az-ai-result" id="az-ai-result" style="display:none"></div>
 
         <button class="az-generate-btn" id="az-generate-btn">
-          <span>🔬</span>
+          <span>馃敩</span>
           <span data-i18n="az.generate">Generate Analysis Report</span>
         </button>
 
         <div class="az-tips">
-          <div class="az-tip" data-i18n="az.tip1">① Upload or drag in your X-ray image</div>
-          <div class="az-tip" data-i18n="az.tip2">② Draw circles on the fracture area</div>
-          <div class="az-tip" data-i18n="az.tip3">③ Select type &amp; body region</div>
-          <div class="az-tip" data-i18n="az.tip4">④ Click Predict or Generate Report</div>
+          <div class="az-tip" data-i18n="az.tip1">鈶?Upload or drag in your X-ray image</div>
+          <div class="az-tip" data-i18n="az.tip2">鈶?Draw circles on the fracture area</div>
+          <div class="az-tip" data-i18n="az.tip3">鈶?Select type &amp; body region</div>
+          <div class="az-tip" data-i18n="az.tip4">鈶?Click Predict or Generate Report</div>
         </div>
       </div>
     </div>
@@ -396,7 +396,7 @@
 
 
 
-<!-- ══ HERO ══ -->
+<!-- 鈺愨晲 HERO 鈺愨晲 -->
 <section id="hero">
   <canvas id="particle-canvas"></canvas>
   <div class="hero-bg"></div>
@@ -428,67 +428,67 @@
   </div>
 </section>
 
-<!-- ══ FEATURE HUB ══ -->
+<!-- 鈺愨晲 FEATURE HUB 鈺愨晲 -->
 <section id="hub" style="padding:64px 0 56px;background:var(--bg2)">
   <div class="section-inner">
     <div style="text-align:center;margin-bottom:36px">
-      <div style="font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--teal);text-transform:uppercase;margin-bottom:8px">All Features · 全部功能</div>
-      <h2 style="font-size:clamp(22px,4vw,32px);font-weight:800;color:var(--text1);margin-bottom:8px">点击任意功能 <span style="color:var(--teal)">立即跳转</span></h2>
-      <p style="font-size:13px;color:var(--text3)">Click any card to jump to that feature · 所有功能一目了然</p>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--teal);text-transform:uppercase;margin-bottom:8px">All Features 路 鍏ㄩ儴鍔熻兘</div>
+      <h2 style="font-size:clamp(22px,4vw,32px);font-weight:800;color:var(--text1);margin-bottom:8px">鐐瑰嚮浠绘剰鍔熻兘 <span style="color:var(--teal)">绔嬪嵆璺宠浆</span></h2>
+      <p style="font-size:13px;color:var(--text3)">Click any card to jump to that feature 路 鎵€鏈夊姛鑳戒竴鐩簡鐒?/p>
     </div>
     <div class="hub-grid">
 
       <div class="hub-cat">
-        <div class="hub-cat-label">🔬 AI 核心分析</div>
+        <div class="hub-cat-label">馃敩 AI 鏍稿績鍒嗘瀽</div>
         <div class="hub-cards">
-          <a href="#analyze" class="hub-card"><span class="hub-icon">🩻</span><div><div class="hub-name">X光上传 & 分析</div><div class="hub-desc">上传图片·标注·AI分类·报告</div></div></a>
-          <a href="#auto-detect-section" class="hub-card"><span class="hub-icon">🔍</span><div><div class="hub-name">自动框选异常区域</div><div class="hub-desc">AI自动高亮可疑骨折位置</div></div></a>
-          <a href="#compare-section" class="hub-card"><span class="hub-icon">⚖️</span><div><div class="hub-name">治疗前后对比</div><div class="hub-desc">上传两张X光对比恢复情况</div></div></a>
+          <a href="#analyze" class="hub-card"><span class="hub-icon">馃┗</span><div><div class="hub-name">X鍏変笂浼?& 鍒嗘瀽</div><div class="hub-desc">涓婁紶鍥剧墖路鏍囨敞路AI鍒嗙被路鎶ュ憡</div></div></a>
+          <a href="#auto-detect-section" class="hub-card"><span class="hub-icon">馃攳</span><div><div class="hub-name">鑷姩妗嗛€夊紓甯稿尯鍩?/div><div class="hub-desc">AI鑷姩楂樹寒鍙枒楠ㄦ姌浣嶇疆</div></div></a>
+          <a href="#compare-section" class="hub-card"><span class="hub-icon">鈿栵笍</span><div><div class="hub-name">娌荤枟鍓嶅悗瀵规瘮</div><div class="hub-desc">涓婁紶涓ゅ紶X鍏夊姣旀仮澶嶆儏鍐?/div></div></a>
         </div>
       </div>
 
       <div class="hub-cat">
-        <div class="hub-cat-label">📋 医疗报告</div>
+        <div class="hub-cat-label">馃搵 鍖荤枟鎶ュ憡</div>
         <div class="hub-cards">
-          <a href="#report-section" class="hub-card"><span class="hub-icon">📄</span><div><div class="hub-name">完整医生报告</div><div class="hub-desc">中英双语专业报告+PDF+QR分享</div></div></a>
-          <a href="#healing-section" class="hub-card"><span class="hub-icon">📅</span><div><div class="hub-name">愈合进度预测</div><div class="hub-desc">输入受伤日期预测康复时间线</div></div></a>
-          <a href="#rehab-section" class="hub-card"><span class="hub-icon">🏋️</span><div><div class="hub-name">个性化康复计划</div><div class="hub-desc">每周康复训练计划+PDF下载</div></div></a>
+          <a href="#report-section" class="hub-card"><span class="hub-icon">馃搫</span><div><div class="hub-name">瀹屾暣鍖荤敓鎶ュ憡</div><div class="hub-desc">涓嫳鍙岃涓撲笟鎶ュ憡+PDF+QR鍒嗕韩</div></div></a>
+          <a href="#healing-section" class="hub-card"><span class="hub-icon">馃搮</span><div><div class="hub-name">鎰堝悎杩涘害棰勬祴</div><div class="hub-desc">杈撳叆鍙椾激鏃ユ湡棰勬祴搴峰鏃堕棿绾?/div></div></a>
+          <a href="#rehab-section" class="hub-card"><span class="hub-icon">馃弸锔?/span><div><div class="hub-name">涓€у寲搴峰璁″垝</div><div class="hub-desc">姣忓懆搴峰璁粌璁″垝+PDF涓嬭浇</div></div></a>
         </div>
       </div>
 
       <div class="hub-cat">
-        <div class="hub-cat-label">📊 数据 & 统计</div>
+        <div class="hub-cat-label">馃搳 鏁版嵁 & 缁熻</div>
         <div class="hub-cards">
-          <a href="#stats-section" class="hub-card"><span class="hub-icon">📈</span><div><div class="hub-name">历史统计仪表盘</div><div class="hub-desc">骨折类型分布·严重程度图表</div></div></a>
-          <a href="#analytics" class="hub-card"><span class="hub-icon">🗂️</span><div><div class="hub-name">数据集分析</div><div class="hub-desc">X光数据集概况与分布</div></div></a>
-          <a href="#pain-diary-section" class="hub-card"><span class="hub-icon">📓</span><div><div class="hub-name">疼痛日记</div><div class="hub-desc">每日疼痛评分·趋势追踪</div></div></a>
+          <a href="#stats-section" class="hub-card"><span class="hub-icon">馃搱</span><div><div class="hub-name">鍘嗗彶缁熻浠〃鐩?/div><div class="hub-desc">楠ㄦ姌绫诲瀷鍒嗗竷路涓ラ噸绋嬪害鍥捐〃</div></div></a>
+          <a href="#analytics" class="hub-card"><span class="hub-icon">馃梻锔?/span><div><div class="hub-name">鏁版嵁闆嗗垎鏋?/div><div class="hub-desc">X鍏夋暟鎹泦姒傚喌涓庡垎甯?/div></div></a>
+          <a href="#pain-diary-section" class="hub-card"><span class="hub-icon">馃摀</span><div><div class="hub-name">鐤肩棝鏃ヨ</div><div class="hub-desc">姣忔棩鐤肩棝璇勫垎路瓒嬪娍杩借釜</div></div></a>
         </div>
       </div>
 
       <div class="hub-cat">
-        <div class="hub-cat-label">🧮 计算 & 评估</div>
+        <div class="hub-cat-label">馃М 璁＄畻 & 璇勪及</div>
         <div class="hub-cards">
-          <a href="#risk-section" class="hub-card"><span class="hub-icon">🧮</span><div><div class="hub-name">骨折风险计算器</div><div class="hub-desc">FRAX算法个人风险评分</div></div></a>
-          <a href="#risk" class="hub-card"><span class="hub-icon">🎯</span><div><div class="hub-name">高级风险评估</div><div class="hub-desc">T值·BMI·骨密度综合评估</div></div></a>
-          <a href="#bone-map-section" class="hub-card"><span class="hub-icon">🗺️</span><div><div class="hub-name">交互式骨骼地图</div><div class="hub-desc">点击部位查看骨折类型</div></div></a>
+          <a href="#risk-section" class="hub-card"><span class="hub-icon">馃М</span><div><div class="hub-name">楠ㄦ姌椋庨櫓璁＄畻鍣?/div><div class="hub-desc">FRAX绠楁硶涓汉椋庨櫓璇勫垎</div></div></a>
+          <a href="#risk" class="hub-card"><span class="hub-icon">馃幆</span><div><div class="hub-name">楂樼骇椋庨櫓璇勪及</div><div class="hub-desc">T鍊悸稡MI路楠ㄥ瘑搴︾患鍚堣瘎浼?/div></div></a>
+          <a href="#bone-map-section" class="hub-card"><span class="hub-icon">馃椇锔?/span><div><div class="hub-name">浜や簰寮忛楠煎湴鍥?/div><div class="hub-desc">鐐瑰嚮閮ㄤ綅鏌ョ湅楠ㄦ姌绫诲瀷</div></div></a>
         </div>
       </div>
 
       <div class="hub-cat">
-        <div class="hub-cat-label">📚 教育 & 学习</div>
+        <div class="hub-cat-label">馃摎 鏁欒偛 & 瀛︿範</div>
         <div class="hub-cards">
-          <a href="#quiz-section" class="hub-card"><span class="hub-icon">🧪</span><div><div class="hub-name">骨折识别测验</div><div class="hub-desc">10道题·即时评分·学习骨折知识</div></div></a>
-          <a href="#case-library-section" class="hub-card"><span class="hub-icon">📚</span><div><div class="hub-name">经典案例库</div><div class="hub-desc">真实案例+专家解读·按类型筛选</div></div></a>
-          <a href="#atlas" class="hub-card"><span class="hub-icon">🦴</span><div><div class="hub-name">骨折图谱</div><div class="hub-desc">10种骨折类型详细说明</div></div></a>
+          <a href="#quiz-section" class="hub-card"><span class="hub-icon">馃И</span><div><div class="hub-name">楠ㄦ姌璇嗗埆娴嬮獙</div><div class="hub-desc">10閬撻路鍗虫椂璇勫垎路瀛︿範楠ㄦ姌鐭ヨ瘑</div></div></a>
+          <a href="#case-library-section" class="hub-card"><span class="hub-icon">馃摎</span><div><div class="hub-name">缁忓吀妗堜緥搴?/div><div class="hub-desc">鐪熷疄妗堜緥+涓撳瑙ｈ路鎸夌被鍨嬬瓫閫?/div></div></a>
+          <a href="#atlas" class="hub-card"><span class="hub-icon">馃Υ</span><div><div class="hub-name">楠ㄦ姌鍥捐氨</div><div class="hub-desc">10绉嶉鎶樼被鍨嬭缁嗚鏄?/div></div></a>
         </div>
       </div>
 
       <div class="hub-cat">
-        <div class="hub-cat-label">🏥 实用工具</div>
+        <div class="hub-cat-label">馃彞 瀹炵敤宸ュ叿</div>
         <div class="hub-cards">
-          <a href="#med-calendar-section" class="hub-card"><span class="hub-icon">💊</span><div><div class="hub-name">用药提醒日历</div><div class="hub-desc">设置用药·复查·康复训练提醒</div></div></a>
-          <a href="#hospital-section" class="hub-card"><span class="hub-icon">📍</span><div><div class="hub-name">附近医院查找</div><div class="hub-desc">GPS定位·地图显示骨科医院</div></div></a>
-          <a href="#compare-section" class="hub-card"><span class="hub-icon">🌙</span><div><div class="hub-name">深色/浅色主题</div><div class="hub-desc">右下角按钮随时切换主题</div></div></a>
+          <a href="#med-calendar-section" class="hub-card"><span class="hub-icon">馃拪</span><div><div class="hub-name">鐢ㄨ嵂鎻愰啋鏃ュ巻</div><div class="hub-desc">璁剧疆鐢ㄨ嵂路澶嶆煡路搴峰璁粌鎻愰啋</div></div></a>
+          <a href="#hospital-section" class="hub-card"><span class="hub-icon">馃搷</span><div><div class="hub-name">闄勮繎鍖婚櫌鏌ユ壘</div><div class="hub-desc">GPS瀹氫綅路鍦板浘鏄剧ず楠ㄧ鍖婚櫌</div></div></a>
+          <a href="#compare-section" class="hub-card"><span class="hub-icon">馃寵</span><div><div class="hub-name">娣辫壊/娴呰壊涓婚</div><div class="hub-desc">鍙充笅瑙掓寜閽殢鏃跺垏鎹富棰?/div></div></a>
         </div>
       </div>
 
@@ -510,7 +510,7 @@
 @media(max-width:560px){.hub-grid{grid-template-columns:1fr}}
 </style>
 
-<!-- ══ OVERVIEW ══ -->
+<!-- 鈺愨晲 OVERVIEW 鈺愨晲 -->
 <section id="overview" class="section section-alt">
   <div class="section-inner">
     <div class="section-eyebrow reveal" data-i18n="ov.title">Overview</div>
@@ -518,25 +518,25 @@
     <p class="section-sub reveal reveal-d2" data-i18n="ov.sub">Comprehensive statistics across both dataset versions.</p>
     <div class="ov-grid">
       <div class="ov-card reveal reveal-d1" style="--ac:#00B4FF">
-        <div class="ov-icon" style="background:rgba(0,180,255,.1)">📊</div>
+        <div class="ov-icon" style="background:rgba(0,180,255,.1)">馃搳</div>
         <div class="ov-big" style="color:#00B4FF">1,107</div>
         <div class="ov-label" data-i18n="ov.c1l">Clean Split Images</div>
         <div class="ov-sub" data-i18n="ov.c1s">After deduplication &amp; augmentation</div>
       </div>
       <div class="ov-card reveal reveal-d2" style="--ac:#9B5FFF">
-        <div class="ov-icon" style="background:rgba(155,95,255,.1)">🗂️</div>
+        <div class="ov-icon" style="background:rgba(155,95,255,.1)">馃梻锔?/div>
         <div class="ov-big" style="color:#9B5FFF">989</div>
         <div class="ov-label" data-i18n="ov.c2l">Fixed Dataset Images</div>
         <div class="ov-sub" data-i18n="ov.c2s">Refined train/test partitioning</div>
       </div>
       <div class="ov-card reveal reveal-d3" style="--ac:#00E5C8">
-        <div class="ov-icon" style="background:rgba(0,229,200,.1)">🧠</div>
+        <div class="ov-icon" style="background:rgba(0,229,200,.1)">馃</div>
         <div class="ov-big" style="color:#00E5C8">885</div>
         <div class="ov-label" data-i18n="ov.c3l">Training Samples</div>
         <div class="ov-sub" data-i18n="ov.c3s">Clean split train set</div>
       </div>
       <div class="ov-card reveal reveal-d4" style="--ac:#FF8C42">
-        <div class="ov-icon" style="background:rgba(255,140,66,.1)">🏷️</div>
+        <div class="ov-icon" style="background:rgba(255,140,66,.1)">馃彿锔?/div>
         <div class="ov-big" style="color:#FF8C42">10</div>
         <div class="ov-label" data-i18n="ov.c4l">Fracture Categories</div>
         <div class="ov-sub" data-i18n="ov.c4s">Clinically validated types</div>
@@ -545,7 +545,7 @@
   </div>
 </section>
 
-<!-- ══ ATLAS ══ -->
+<!-- 鈺愨晲 ATLAS 鈺愨晲 -->
 <section id="atlas" class="section">
   <div class="section-inner">
     <div class="section-eyebrow reveal" data-i18n="atlas.eyebrow">Fracture Atlas</div>
@@ -555,7 +555,7 @@
   </div>
 </section>
 
-<!-- ══ BODY MAP ══ -->
+<!-- 鈺愨晲 BODY MAP 鈺愨晲 -->
 <section id="bodymap" class="section section-alt">
   <div class="section-inner">
     <div class="section-eyebrow reveal" data-i18n="bm.eyebrow">Interactive Body Map</div>
@@ -563,7 +563,7 @@
     <p class="section-sub reveal reveal-d2" data-i18n="bm.sub">Click on any body region to explore related fracture types, common causes, and clinical information.</p>
     <div class="bm-container reveal">
       <div class="bm-svg-wrap">
-        <div class="bm-svg-label" data-i18n="bm.click_hint">↓ Click a region</div>
+        <div class="bm-svg-label" data-i18n="bm.click_hint">鈫?Click a region</div>
         <svg id="bm-svg" viewBox="0 0 220 510" fill="none" xmlns="http://www.w3.org/2000/svg">
           <!-- HEAD -->
           <ellipse class="br" id="br-head" data-region="head" cx="110" cy="42" rx="31" ry="36"/>
@@ -612,13 +612,13 @@
       <!-- Info Panel -->
       <div class="bm-info-side" id="bm-info-side">
         <div class="bm-placeholder" id="bm-placeholder">
-          <div class="bm-ph-icon">🦴</div>
+          <div class="bm-ph-icon">馃Υ</div>
           <div class="bm-ph-title" data-i18n="bm.ph_title">Select a Body Region</div>
           <div class="bm-ph-text" data-i18n="bm.ph_text">Click on any part of the skeleton to explore related fracture types, causes, and clinical details.</div>
           <div class="bm-ph-chips">
-            <span class="bm-ph-chip" data-i18n="bm.chip1">📍 21 body regions</span>
-            <span class="bm-ph-chip" data-i18n="bm.chip2">🦴 19 fracture types</span>
-            <span class="bm-ph-chip" data-i18n="bm.chip3">🌐 3 languages</span>
+            <span class="bm-ph-chip" data-i18n="bm.chip1">馃搷 21 body regions</span>
+            <span class="bm-ph-chip" data-i18n="bm.chip2">馃Υ 19 fracture types</span>
+            <span class="bm-ph-chip" data-i18n="bm.chip3">馃寪 3 languages</span>
           </div>
         </div>
         <div class="bm-detail" id="bm-detail" style="display:none">
@@ -632,7 +632,7 @@
           <div class="bm-prevalence">
             <span class="bm-prev-lbl" data-i18n="bm.prevalence">Prevalence</span>
             <div class="bm-prev-track"><div class="bm-prev-fill" id="bm-prev-fill" style="width:0%"></div></div>
-            <span class="bm-prev-pct" id="bm-prev-pct">—</span>
+            <span class="bm-prev-pct" id="bm-prev-pct">鈥?/span>
           </div>
           <div class="bm-fractures-title" data-i18n="bm.related">Related Fracture Types</div>
           <div class="bm-fracture-chips" id="bm-fracture-chips"></div>
@@ -644,7 +644,7 @@
   </div>
 </section>
 
-<!-- ══ RISK CALCULATOR ══ -->
+<!-- 鈺愨晲 RISK CALCULATOR 鈺愨晲 -->
 <section id="risk" class="section">
   <div class="section-inner">
     <div class="section-eyebrow reveal" data-i18n="rc.eyebrow">Risk Assessment</div>
@@ -674,35 +674,35 @@
           <div class="rc-field">
             <label class="rc-lbl" data-i18n="rc.sex">Sex</label>
             <div class="rc-seg" id="rc-sex">
-              <button class="rc-seg-btn" data-v="male" data-i18n="rc.male">♂ Male</button>
-              <button class="rc-seg-btn active" data-v="female" data-i18n="rc.female">♀ Female</button>
+              <button class="rc-seg-btn" data-v="male" data-i18n="rc.male">鈾?Male</button>
+              <button class="rc-seg-btn active" data-v="female" data-i18n="rc.female">鈾€ Female</button>
             </div>
           </div>
           <div class="rc-field">
             <label class="rc-lbl" data-i18n="rc.activity">Activity Level</label>
             <div class="rc-seg" id="rc-activity">
-              <button class="rc-seg-btn active" data-v="sedentary" data-i18n="rc.sedentary">🛋 Sedentary</button>
-              <button class="rc-seg-btn" data-v="moderate" data-i18n="rc.moderate">🚶 Moderate</button>
-              <button class="rc-seg-btn" data-v="active" data-i18n="rc.active">🏃 Active</button>
+              <button class="rc-seg-btn active" data-v="sedentary" data-i18n="rc.sedentary">馃泲 Sedentary</button>
+              <button class="rc-seg-btn" data-v="moderate" data-i18n="rc.moderate">馃毝 Moderate</button>
+              <button class="rc-seg-btn" data-v="active" data-i18n="rc.active">馃弮 Active</button>
             </div>
           </div>
         </div>
         <div class="rc-field">
           <label class="rc-lbl" data-i18n="rc.calcium">Calcium &amp; Vitamin D Intake</label>
           <div class="rc-seg" id="rc-calcium">
-            <button class="rc-seg-btn active" data-v="low" data-i18n="rc.cal_low">🔴 Low</button>
-            <button class="rc-seg-btn" data-v="medium" data-i18n="rc.cal_med">🟡 Medium</button>
-            <button class="rc-seg-btn" data-v="high" data-i18n="rc.cal_high">🟢 Adequate</button>
+            <button class="rc-seg-btn active" data-v="low" data-i18n="rc.cal_low">馃敶 Low</button>
+            <button class="rc-seg-btn" data-v="medium" data-i18n="rc.cal_med">馃煛 Medium</button>
+            <button class="rc-seg-btn" data-v="high" data-i18n="rc.cal_high">馃煝 Adequate</button>
           </div>
         </div>
         <div class="rc-checks">
-          <label class="rc-check"><input type="checkbox" id="rc-smoke" class="rc-chk-input"><span class="rc-chk-box"></span><span data-i18n="rc.smoking">🚬 Current smoker</span></label>
-          <label class="rc-check"><input type="checkbox" id="rc-prev" class="rc-chk-input"><span class="rc-chk-box"></span><span data-i18n="rc.prev_frac">🦴 Previous fracture</span></label>
-          <label class="rc-check"><input type="checkbox" id="rc-family" class="rc-chk-input"><span class="rc-chk-box"></span><span data-i18n="rc.family">👨‍👩‍👧 Family history of osteoporosis</span></label>
-          <label class="rc-check"><input type="checkbox" id="rc-steroids" class="rc-chk-input"><span class="rc-chk-box"></span><span data-i18n="rc.steroids">💊 Long-term corticosteroids (&gt;3 months)</span></label>
+          <label class="rc-check"><input type="checkbox" id="rc-smoke" class="rc-chk-input"><span class="rc-chk-box"></span><span data-i18n="rc.smoking">馃毈 Current smoker</span></label>
+          <label class="rc-check"><input type="checkbox" id="rc-prev" class="rc-chk-input"><span class="rc-chk-box"></span><span data-i18n="rc.prev_frac">馃Υ Previous fracture</span></label>
+          <label class="rc-check"><input type="checkbox" id="rc-family" class="rc-chk-input"><span class="rc-chk-box"></span><span data-i18n="rc.family">馃懆鈥嶐煈┾€嶐煈?Family history of osteoporosis</span></label>
+          <label class="rc-check"><input type="checkbox" id="rc-steroids" class="rc-chk-input"><span class="rc-chk-box"></span><span data-i18n="rc.steroids">馃拪 Long-term corticosteroids (&gt;3 months)</span></label>
         </div>
         <button class="rc-calc-btn" id="rc-calc-btn">
-          <span>🔬</span>
+          <span>馃敩</span>
           <span data-i18n="rc.calculate">Calculate My Fracture Risk</span>
         </button>
       </div>
@@ -724,7 +724,7 @@
             <text id="rc-score-num" x="110" y="112" text-anchor="middle" font-size="42" font-weight="900" fill="#fff" font-family="Inter,sans-serif">--</text>
             <text id="rc-score-lbl" x="110" y="132" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.45)" font-family="Inter,sans-serif" letter-spacing="2">RISK SCORE</text>
           </svg>
-          <div class="rc-risk-badge" id="rc-risk-badge">—</div>
+          <div class="rc-risk-badge" id="rc-risk-badge">鈥?/div>
         </div>
         <div class="rc-breakdown" id="rc-breakdown" style="display:none">
           <div class="rc-breakdown-title" data-i18n="rc.breakdown">Risk Factor Breakdown</div>
@@ -734,13 +734,13 @@
           <div class="rc-recs-title" data-i18n="rc.recs_title">Recommendations</div>
           <div id="rc-rec-list"></div>
         </div>
-        <div class="rc-disclaimer" data-i18n="rc.disc">⚠️ Educational reference only. Consult a physician for clinical evaluation.</div>
+        <div class="rc-disclaimer" data-i18n="rc.disc">鈿狅笍 Educational reference only. Consult a physician for clinical evaluation.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══ ANALYTICS ══ -->
+<!-- 鈺愨晲 ANALYTICS 鈺愨晲 -->
 <section id="analytics" class="section section-alt">
   <div class="section-inner">
     <div class="section-eyebrow reveal" data-i18n="an.eyebrow">Data Analytics</div>
@@ -763,7 +763,7 @@
   </div>
 </section>
 
-<!-- ══ PIPELINE ══ -->
+<!-- 鈺愨晲 PIPELINE 鈺愨晲 -->
 <section id="pipeline" class="section">
   <div class="section-inner">
     <div class="section-eyebrow reveal" data-i18n="pipe.eyebrow">Data Pipeline</div>
@@ -771,7 +771,7 @@
     <p class="section-sub reveal reveal-d2" data-i18n="pipe.sub">A rigorous multi-stage pipeline ensures dataset quality and reproducibility.</p>
     <div class="pipeline">
       <div class="pipe-step reveal">
-        <div class="pipe-dot">📁</div>
+        <div class="pipe-dot">馃搧</div>
         <div class="pipe-body">
           <div class="pipe-num" data-i18n="pipe.s1n">Step 01</div>
           <div class="pipe-title" data-i18n="pipe.s1t">Raw Collection</div>
@@ -780,7 +780,7 @@
         </div>
       </div>
       <div class="pipe-step reveal reveal-d1">
-        <div class="pipe-dot">🔑</div>
+        <div class="pipe-dot">馃攽</div>
         <div class="pipe-body">
           <div class="pipe-num" data-i18n="pipe.s2n">Step 02</div>
           <div class="pipe-title" data-i18n="pipe.s2t">Deduplication</div>
@@ -789,7 +789,7 @@
         </div>
       </div>
       <div class="pipe-step reveal reveal-d2">
-        <div class="pipe-dot">⚡</div>
+        <div class="pipe-dot">鈿?/div>
         <div class="pipe-body">
           <div class="pipe-num" data-i18n="pipe.s3n">Step 03</div>
           <div class="pipe-title" data-i18n="pipe.s3t">Augmentation</div>
@@ -798,7 +798,7 @@
         </div>
       </div>
       <div class="pipe-step reveal reveal-d3">
-        <div class="pipe-dot">✂️</div>
+        <div class="pipe-dot">鉁傦笍</div>
         <div class="pipe-body">
           <div class="pipe-num" data-i18n="pipe.s4n">Step 04</div>
           <div class="pipe-title" data-i18n="pipe.s4t">Train / Test Split</div>
@@ -810,7 +810,7 @@
   </div>
 </section>
 
-<!-- ══ VERSIONS ══ -->
+<!-- 鈺愨晲 VERSIONS 鈺愨晲 -->
 <section id="versions" class="section section-alt">
   <div class="section-inner">
     <div class="section-eyebrow reveal" data-i18n="ver.eyebrow">Dataset Versions</div>
@@ -843,37 +843,37 @@
   </div>
 </section>
 
-<!-- ══ FOOTER ══ -->
-<!-- ══ NEW SECTIONS ══════════════════════════════════════ -->
+<!-- 鈺愨晲 FOOTER 鈺愨晲 -->
+<!-- 鈺愨晲 NEW SECTIONS 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲 -->
 
 <!-- 1. Compare Section -->
 <section id="compare-section" class="section" style="background:var(--bg2)">
   <div class="section-inner">
-    <div class="section-eyebrow reveal">Image Comparison / 图像对比</div>
-    <h2 class="section-title reveal reveal-d1">治疗前后 X光 <span style="color:var(--teal)">对比分析</span></h2>
-    <p class="section-sub reveal reveal-d2">上传两张X光片，AI自动对比骨折恢复情况。Before &amp; After analysis.</p>
+    <div class="section-eyebrow reveal">Image Comparison / 鍥惧儚瀵规瘮</div>
+    <h2 class="section-title reveal reveal-d1">娌荤枟鍓嶅悗 X鍏?<span style="color:var(--teal)">瀵规瘮鍒嗘瀽</span></h2>
+    <p class="section-sub reveal reveal-d2">涓婁紶涓ゅ紶X鍏夌墖锛孉I鑷姩瀵规瘮楠ㄦ姌鎭㈠鎯呭喌銆侭efore &amp; After analysis.</p>
     <div class="cmp-layout reveal">
       <div class="cmp-slot" id="cmp-slot-a">
-        <div class="cmp-label">BEFORE 治疗前</div>
+        <div class="cmp-label">BEFORE 娌荤枟鍓?/div>
         <canvas id="cmp-canvas-a" class="cmp-canvas"></canvas>
         <div class="cmp-upload-area" id="cmp-upload-a">
           <input type="file" id="cmp-file-a" accept="image/*" style="display:none">
-          <div class="cmp-icon">📤</div>
-          <div class="cmp-hint">点击上传 / Click to upload</div>
+          <div class="cmp-icon">馃摛</div>
+          <div class="cmp-hint">鐐瑰嚮涓婁紶 / Click to upload</div>
         </div>
         <div class="cmp-result" id="cmp-result-a"></div>
       </div>
       <div class="cmp-divider">
         <div class="cmp-vs">VS</div>
-        <button class="cmp-run-btn" id="cmp-run-btn">🔍 Compare</button>
+        <button class="cmp-run-btn" id="cmp-run-btn">馃攳 Compare</button>
       </div>
       <div class="cmp-slot" id="cmp-slot-b">
-        <div class="cmp-label">AFTER 治疗后</div>
+        <div class="cmp-label">AFTER 娌荤枟鍚?/div>
         <canvas id="cmp-canvas-b" class="cmp-canvas"></canvas>
         <div class="cmp-upload-area" id="cmp-upload-b">
           <input type="file" id="cmp-file-b" accept="image/*" style="display:none">
-          <div class="cmp-icon">📤</div>
-          <div class="cmp-hint">点击上传 / Click to upload</div>
+          <div class="cmp-icon">馃摛</div>
+          <div class="cmp-hint">鐐瑰嚮涓婁紶 / Click to upload</div>
         </div>
         <div class="cmp-result" id="cmp-result-b"></div>
       </div>
@@ -885,63 +885,63 @@
 <!-- 2. Bone Map Section -->
 <section id="bone-map-section" class="section">
   <div class="section-inner">
-    <div class="section-eyebrow reveal">Interactive Bone Map / 交互骨骼图</div>
-    <h2 class="section-title reveal reveal-d1">点击部位 · 查看 <span style="color:var(--teal)">骨折详情</span></h2>
+    <div class="section-eyebrow reveal">Interactive Bone Map / 浜や簰楠ㄩ鍥?/div>
+    <h2 class="section-title reveal reveal-d1">鐐瑰嚮閮ㄤ綅 路 鏌ョ湅 <span style="color:var(--teal)">楠ㄦ姌璇︽儏</span></h2>
     <p class="section-sub reveal reveal-d2">Click any bone region to see common fracture types, risk level, and treatment overview.</p>
     <div class="bonemap-layout reveal">
       <div class="bonemap-svg-wrap">
         <svg id="bone-svg" viewBox="0 0 300 580" class="bone-svg">
           <!-- Head/Skull -->
-          <ellipse cx="150" cy="45" rx="42" ry="38" class="bzone" data-region="skull" data-name="颅骨 Skull" data-risk="low" data-frac="linear,depressed,diastatic"/>
+          <ellipse cx="150" cy="45" rx="42" ry="38" class="bzone" data-region="skull" data-name="棰呴 Skull" data-risk="low" data-frac="linear,depressed,diastatic"/>
           <!-- Neck -->
-          <rect x="135" y="83" width="30" height="22" rx="6" class="bzone" data-region="cervical" data-name="颈椎 Cervical Spine" data-risk="critical" data-frac="jefferson,hangman,compression"/>
+          <rect x="135" y="83" width="30" height="22" rx="6" class="bzone" data-region="cervical" data-name="棰堟 Cervical Spine" data-risk="critical" data-frac="jefferson,hangman,compression"/>
           <!-- Shoulder L -->
-          <ellipse cx="90" cy="125" rx="22" ry="18" class="bzone" data-region="shoulder-l" data-name="肩关节 Shoulder (L)" data-risk="medium" data-frac="dislocation,avulsion,comminuted"/>
+          <ellipse cx="90" cy="125" rx="22" ry="18" class="bzone" data-region="shoulder-l" data-name="鑲╁叧鑺?Shoulder (L)" data-risk="medium" data-frac="dislocation,avulsion,comminuted"/>
           <!-- Shoulder R -->
-          <ellipse cx="210" cy="125" rx="22" ry="18" class="bzone" data-region="shoulder-r" data-name="肩关节 Shoulder (R)" data-risk="medium" data-frac="dislocation,avulsion,comminuted"/>
+          <ellipse cx="210" cy="125" rx="22" ry="18" class="bzone" data-region="shoulder-r" data-name="鑲╁叧鑺?Shoulder (R)" data-risk="medium" data-frac="dislocation,avulsion,comminuted"/>
           <!-- Thorax -->
-          <rect x="115" y="107" width="70" height="90" rx="10" class="bzone" data-region="thorax" data-name="胸廓 Thorax" data-risk="medium" data-frac="rib,sternum,thoracic"/>
+          <rect x="115" y="107" width="70" height="90" rx="10" class="bzone" data-region="thorax" data-name="鑳稿粨 Thorax" data-risk="medium" data-frac="rib,sternum,thoracic"/>
           <!-- Humerus L -->
-          <rect x="72" y="143" width="18" height="70" rx="6" class="bzone" data-region="humerus-l" data-name="肱骨 Humerus (L)" data-risk="medium" data-frac="spiral,oblique,comminuted"/>
+          <rect x="72" y="143" width="18" height="70" rx="6" class="bzone" data-region="humerus-l" data-name="鑲遍 Humerus (L)" data-risk="medium" data-frac="spiral,oblique,comminuted"/>
           <!-- Humerus R -->
-          <rect x="210" y="143" width="18" height="70" rx="6" class="bzone" data-region="humerus-r" data-name="肱骨 Humerus (R)" data-risk="medium" data-frac="spiral,oblique,comminuted"/>
+          <rect x="210" y="143" width="18" height="70" rx="6" class="bzone" data-region="humerus-r" data-name="鑲遍 Humerus (R)" data-risk="medium" data-frac="spiral,oblique,comminuted"/>
           <!-- Lumbar/Pelvis -->
-          <rect x="118" y="198" width="64" height="45" rx="8" class="bzone" data-region="lumbar" data-name="腰椎/骨盆 Lumbar/Pelvis" data-risk="high" data-frac="compression,stress,impacted"/>
+          <rect x="118" y="198" width="64" height="45" rx="8" class="bzone" data-region="lumbar" data-name="鑵版/楠ㄧ泦 Lumbar/Pelvis" data-risk="high" data-frac="compression,stress,impacted"/>
           <!-- Forearm L -->
-          <rect x="66" y="213" width="16" height="65" rx="5" class="bzone" data-region="forearm-l" data-name="前臂 Forearm (L)" data-risk="medium" data-frac="colles,longitudinal,hairline"/>
+          <rect x="66" y="213" width="16" height="65" rx="5" class="bzone" data-region="forearm-l" data-name="鍓嶈噦 Forearm (L)" data-risk="medium" data-frac="colles,longitudinal,hairline"/>
           <!-- Forearm R -->
-          <rect x="218" y="213" width="16" height="65" rx="5" class="bzone" data-region="forearm-r" data-name="前臂 Forearm (R)" data-risk="medium" data-frac="colles,longitudinal,hairline"/>
+          <rect x="218" y="213" width="16" height="65" rx="5" class="bzone" data-region="forearm-r" data-name="鍓嶈噦 Forearm (R)" data-risk="medium" data-frac="colles,longitudinal,hairline"/>
           <!-- Hand L -->
-          <ellipse cx="74" cy="295" rx="16" ry="20" class="bzone" data-region="hand-l" data-name="手部 Hand (L)" data-risk="low" data-frac="boxer,avulsion,greenstick"/>
+          <ellipse cx="74" cy="295" rx="16" ry="20" class="bzone" data-region="hand-l" data-name="鎵嬮儴 Hand (L)" data-risk="low" data-frac="boxer,avulsion,greenstick"/>
           <!-- Hand R -->
-          <ellipse cx="226" cy="295" rx="16" ry="20" class="bzone" data-region="hand-r" data-name="手部 Hand (R)" data-risk="low" data-frac="boxer,avulsion,greenstick"/>
+          <ellipse cx="226" cy="295" rx="16" ry="20" class="bzone" data-region="hand-r" data-name="鎵嬮儴 Hand (R)" data-risk="low" data-frac="boxer,avulsion,greenstick"/>
           <!-- Hip L -->
-          <ellipse cx="120" cy="257" rx="22" ry="18" class="bzone" data-region="hip-l" data-name="髋关节 Hip (L)" data-risk="high" data-frac="hip,avulsion,stress"/>
+          <ellipse cx="120" cy="257" rx="22" ry="18" class="bzone" data-region="hip-l" data-name="楂嬪叧鑺?Hip (L)" data-risk="high" data-frac="hip,avulsion,stress"/>
           <!-- Hip R -->
-          <ellipse cx="180" cy="257" rx="22" ry="18" class="bzone" data-region="hip-r" data-name="髋关节 Hip (R)" data-risk="high" data-frac="hip,avulsion,stress"/>
+          <ellipse cx="180" cy="257" rx="22" ry="18" class="bzone" data-region="hip-r" data-name="楂嬪叧鑺?Hip (R)" data-risk="high" data-frac="hip,avulsion,stress"/>
           <!-- Femur L -->
-          <rect x="110" y="275" width="20" height="90" rx="6" class="bzone" data-region="femur-l" data-name="股骨 Femur (L)" data-risk="high" data-frac="spiral,oblique,comminuted"/>
+          <rect x="110" y="275" width="20" height="90" rx="6" class="bzone" data-region="femur-l" data-name="鑲￠ Femur (L)" data-risk="high" data-frac="spiral,oblique,comminuted"/>
           <!-- Femur R -->
-          <rect x="170" y="275" width="20" height="90" rx="6" class="bzone" data-region="femur-r" data-name="股骨 Femur (R)" data-risk="high" data-frac="spiral,oblique,comminuted"/>
+          <rect x="170" y="275" width="20" height="90" rx="6" class="bzone" data-region="femur-r" data-name="鑲￠ Femur (R)" data-risk="high" data-frac="spiral,oblique,comminuted"/>
           <!-- Knee L -->
-          <ellipse cx="120" cy="372" rx="18" ry="14" class="bzone" data-region="knee-l" data-name="膝关节 Knee (L)" data-risk="medium" data-frac="dislocation,impacted,avulsion"/>
+          <ellipse cx="120" cy="372" rx="18" ry="14" class="bzone" data-region="knee-l" data-name="鑶濆叧鑺?Knee (L)" data-risk="medium" data-frac="dislocation,impacted,avulsion"/>
           <!-- Knee R -->
-          <ellipse cx="180" cy="372" rx="18" ry="14" class="bzone" data-region="knee-r" data-name="膝关节 Knee (R)" data-risk="medium" data-frac="dislocation,impacted,avulsion"/>
+          <ellipse cx="180" cy="372" rx="18" ry="14" class="bzone" data-region="knee-r" data-name="鑶濆叧鑺?Knee (R)" data-risk="medium" data-frac="dislocation,impacted,avulsion"/>
           <!-- Tibia L -->
-          <rect x="112" y="386" width="16" height="90" rx="5" class="bzone" data-region="tibia-l" data-name="胫骨 Tibia (L)" data-risk="medium" data-frac="stress,longitudinal,transverse"/>
+          <rect x="112" y="386" width="16" height="90" rx="5" class="bzone" data-region="tibia-l" data-name="鑳 Tibia (L)" data-risk="medium" data-frac="stress,longitudinal,transverse"/>
           <!-- Tibia R -->
-          <rect x="172" y="386" width="16" height="90" rx="5" class="bzone" data-region="tibia-r" data-name="胫骨 Tibia (R)" data-risk="medium" data-frac="stress,longitudinal,transverse"/>
+          <rect x="172" y="386" width="16" height="90" rx="5" class="bzone" data-region="tibia-r" data-name="鑳 Tibia (R)" data-risk="medium" data-frac="stress,longitudinal,transverse"/>
           <!-- Foot L -->
-          <ellipse cx="118" cy="488" rx="22" ry="14" class="bzone" data-region="foot-l" data-name="足部 Foot (L)" data-risk="low" data-frac="stress,avulsion,hairline"/>
+          <ellipse cx="118" cy="488" rx="22" ry="14" class="bzone" data-region="foot-l" data-name="瓒抽儴 Foot (L)" data-risk="low" data-frac="stress,avulsion,hairline"/>
           <!-- Foot R -->
-          <ellipse cx="182" cy="488" rx="22" ry="14" class="bzone" data-region="foot-r" data-name="足部 Foot (R)" data-risk="low" data-frac="stress,avulsion,hairline"/>
+          <ellipse cx="182" cy="488" rx="22" ry="14" class="bzone" data-region="foot-r" data-name="瓒抽儴 Foot (R)" data-risk="low" data-frac="stress,avulsion,hairline"/>
           <!-- Silhouette lines -->
           <line x1="150" y1="83" x2="150" y2="107" stroke="var(--text4)" stroke-width="2"/>
           <line x1="150" y1="197" x2="150" y2="243" stroke="var(--text4)" stroke-width="2"/>
         </svg>
       </div>
       <div class="bonemap-info" id="bonemap-info">
-        <div class="bmi-placeholder">← 点击左侧骨骼部位<br>Click a bone region</div>
+        <div class="bmi-placeholder">鈫?鐐瑰嚮宸︿晶楠ㄩ閮ㄤ綅<br>Click a bone region</div>
       </div>
     </div>
   </div>
@@ -950,34 +950,34 @@
 <!-- 3. Stats Dashboard -->
 <section id="stats-section" class="section" style="background:var(--bg2)">
   <div class="section-inner">
-    <div class="section-eyebrow reveal">Analytics Dashboard / 统计仪表盘</div>
-    <h2 class="section-title reveal reveal-d1">历史分析 <span style="color:var(--teal)">数据统计</span></h2>
+    <div class="section-eyebrow reveal">Analytics Dashboard / 缁熻浠〃鐩?/div>
+    <h2 class="section-title reveal reveal-d1">鍘嗗彶鍒嗘瀽 <span style="color:var(--teal)">鏁版嵁缁熻</span></h2>
     <p class="section-sub reveal reveal-d2">Your local case history visualized. All data stays in your browser.</p>
     <div class="stats-grid reveal">
       <div class="stats-card">
         <div class="stats-num" id="stat-total-cases">0</div>
-        <div class="stats-label">总分析次数</div>
+        <div class="stats-label">鎬诲垎鏋愭鏁?/div>
       </div>
       <div class="stats-card">
-        <div class="stats-num" id="stat-fracture-rate">—</div>
-        <div class="stats-label">骨折检出率</div>
+        <div class="stats-num" id="stat-fracture-rate">鈥?/div>
+        <div class="stats-label">楠ㄦ姌妫€鍑虹巼</div>
       </div>
       <div class="stats-card">
-        <div class="stats-num" id="stat-avg-conf">—</div>
-        <div class="stats-label">平均置信度</div>
+        <div class="stats-num" id="stat-avg-conf">鈥?/div>
+        <div class="stats-label">骞冲潎缃俊搴?/div>
       </div>
       <div class="stats-card">
-        <div class="stats-num" id="stat-top-type">—</div>
-        <div class="stats-label">最常见类型</div>
+        <div class="stats-num" id="stat-top-type">鈥?/div>
+        <div class="stats-label">鏈€甯歌绫诲瀷</div>
       </div>
     </div>
     <div class="stats-charts reveal">
       <div class="stats-chart-wrap">
-        <div class="stats-chart-title">骨折类型分布</div>
+        <div class="stats-chart-title">楠ㄦ姌绫诲瀷鍒嗗竷</div>
         <canvas id="chart-type" height="240"></canvas>
       </div>
       <div class="stats-chart-wrap">
-        <div class="stats-chart-title">严重程度分布</div>
+        <div class="stats-chart-title">涓ラ噸绋嬪害鍒嗗竷</div>
         <canvas id="chart-severity" height="240"></canvas>
       </div>
     </div>
@@ -987,13 +987,13 @@
 <!-- 4. Risk Calculator -->
 <section id="risk-section" class="section">
   <div class="section-inner">
-    <div class="section-eyebrow reveal">Risk Calculator / 风险计算器</div>
-    <h2 class="section-title reveal reveal-d1">骨折风险 <span style="color:var(--teal)">个人评估</span></h2>
+    <div class="section-eyebrow reveal">Risk Calculator / 椋庨櫓璁＄畻鍣?/div>
+    <h2 class="section-title reveal reveal-d1">楠ㄦ姌椋庨櫓 <span style="color:var(--teal)">涓汉璇勪及</span></h2>
     <p class="section-sub reveal reveal-d2">Enter your profile to receive an AI-powered personal fracture risk score and prevention recommendations.</p>
     <div class="risk-layout reveal">
       <div class="risk-form">
         <div class="risk-row">
-          <label class="risk-label">年龄 Age</label>
+          <label class="risk-label">骞撮緞 Age</label>
           <input type="number" id="risk-age" class="risk-input" value="45" min="1" max="120">
         </div>
         <div class="risk-row">
@@ -1001,47 +1001,47 @@
           <input type="number" id="risk-bmi" class="risk-input" value="22" step="0.1" min="10" max="50">
         </div>
         <div class="risk-row">
-          <label class="risk-label">性别 Sex</label>
+          <label class="risk-label">鎬у埆 Sex</label>
           <select id="risk-sex" class="risk-select">
-            <option value="f">女 Female</option>
-            <option value="m">男 Male</option>
+            <option value="f">濂?Female</option>
+            <option value="m">鐢?Male</option>
           </select>
         </div>
         <div class="risk-row">
-          <label class="risk-label">骨密度 Bone Density</label>
+          <label class="risk-label">楠ㄥ瘑搴?Bone Density</label>
           <select id="risk-density" class="risk-select">
-            <option value="0">正常 Normal</option>
-            <option value="1">骨量减少 Osteopenia</option>
-            <option value="2">骨质疏松 Osteoporosis</option>
+            <option value="0">姝ｅ父 Normal</option>
+            <option value="1">楠ㄩ噺鍑忓皯 Osteopenia</option>
+            <option value="2">楠ㄨ川鐤忔澗 Osteoporosis</option>
           </select>
         </div>
         <div class="risk-row">
-          <label class="risk-label">运动量 Activity</label>
+          <label class="risk-label">杩愬姩閲?Activity</label>
           <select id="risk-activity" class="risk-select">
-            <option value="0">高强度 High</option>
-            <option value="1">中等 Moderate</option>
-            <option value="2">久坐 Sedentary</option>
+            <option value="0">楂樺己搴?High</option>
+            <option value="1">涓瓑 Moderate</option>
+            <option value="2">涔呭潗 Sedentary</option>
           </select>
         </div>
         <div class="risk-row">
-          <label class="risk-label">既往骨折 Prior Fracture</label>
+          <label class="risk-label">鏃㈠線楠ㄦ姌 Prior Fracture</label>
           <select id="risk-prior" class="risk-select">
-            <option value="0">无 None</option>
-            <option value="1">1次</option>
-            <option value="2">2次+</option>
+            <option value="0">鏃?None</option>
+            <option value="1">1娆?/option>
+            <option value="2">2娆?</option>
           </select>
         </div>
         <div class="risk-row">
-          <label class="risk-label">吸烟 Smoking</label>
+          <label class="risk-label">鍚哥儫 Smoking</label>
           <select id="risk-smoke" class="risk-select">
-            <option value="0">不吸烟 No</option>
-            <option value="1">吸烟 Yes</option>
+            <option value="0">涓嶅惛鐑?No</option>
+            <option value="1">鍚哥儫 Yes</option>
           </select>
         </div>
-        <button class="risk-calc-btn" onclick="calcFractureRisk()">🧮 Calculate Risk</button>
+        <button class="risk-calc-btn" onclick="calcFractureRisk()">馃М Calculate Risk</button>
       </div>
       <div class="risk-result" id="risk-result">
-        <div class="risk-placeholder">← 填写信息后点击计算<br>Fill the form and calculate</div>
+        <div class="risk-placeholder">鈫?濉啓淇℃伅鍚庣偣鍑昏绠?br>Fill the form and calculate</div>
       </div>
     </div>
   </div>
@@ -1050,34 +1050,34 @@
 <!-- 5. Rehab Planner -->
 <section id="rehab-section" class="section" style="background:var(--bg2)">
   <div class="section-inner">
-    <div class="section-eyebrow reveal">Rehab Planner / 康复计划</div>
-    <h2 class="section-title reveal reveal-d1">个性化 <span style="color:var(--teal)">康复周计划</span></h2>
+    <div class="section-eyebrow reveal">Rehab Planner / 搴峰璁″垝</div>
+    <h2 class="section-title reveal reveal-d1">涓€у寲 <span style="color:var(--teal)">搴峰鍛ㄨ鍒?/span></h2>
     <p class="section-sub reveal reveal-d2">Generate a personalized weekly rehabilitation schedule based on fracture type, location, and age.</p>
     <div class="rehab-controls reveal">
       <select id="rehab-frac" class="risk-select">
-        <option value="hairline">Hairline 微小骨折</option>
-        <option value="greenstick">Greenstick 青枝骨折</option>
-        <option value="avulsion">Avulsion 撕脱骨折</option>
-        <option value="colles">Colles 桡骨远端骨折</option>
-        <option value="oblique">Oblique 斜形骨折</option>
-        <option value="spiral">Spiral 螺旋骨折</option>
-        <option value="comminuted">Comminuted 粉碎骨折</option>
-        <option value="hip">Hip 髋部骨折</option>
+        <option value="hairline">Hairline 寰皬楠ㄦ姌</option>
+        <option value="greenstick">Greenstick 闈掓灊楠ㄦ姌</option>
+        <option value="avulsion">Avulsion 鎾曡劚楠ㄦ姌</option>
+        <option value="colles">Colles 妗￠杩滅楠ㄦ姌</option>
+        <option value="oblique">Oblique 鏂滃舰楠ㄦ姌</option>
+        <option value="spiral">Spiral 铻烘棆楠ㄦ姌</option>
+        <option value="comminuted">Comminuted 绮夌楠ㄦ姌</option>
+        <option value="hip">Hip 楂嬮儴楠ㄦ姌</option>
       </select>
       <select id="rehab-age" class="risk-select">
-        <option value="child">儿童 Child (&lt;18)</option>
-        <option value="adult" selected>成人 Adult (18-60)</option>
-        <option value="elder">老年 Elderly (60+)</option>
+        <option value="child">鍎跨 Child (&lt;18)</option>
+        <option value="adult" selected>鎴愪汉 Adult (18-60)</option>
+        <option value="elder">鑰佸勾 Elderly (60+)</option>
       </select>
-      <button class="risk-calc-btn" onclick="generateRehabPlan()">📋 Generate Plan</button>
-      <button class="risk-calc-btn" id="rehab-pdf-btn" style="display:none;background:linear-gradient(135deg,#059669,#10B981)" onclick="downloadRehabPDF()">📥 Download PDF</button>
+      <button class="risk-calc-btn" onclick="generateRehabPlan()">馃搵 Generate Plan</button>
+      <button class="risk-calc-btn" id="rehab-pdf-btn" style="display:none;background:linear-gradient(135deg,#059669,#10B981)" onclick="downloadRehabPDF()">馃摜 Download PDF</button>
     </div>
     <div id="rehab-output" class="rehab-output" style="display:none"></div>
   </div>
 </section>
 
 <style>
-/* ── Compare ─────────────────────────────── */
+/* 鈹€鈹€ Compare 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 .cmp-layout{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
 .cmp-slot{flex:1;min-width:220px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden}
 .cmp-label{padding:10px 16px;font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;background:var(--bg3)}
@@ -1091,7 +1091,7 @@
 .cmp-vs{font-size:22px;font-weight:900;color:var(--text4)}
 .cmp-run-btn{padding:10px 20px;background:linear-gradient(135deg,#00B4FF,#0070CC);color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px;white-space:nowrap}
 .cmp-summary{margin-top:24px;padding:20px;background:var(--bg3);border-radius:14px;border:1px solid var(--border);font-size:13px;line-height:1.8;color:var(--text2)}
-/* ── Bone Map ────────────────────────────── */
+/* 鈹€鈹€ Bone Map 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 .bonemap-layout{display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap}
 .bonemap-svg-wrap{flex:0 0 300px;max-width:300px}
 .bone-svg{width:100%}
@@ -1108,7 +1108,7 @@
 .bmi-frac-title{font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
 .bmi-frac-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
 .bmi-frac-tag{font-size:11px;padding:4px 10px;border-radius:20px;background:rgba(0,180,255,.12);color:var(--teal);border:1px solid rgba(0,180,255,.25)}
-/* ── Stats ───────────────────────────────── */
+/* 鈹€鈹€ Stats 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
 .stats-card{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center}
 .stats-num{font-size:32px;font-weight:900;color:var(--teal);margin-bottom:6px}
@@ -1116,7 +1116,7 @@
 .stats-charts{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 .stats-chart-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:20px}
 .stats-chart-title{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:16px}
-/* ── Risk ────────────────────────────────── */
+/* 鈹€鈹€ Risk 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 .risk-layout{display:grid;grid-template-columns:360px 1fr;gap:32px;align-items:start}
 .risk-form{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px}
 .risk-row{margin-bottom:14px}
@@ -1126,7 +1126,7 @@
 .risk-calc-btn:hover{opacity:.9;transform:translateY(-1px)}
 .risk-result{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px;min-height:300px;display:flex;align-items:center;justify-content:center}
 .risk-placeholder{color:var(--text4);font-size:13px;text-align:center;line-height:2}
-/* ── Rehab ───────────────────────────────── */
+/* 鈹€鈹€ Rehab 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 .rehab-controls{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px}
 .rehab-controls .risk-select{flex:1;min-width:160px;width:auto}
 .rehab-controls .risk-calc-btn{width:auto;padding:10px 20px}
@@ -1146,29 +1146,29 @@
 }
 </style>
 
-<!-- ══ EXTRA SECTIONS ════════════════════════════════════ -->
+<!-- 鈺愨晲 EXTRA SECTIONS 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲 -->
 
 <!-- THEME TOGGLE (fixed) -->
-<button id="theme-toggle" title="Toggle theme" style="position:fixed;bottom:80px;right:20px;z-index:9000;width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--bg3);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.3)">🌙</button>
+<button id="theme-toggle" title="Toggle theme" style="position:fixed;bottom:80px;right:20px;z-index:9000;width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:var(--bg3);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.3)">馃寵</button>
 
 <!-- AUTO DETECTION -->
 <section id="auto-detect-section" class="section" style="background:var(--bg2)">
   <div class="section-inner">
-    <div class="section-eyebrow reveal">Auto Detection / 自动检测</div>
-    <h2 class="section-title reveal reveal-d1">AI 自动框选 <span style="color:var(--teal)">可疑骨折区域</span></h2>
-    <p class="section-sub reveal reveal-d2">Upload an X-ray and AI will automatically highlight suspicious high-density anomaly regions — no manual annotation needed.</p>
+    <div class="section-eyebrow reveal">Auto Detection / 鑷姩妫€娴?/div>
+    <h2 class="section-title reveal reveal-d1">AI 鑷姩妗嗛€?<span style="color:var(--teal)">鍙枒楠ㄦ姌鍖哄煙</span></h2>
+    <p class="section-sub reveal reveal-d2">Upload an X-ray and AI will automatically highlight suspicious high-density anomaly regions 鈥?no manual annotation needed.</p>
     <div class="autodet-layout reveal">
       <div class="autodet-upload" id="autodet-upload">
         <input type="file" id="autodet-file" accept="image/*" style="display:none">
-        <div class="cmp-icon">🔍</div>
-        <div class="cmp-hint">点击上传X光 · Click to upload X-ray</div>
+        <div class="cmp-icon">馃攳</div>
+        <div class="cmp-hint">鐐瑰嚮涓婁紶X鍏?路 Click to upload X-ray</div>
       </div>
       <div class="autodet-canvas-wrap" id="autodet-canvas-wrap" style="display:none">
         <canvas id="autodet-canvas" class="autodet-canvas"></canvas>
         <div class="autodet-legend">
-          <span class="autodet-dot" style="background:#EF4444"></span>高风险 High Risk &nbsp;
-          <span class="autodet-dot" style="background:#F97316"></span>中风险 Medium &nbsp;
-          <span class="autodet-dot" style="background:#EAB308"></span>低风险 Low
+          <span class="autodet-dot" style="background:#EF4444"></span>楂橀闄?High Risk &nbsp;
+          <span class="autodet-dot" style="background:#F97316"></span>涓闄?Medium &nbsp;
+          <span class="autodet-dot" style="background:#EAB308"></span>浣庨闄?Low
         </div>
       </div>
       <div class="autodet-result" id="autodet-result" style="display:none"></div>
@@ -1179,42 +1179,42 @@
 <!-- HEALING PREDICTION -->
 <section id="healing-section" class="section">
   <div class="section-inner">
-    <div class="section-eyebrow reveal">Healing Tracker / 愈合预测</div>
-    <h2 class="section-title reveal reveal-d1">骨折愈合 <span style="color:var(--teal)">进度预测</span></h2>
-    <p class="section-sub reveal reveal-d2">Enter your fracture type and injury date — AI predicts your healing stage and estimated full recovery date.</p>
+    <div class="section-eyebrow reveal">Healing Tracker / 鎰堝悎棰勬祴</div>
+    <h2 class="section-title reveal reveal-d1">楠ㄦ姌鎰堝悎 <span style="color:var(--teal)">杩涘害棰勬祴</span></h2>
+    <p class="section-sub reveal reveal-d2">Enter your fracture type and injury date 鈥?AI predicts your healing stage and estimated full recovery date.</p>
     <div class="heal-layout reveal">
       <div class="heal-form">
-        <div class="risk-row"><label class="risk-label">骨折类型 Fracture Type</label>
+        <div class="risk-row"><label class="risk-label">楠ㄦ姌绫诲瀷 Fracture Type</label>
           <select id="heal-frac" class="risk-select">
-            <option value="hairline">Hairline · 微小骨折（4-6周）</option>
-            <option value="greenstick">Greenstick · 青枝骨折（6-8周）</option>
-            <option value="avulsion">Avulsion · 撕脱骨折（8-12周）</option>
-            <option value="oblique">Oblique · 斜形骨折（8-12周）</option>
-            <option value="spiral">Spiral · 螺旋骨折（8-12周）</option>
-            <option value="comminuted">Comminuted · 粉碎骨折（12-24周）</option>
-            <option value="hip">Hip · 髋部骨折（12-24周）</option>
+            <option value="hairline">Hairline 路 寰皬楠ㄦ姌锛?-6鍛級</option>
+            <option value="greenstick">Greenstick 路 闈掓灊楠ㄦ姌锛?-8鍛級</option>
+            <option value="avulsion">Avulsion 路 鎾曡劚楠ㄦ姌锛?-12鍛級</option>
+            <option value="oblique">Oblique 路 鏂滃舰楠ㄦ姌锛?-12鍛級</option>
+            <option value="spiral">Spiral 路 铻烘棆楠ㄦ姌锛?-12鍛級</option>
+            <option value="comminuted">Comminuted 路 绮夌楠ㄦ姌锛?2-24鍛級</option>
+            <option value="hip">Hip 路 楂嬮儴楠ㄦ姌锛?2-24鍛級</option>
           </select>
         </div>
-        <div class="risk-row"><label class="risk-label">受伤日期 Injury Date</label>
+        <div class="risk-row"><label class="risk-label">鍙椾激鏃ユ湡 Injury Date</label>
           <input type="date" id="heal-date" class="risk-input">
         </div>
-        <div class="risk-row"><label class="risk-label">年龄 Age</label>
+        <div class="risk-row"><label class="risk-label">骞撮緞 Age</label>
           <select id="heal-age" class="risk-select">
-            <option value="child">儿童 &lt;18（愈合最快）</option>
-            <option value="adult" selected>成人 18-60</option>
-            <option value="elder">老年 60+（愈合较慢）</option>
+            <option value="child">鍎跨 &lt;18锛堟剤鍚堟渶蹇級</option>
+            <option value="adult" selected>鎴愪汉 18-60</option>
+            <option value="elder">鑰佸勾 60+锛堟剤鍚堣緝鎱級</option>
           </select>
         </div>
-        <div class="risk-row"><label class="risk-label">治疗方式 Treatment</label>
+        <div class="risk-row"><label class="risk-label">娌荤枟鏂瑰紡 Treatment</label>
           <select id="heal-treat" class="risk-select">
-            <option value="cast">石膏固定 Cast</option>
-            <option value="surgery">手术固定 Surgery (ORIF)</option>
-            <option value="splint">夹板 Splint</option>
+            <option value="cast">鐭宠啅鍥哄畾 Cast</option>
+            <option value="surgery">鎵嬫湳鍥哄畾 Surgery (ORIF)</option>
+            <option value="splint">澶规澘 Splint</option>
           </select>
         </div>
-        <button class="risk-calc-btn" onclick="predictHealing()">📅 Predict Healing</button>
+        <button class="risk-calc-btn" onclick="predictHealing()">馃搮 Predict Healing</button>
       </div>
-      <div id="heal-result" class="risk-result"><div class="risk-placeholder">← 填写信息后预测<br>Fill form to predict</div></div>
+      <div id="heal-result" class="risk-result"><div class="risk-placeholder">鈫?濉啓淇℃伅鍚庨娴?br>Fill form to predict</div></div>
     </div>
   </div>
 </section>
@@ -1222,30 +1222,30 @@
 <!-- DOCTOR REPORT -->
 <section id="report-section" class="section" style="background:var(--bg2)">
   <div class="section-inner">
-    <div class="section-eyebrow reveal">Medical Report / 医疗报告</div>
-    <h2 class="section-title reveal reveal-d1">一键生成 <span style="color:var(--teal)">完整医生报告</span></h2>
+    <div class="section-eyebrow reveal">Medical Report / 鍖荤枟鎶ュ憡</div>
+    <h2 class="section-title reveal reveal-d1">涓€閿敓鎴?<span style="color:var(--teal)">瀹屾暣鍖荤敓鎶ュ憡</span></h2>
     <p class="section-sub reveal reveal-d2">Generate a full bilingual (Chinese/English) medical imaging report in professional format. Includes QR code for sharing.</p>
     <div class="report-layout reveal">
       <div class="report-form">
-        <div class="risk-row"><label class="risk-label">患者姓名 Patient Name</label><input type="text" id="rpt-name" class="risk-input" placeholder="姓名 / Name"></div>
-        <div class="risk-row"><label class="risk-label">年龄/性别 Age / Sex</label>
+        <div class="risk-row"><label class="risk-label">鎮ｈ€呭鍚?Patient Name</label><input type="text" id="rpt-name" class="risk-input" placeholder="濮撳悕 / Name"></div>
+        <div class="risk-row"><label class="risk-label">骞撮緞/鎬у埆 Age / Sex</label>
           <div style="display:flex;gap:8px">
-            <input type="number" id="rpt-age" class="risk-input" placeholder="年龄" style="width:80px" value="35">
-            <select id="rpt-sex" class="risk-select"><option>男 M</option><option>女 F</option></select>
+            <input type="number" id="rpt-age" class="risk-input" placeholder="骞撮緞" style="width:80px" value="35">
+            <select id="rpt-sex" class="risk-select"><option>鐢?M</option><option>濂?F</option></select>
           </div>
         </div>
-        <div class="risk-row"><label class="risk-label">检查日期 Exam Date</label><input type="date" id="rpt-date" class="risk-input"></div>
-        <div class="risk-row"><label class="risk-label">主诉 Chief Complaint</label><input type="text" id="rpt-complaint" class="risk-input" placeholder="e.g. 左腕疼痛 Left wrist pain"></div>
-        <div class="risk-row"><label class="risk-label">报告医生 Radiologist</label><input type="text" id="rpt-doctor" class="risk-input" placeholder="Dr. / 医生姓名"></div>
+        <div class="risk-row"><label class="risk-label">妫€鏌ユ棩鏈?Exam Date</label><input type="date" id="rpt-date" class="risk-input"></div>
+        <div class="risk-row"><label class="risk-label">涓昏瘔 Chief Complaint</label><input type="text" id="rpt-complaint" class="risk-input" placeholder="e.g. 宸﹁厱鐤肩棝 Left wrist pain"></div>
+        <div class="risk-row"><label class="risk-label">鎶ュ憡鍖荤敓 Radiologist</label><input type="text" id="rpt-doctor" class="risk-input" placeholder="Dr. / 鍖荤敓濮撳悕"></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="risk-calc-btn" style="flex:1" onclick="generateFullReport()">📄 Generate Report</button>
-          <button class="risk-calc-btn" style="flex:1;background:linear-gradient(135deg,#059669,#10B981);display:none" id="rpt-pdf-btn" onclick="downloadFullReportPDF()">📥 PDF</button>
-          <button class="risk-calc-btn" style="flex:1;background:linear-gradient(135deg,#7C3AED,#8B5CF6);display:none" id="rpt-qr-btn" onclick="generateReportQR()">📲 QR Share</button>
+          <button class="risk-calc-btn" style="flex:1" onclick="generateFullReport()">馃搫 Generate Report</button>
+          <button class="risk-calc-btn" style="flex:1;background:linear-gradient(135deg,#059669,#10B981);display:none" id="rpt-pdf-btn" onclick="downloadFullReportPDF()">馃摜 PDF</button>
+          <button class="risk-calc-btn" style="flex:1;background:linear-gradient(135deg,#7C3AED,#8B5CF6);display:none" id="rpt-qr-btn" onclick="generateReportQR()">馃摬 QR Share</button>
         </div>
       </div>
       <div id="report-preview" class="report-preview" style="display:none"></div>
       <div id="report-qr-wrap" style="display:none;text-align:center;margin-top:16px">
-        <div style="font-size:12px;color:var(--text3);margin-bottom:8px">扫码查看报告 Scan to view report</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:8px">鎵爜鏌ョ湅鎶ュ憡 Scan to view report</div>
         <div id="report-qr-canvas"></div>
       </div>
     </div>
@@ -1255,13 +1255,13 @@
 <!-- QUIZ -->
 <section id="quiz-section" class="section">
   <div class="section-inner">
-    <div class="section-eyebrow reveal">Knowledge Quiz / 知识测验</div>
-    <h2 class="section-title reveal reveal-d1">骨折识别 <span style="color:var(--teal)">挑战测验</span></h2>
+    <div class="section-eyebrow reveal">Knowledge Quiz / 鐭ヨ瘑娴嬮獙</div>
+    <h2 class="section-title reveal reveal-d1">楠ㄦ姌璇嗗埆 <span style="color:var(--teal)">鎸戞垬娴嬮獙</span></h2>
     <p class="section-sub reveal reveal-d2">Test your knowledge! Look at the X-ray description and identify the fracture type. Track your score.</p>
     <div id="quiz-wrap" class="quiz-wrap reveal">
       <div class="quiz-header">
-        <span class="quiz-score-label">得分 Score: <strong id="quiz-score">0</strong></span>
-        <span class="quiz-q-label">题目 Q: <strong id="quiz-qnum">1</strong>/10</span>
+        <span class="quiz-score-label">寰楀垎 Score: <strong id="quiz-score">0</strong></span>
+        <span class="quiz-q-label">棰樼洰 Q: <strong id="quiz-qnum">1</strong>/10</span>
         <div class="quiz-progress"><div id="quiz-prog-fill" style="width:10%"></div></div>
       </div>
       <div class="quiz-card" id="quiz-card">
@@ -1270,11 +1270,11 @@
         <div class="quiz-opts" id="quiz-opts"></div>
         <div class="quiz-feedback" id="quiz-feedback" style="display:none"></div>
       </div>
-      <button class="risk-calc-btn" id="quiz-next-btn" style="display:none;margin-top:16px" onclick="nextQuizQuestion()">下一题 Next →</button>
+      <button class="risk-calc-btn" id="quiz-next-btn" style="display:none;margin-top:16px" onclick="nextQuizQuestion()">涓嬩竴棰?Next 鈫?/button>
       <div id="quiz-final" style="display:none;text-align:center;padding:32px">
         <div style="font-size:48px;font-weight:900;color:var(--teal)" id="quiz-final-score"></div>
         <div style="font-size:14px;color:var(--text2);margin:8px 0" id="quiz-final-msg"></div>
-        <button class="risk-calc-btn" style="margin-top:16px;width:auto;padding:10px 24px" onclick="startQuiz()">🔄 再来一次 Retry</button>
+        <button class="risk-calc-btn" style="margin-top:16px;width:auto;padding:10px 24px" onclick="startQuiz()">馃攧 鍐嶆潵涓€娆?Retry</button>
       </div>
     </div>
   </div>
@@ -1283,16 +1283,16 @@
 <!-- CASE LIBRARY -->
 <section id="case-library-section" class="section" style="background:var(--bg2)">
   <div class="section-inner">
-    <div class="section-eyebrow reveal">Case Library / 案例库</div>
-    <h2 class="section-title reveal reveal-d1">经典骨折 <span style="color:var(--teal)">案例参考库</span></h2>
+    <div class="section-eyebrow reveal">Case Library / 妗堜緥搴?/div>
+    <h2 class="section-title reveal reveal-d1">缁忓吀楠ㄦ姌 <span style="color:var(--teal)">妗堜緥鍙傝€冨簱</span></h2>
     <p class="section-sub reveal reveal-d2">Reference cases with expert descriptions. Filter by fracture type, severity, or body region.</p>
     <div class="casel-filter reveal">
-      <button class="casel-btn active" data-filter="all">全部 All</button>
-      <button class="casel-btn" data-filter="high">高风险 High</button>
-      <button class="casel-btn" data-filter="medium">中风险 Medium</button>
-      <button class="casel-btn" data-filter="low">低风险 Low</button>
-      <button class="casel-btn" data-filter="pediatric">儿童 Pediatric</button>
-      <button class="casel-btn" data-filter="elderly">老年 Elderly</button>
+      <button class="casel-btn active" data-filter="all">鍏ㄩ儴 All</button>
+      <button class="casel-btn" data-filter="high">楂橀闄?High</button>
+      <button class="casel-btn" data-filter="medium">涓闄?Medium</button>
+      <button class="casel-btn" data-filter="low">浣庨闄?Low</button>
+      <button class="casel-btn" data-filter="pediatric">鍎跨 Pediatric</button>
+      <button class="casel-btn" data-filter="elderly">鑰佸勾 Elderly</button>
     </div>
     <div class="casel-grid reveal" id="casel-grid"></div>
   </div>
@@ -1301,33 +1301,33 @@
 <!-- PAIN DIARY -->
 <section id="pain-diary-section" class="section">
   <div class="section-inner">
-    <div class="section-eyebrow reveal">Pain Diary / 疼痛日记</div>
-    <h2 class="section-title reveal reveal-d1">每日疼痛 <span style="color:var(--teal)">记录追踪</span></h2>
+    <div class="section-eyebrow reveal">Pain Diary / 鐤肩棝鏃ヨ</div>
+    <h2 class="section-title reveal reveal-d1">姣忔棩鐤肩棝 <span style="color:var(--teal)">璁板綍杩借釜</span></h2>
     <p class="section-sub reveal reveal-d2">Log your daily pain level and symptoms during recovery. AI shows your healing trend over time.</p>
     <div class="pain-layout reveal">
       <div class="pain-form">
-        <div class="risk-row"><label class="risk-label">日期 Date</label><input type="date" id="pain-date" class="risk-input"></div>
-        <div class="risk-row"><label class="risk-label">疼痛评分 Pain Score (0-10)</label>
+        <div class="risk-row"><label class="risk-label">鏃ユ湡 Date</label><input type="date" id="pain-date" class="risk-input"></div>
+        <div class="risk-row"><label class="risk-label">鐤肩棝璇勫垎 Pain Score (0-10)</label>
           <div style="display:flex;align-items:center;gap:12px">
             <input type="range" id="pain-score" min="0" max="10" value="3" style="flex:1;accent-color:var(--teal)">
             <span id="pain-score-val" style="font-size:20px;font-weight:900;color:var(--teal);min-width:24px">3</span>
           </div>
         </div>
-        <div class="risk-row"><label class="risk-label">症状 Symptoms</label>
+        <div class="risk-row"><label class="risk-label">鐥囩姸 Symptoms</label>
           <div class="pain-syms">
-            <label><input type="checkbox" id="ps-swelling"> 肿胀 Swelling</label>
-            <label><input type="checkbox" id="ps-stiff"> 僵硬 Stiffness</label>
-            <label><input type="checkbox" id="ps-tender"> 压痛 Tenderness</label>
-            <label><input type="checkbox" id="ps-numb"> 麻木 Numbness</label>
+            <label><input type="checkbox" id="ps-swelling"> 鑲胯儉 Swelling</label>
+            <label><input type="checkbox" id="ps-stiff"> 鍍电‖ Stiffness</label>
+            <label><input type="checkbox" id="ps-tender"> 鍘嬬棝 Tenderness</label>
+            <label><input type="checkbox" id="ps-numb"> 楹绘湪 Numbness</label>
           </div>
         </div>
-        <div class="risk-row"><label class="risk-label">备注 Notes</label>
-          <input type="text" id="pain-notes" class="risk-input" placeholder="今天感觉... Today I feel...">
+        <div class="risk-row"><label class="risk-label">澶囨敞 Notes</label>
+          <input type="text" id="pain-notes" class="risk-input" placeholder="浠婂ぉ鎰熻... Today I feel...">
         </div>
-        <button class="risk-calc-btn" onclick="savePainEntry()">💾 Save Entry</button>
+        <button class="risk-calc-btn" onclick="savePainEntry()">馃捑 Save Entry</button>
       </div>
       <div class="pain-chart-wrap">
-        <div class="stats-chart-title">疼痛趋势 Pain Trend</div>
+        <div class="stats-chart-title">鐤肩棝瓒嬪娍 Pain Trend</div>
         <canvas id="pain-chart" height="200"></canvas>
         <div id="pain-entries-list" style="margin-top:16px;max-height:200px;overflow-y:auto"></div>
       </div>
@@ -1338,23 +1338,23 @@
 <!-- MEDICATION CALENDAR -->
 <section id="med-calendar-section" class="section" style="background:var(--bg2)">
   <div class="section-inner">
-    <div class="section-eyebrow reveal">Med Calendar / 用药日历</div>
-    <h2 class="section-title reveal reveal-d1">用药提醒 <span style="color:var(--teal)">康复日历</span></span></h2>
+    <div class="section-eyebrow reveal">Med Calendar / 鐢ㄨ嵂鏃ュ巻</div>
+    <h2 class="section-title reveal reveal-d1">鐢ㄨ嵂鎻愰啋 <span style="color:var(--teal)">搴峰鏃ュ巻</span></span></h2>
     <p class="section-sub reveal reveal-d2">Set medication reminders and follow-up dates. Get browser notifications to stay on track.</p>
     <div class="medcal-layout reveal">
       <div class="medcal-add">
-        <div class="risk-row"><label class="risk-label">药品/事项 Med / Event</label><input type="text" id="med-name" class="risk-input" placeholder="e.g. 布洛芬 Ibuprofen 400mg"></div>
-        <div class="risk-row"><label class="risk-label">日期时间 Date & Time</label><input type="datetime-local" id="med-datetime" class="risk-input"></div>
-        <div class="risk-row"><label class="risk-label">类型 Type</label>
+        <div class="risk-row"><label class="risk-label">鑽搧/浜嬮」 Med / Event</label><input type="text" id="med-name" class="risk-input" placeholder="e.g. 甯冩礇鑺?Ibuprofen 400mg"></div>
+        <div class="risk-row"><label class="risk-label">鏃ユ湡鏃堕棿 Date & Time</label><input type="datetime-local" id="med-datetime" class="risk-input"></div>
+        <div class="risk-row"><label class="risk-label">绫诲瀷 Type</label>
           <select id="med-type" class="risk-select">
-            <option value="med">💊 用药 Medication</option>
-            <option value="checkup">🏥 复查 Follow-up</option>
-            <option value="rehab">🏋️ 康复训练 Rehab</option>
-            <option value="xray">🩻 X光复查 X-ray</option>
+            <option value="med">馃拪 鐢ㄨ嵂 Medication</option>
+            <option value="checkup">馃彞 澶嶆煡 Follow-up</option>
+            <option value="rehab">馃弸锔?搴峰璁粌 Rehab</option>
+            <option value="xray">馃┗ X鍏夊鏌?X-ray</option>
           </select>
         </div>
-        <button class="risk-calc-btn" onclick="addMedEntry()">➕ Add Reminder</button>
-        <button class="risk-calc-btn" style="background:rgba(255,255,255,.08);color:var(--text2);margin-top:6px" onclick="requestNotifPermission()">🔔 Enable Notifications</button>
+        <button class="risk-calc-btn" onclick="addMedEntry()">鉃?Add Reminder</button>
+        <button class="risk-calc-btn" style="background:rgba(255,255,255,.08);color:var(--text2);margin-top:6px" onclick="requestNotifPermission()">馃敂 Enable Notifications</button>
       </div>
       <div class="medcal-calendar" id="medcal-calendar"></div>
     </div>
@@ -1364,11 +1364,11 @@
 <!-- NEARBY HOSPITALS -->
 <section id="hospital-section" class="section">
   <div class="section-inner">
-    <div class="section-eyebrow reveal">Hospital Finder / 医院查找</div>
-    <h2 class="section-title reveal reveal-d1">附近 <span style="color:var(--teal)">骨科医院</span></h2>
+    <div class="section-eyebrow reveal">Hospital Finder / 鍖婚櫌鏌ユ壘</div>
+    <h2 class="section-title reveal reveal-d1">闄勮繎 <span style="color:var(--teal)">楠ㄧ鍖婚櫌</span></h2>
     <p class="section-sub reveal reveal-d2">Find orthopedic hospitals near you. Uses your browser location to show the nearest facilities on a map.</p>
     <div class="hosp-layout reveal">
-      <button class="risk-calc-btn" style="max-width:260px;margin-bottom:20px" onclick="findHospitals()">📍 Find Nearby Hospitals</button>
+      <button class="risk-calc-btn" style="max-width:260px;margin-bottom:20px" onclick="findHospitals()">馃搷 Find Nearby Hospitals</button>
       <div id="hosp-status" style="font-size:13px;color:var(--text3);margin-bottom:12px"></div>
       <div id="hosp-map-wrap" style="border-radius:14px;overflow:hidden;height:360px;border:1px solid var(--border);display:none">
         <iframe id="hosp-map" src="" width="100%" height="360" style="border:0" allowfullscreen loading="lazy"></iframe>
@@ -1379,7 +1379,7 @@
 </section>
 
 <style>
-/* ── Auto Detect ──── */
+/* 鈹€鈹€ Auto Detect 鈹€鈹€鈹€鈹€ */
 .autodet-layout{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
 .autodet-upload{border:2px dashed var(--border);border-radius:14px;padding:48px 20px;text-align:center;cursor:pointer;transition:.2s}
 .autodet-upload:hover{border-color:var(--teal);background:rgba(0,229,200,.04)}
@@ -1387,7 +1387,7 @@
 .autodet-legend{font-size:11px;color:var(--text3);margin-top:8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .autodet-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
 .autodet-result{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:12px;color:var(--text2);line-height:1.8}
-/* ── Quiz ──────────── */
+/* 鈹€鈹€ Quiz 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 .quiz-wrap{max-width:700px;margin:0 auto}
 .quiz-header{display:flex;align-items:center;gap:20px;margin-bottom:20px;flex-wrap:wrap}
 .quiz-score-label,.quiz-q-label{font-size:13px;color:var(--text3)}
@@ -1404,7 +1404,7 @@
 .quiz-feedback{padding:12px 16px;border-radius:10px;font-size:13px;line-height:1.6;margin-top:12px}
 .quiz-feedback.ok{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:#10B981}
 .quiz-feedback.bad{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);color:#EF4444}
-/* ── Case Library ─── */
+/* 鈹€鈹€ Case Library 鈹€鈹€鈹€ */
 .casel-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
 .casel-btn{padding:7px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text3);font-size:12px;cursor:pointer;transition:.2s}
 .casel-btn.active,.casel-btn:hover{background:var(--teal);color:#000;border-color:var(--teal)}
@@ -1418,12 +1418,12 @@
 .casel-card-desc{font-size:11px;color:var(--text3);line-height:1.6}
 .casel-card-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
 .casel-card-tag{font-size:9px;padding:2px 8px;border-radius:10px;background:rgba(0,180,255,.1);color:#00B4FF}
-/* ── Pain Diary ───── */
+/* 鈹€鈹€ Pain Diary 鈹€鈹€鈹€鈹€鈹€ */
 .pain-layout{display:grid;grid-template-columns:320px 1fr;gap:32px;align-items:start}
 .pain-syms{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
 .pain-syms label{font-size:12px;color:var(--text2);cursor:pointer;display:flex;align-items:center;gap:4px}
 .pain-chart-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px}
-/* ── Med Calendar ─── */
+/* 鈹€鈹€ Med Calendar 鈹€鈹€鈹€ */
 .medcal-layout{display:grid;grid-template-columns:300px 1fr;gap:32px;align-items:start}
 .medcal-calendar{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px}
 .medcal-entry{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)}
@@ -1432,23 +1432,23 @@
 .medcal-name{font-size:13px;font-weight:600;color:var(--text1)}
 .medcal-time{font-size:11px;color:var(--text3)}
 .medcal-del{margin-left:auto;font-size:11px;color:var(--text4);cursor:pointer;padding:2px 6px;border-radius:4px;border:1px solid var(--border)}
-/* ── Hospital ─────── */
+/* 鈹€鈹€ Hospital 鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 .hosp-list{display:flex;flex-direction:column;gap:12px;margin-top:16px}
 .hosp-card{display:flex;gap:14px;align-items:center;padding:14px;background:var(--bg2);border:1px solid var(--border);border-radius:12px}
 .hosp-icon{font-size:28px;flex-shrink:0}
 .hosp-name{font-size:14px;font-weight:700;color:var(--text1)}
 .hosp-addr{font-size:11px;color:var(--text3)}
 .hosp-dist{font-size:12px;color:var(--teal);font-weight:700;margin-left:auto}
-/* ── Report ────────── */
+/* 鈹€鈹€ Report 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 .report-layout{display:grid;grid-template-columns:320px 1fr;gap:32px;align-items:start}
 .report-preview{background:#fff;color:#1a1a1a;border-radius:14px;padding:28px;font-size:12px;line-height:1.8}
 .rpt-header{border-bottom:2px solid #1D4ED8;margin-bottom:16px;padding-bottom:12px}
 .rpt-title{font-size:18px;font-weight:800;color:#1D4ED8}
 .rpt-section{margin-bottom:14px}
 .rpt-section-title{font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;border-bottom:1px solid #E2E8F0;padding-bottom:3px}
-/* ── Heal ──────────── */
+/* 鈹€鈹€ Heal 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 .heal-layout{display:grid;grid-template-columns:320px 1fr;gap:32px;align-items:start}
-/* ── Responsive ───── */
+/* 鈹€鈹€ Responsive 鈹€鈹€鈹€鈹€鈹€ */
 @media(max-width:768px){
   .autodet-layout,.pain-layout,.medcal-layout,.report-layout,.heal-layout{grid-template-columns:1fr}
   .casel-grid{grid-template-columns:repeat(2,1fr)}
@@ -1461,7 +1461,7 @@
   <div class="footer-inner">
     <div>
       <a class="footer-logo" href="#hero">
-        <div class="footer-logo-icon">🔬</div>
+        <div class="footer-logo-icon">馃敩</div>
         <span class="footer-logo-name" data-i18n="ft.logo">BoneScan AI</span>
       </a>
       <p class="footer-desc" data-i18n="ft.desc">A research-grade bone fracture X-ray dataset for advancing medical artificial intelligence and diagnostic automation.</p>
@@ -1479,7 +1479,7 @@
     </div>
   </div>
   <div class="footer-bottom">
-    <span data-i18n="ft.copy">© 2025 BoneScan AI Dataset</span>
+    <span data-i18n="ft.copy">漏 2025 BoneScan AI Dataset</span>
     <span data-i18n="ft.rights">For research &amp; educational use</span>
   </div>
 </footer>
@@ -1487,8 +1487,8 @@
 <!-- History Panel -->
 <div id="hist-panel" class="hist-panel">
   <div class="hist-hdr">
-    <span class="hist-title" data-i18n="hist.title">📋 Case History</span>
-    <button class="hist-close" id="hist-close">✕</button>
+    <span class="hist-title" data-i18n="hist.title">馃搵 Case History</span>
+    <button class="hist-close" id="hist-close">鉁?/button>
   </div>
   <div class="hist-list" id="hist-list"></div>
   <div class="hist-footer">
@@ -1500,9 +1500,9 @@
 <!-- TF.js Model loading overlay -->
 <div id="tf-overlay" class="tf-overlay" style="display:none">
   <div class="tf-box">
-    <div class="tf-icon">🧠</div>
+    <div class="tf-icon">馃</div>
     <div class="tf-title" id="tf-title">Loading AI Model</div>
-    <div class="tf-sub" id="tf-sub">TensorFlow.js · MobileNet v2</div>
+    <div class="tf-sub" id="tf-sub">TensorFlow.js 路 MobileNet v2</div>
     <div class="tf-track"><div class="tf-bar" id="tf-bar" style="width:0%"></div></div>
     <div class="tf-pct" id="tf-pct">0%</div>
   </div>
@@ -1514,7 +1514,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.1/dist/mobilenet.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="js/app.js?v=20260609"></script>
+<script src="js/app.js?v=20260610"></script>
 <script src="js/extra.js"></script>
 </body>
 </html>
+
