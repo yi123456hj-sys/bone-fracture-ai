@@ -1952,42 +1952,48 @@ async function runAIAnalysis(){
 // ── Auto-circle fracture region on canvas ─────────────────
 function autoCircleFracture(result){
   if(!azCvs||!azImg) return;
-  // Remove previous AI-generated annotations (marked with _ai flag)
+  // Remove previous AI-generated annotations
   azAnns = azAnns.filter(a=>!a._ai);
 
-  if(!result.detected) { azRedraw(); return; }
+  if(!result.detected){ azRedraw(); return; }
 
   const W = azCvs.width, H = azCvs.height;
+  let cx, cy, r;
 
-  // If Claude returned a bbox [x1%,y1%,x2%,y2%]
+  // Use Claude bbox if available
   if(result.bbox && Array.isArray(result.bbox) && result.bbox.length===4){
     const [x1p,y1p,x2p,y2p] = result.bbox;
     if(x2p > x1p && y2p > y1p){
-      const cx = ((x1p+x2p)/2/100)*W;
-      const cy = ((y1p+y2p)/2/100)*H;
+      cx = ((x1p+x2p)/2/100)*W;
+      cy = ((y1p+y2p)/2/100)*H;
       const rw = ((x2p-x1p)/100)*W/2;
       const rh = ((y2p-y1p)/100)*H/2;
-      const r  = Math.max(20, Math.min(Math.max(rw,rh)*1.1, W*0.45));
-      azAnns.push({x:cx, y:cy, r, c:'#FFD600', _ai:true});
-      azRedraw();
-      // Animate pulsing ring to draw attention
-      pulseAiCircle(cx, cy, r);
-      return;
+      r  = Math.max(20, Math.min(Math.max(rw,rh)*1.15, W*0.42));
     }
   }
 
-  // Fallback: use local variance grid to find hotspot
-  const f = getFeatures();
-  if(!f) { azRedraw(); return; }
-  const {localVars} = f;
-  const gridR=4, gridC=4;
-  let maxV=-1, maxIdx=0;
-  localVars.forEach((v,i)=>{ if(v>maxV){maxV=v;maxIdx=i;} });
-  const gr=Math.floor(maxIdx/gridC), gc=maxIdx%gridC;
-  const cx = (gc+0.5)*(W/gridC);
-  const cy = (gr+0.5)*(H/gridR);
-  const r  = Math.min(W,H)*0.18;
-  azAnns.push({x:cx, y:cy, r, c:'#FFD600', _ai:true});
+  // Fallback: top-variance cell in 4×4 grid
+  if(cx==null){
+    const f = getFeatures();
+    if(!f){ azRedraw(); return; }
+    const gridR=4, gridC=4;
+    let maxV=-1, maxIdx=0;
+    f.localVars.forEach((v,i)=>{ if(v>maxV){maxV=v;maxIdx=i;} });
+    const gr=Math.floor(maxIdx/gridC), gc=maxIdx%gridC;
+    cx = (gc+0.5)*(W/gridC);
+    cy = (gr+0.5)*(H/gridR);
+    r  = Math.min(W,H)*0.18;
+  }
+
+  // Add red circle — this also feeds into GradCAM boost
+  azAnns.push({x:cx, y:cy, r, c:'#FF3333', _ai:true});
+
+  // Recompute GradCAM so it focuses on the circled area
+  gcamData = computeGradCAM();
+  gcamVisible = true;
+  const gcamBtn = document.getElementById('az-gcam-toggle');
+  if(gcamBtn) gcamBtn.classList.add('active');
+
   azRedraw();
   pulseAiCircle(cx, cy, r);
 }
