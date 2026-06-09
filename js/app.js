@@ -981,7 +981,7 @@ function initAnalyze(){
     else azAnns.pop();
     azRedraw();
   });
-  document.getElementById('az-clear-btn').addEventListener('click',()=>{azAnns=[];azRulers=[];azAngles=[];azAnglePts=[];azRedraw();});
+  document.getElementById('az-clear-btn').addEventListener('click',()=>{azAnns=[];azRulers=[];azAngles=[];azAnglePts=[];azDetBoxes=[];azRedraw();});
   document.getElementById('az-reupload-btn').addEventListener('click',resetUpload);
   // Zoom controls
   document.getElementById('az-zoom-in').addEventListener('click',()=>setZoom(azZoom*1.25));
@@ -1028,7 +1028,7 @@ function loadSample(fid){
 }
 
 function showWorkspace(img){
-  azImg=img; azAnns=[];
+  azImg=img; azAnns=[]; azDetBoxes=[];
   document.getElementById('az-upload-zone').style.display='none';
   document.getElementById('az-report').style.display='none';
   const ws=document.getElementById('az-workspace');
@@ -1076,6 +1076,7 @@ function azRedraw(){
   azRulers.forEach(r=>drawRulerLine(azCtx2,r,imgScale));
   // Draw angles
   azAngles.forEach(a=>drawAngleMeasure(azCtx2,a));
+  drawDetBoxes();
 }
 
 function azTempCircle(cx,cy,r){
@@ -1164,7 +1165,7 @@ function resetUpload(){
   document.getElementById('az-report').style.display='none';
   document.getElementById('az-ai-result').style.display='none';
   document.getElementById('az-file-input').value='';
-  azAnns=[];azImg=null;
+  azAnns=[];azDetBoxes=[];azImg=null;
   azBright=100;azContrast=100;azInverted=false;
   const bs=document.getElementById('az-bright-slider');
   const cs=document.getElementById('az-contrast-slider');
@@ -1949,53 +1950,106 @@ async function runAIAnalysis(){
   autoCircleFracture(result);
 }
 
-// ── Auto-circle fracture region on canvas ─────────────────
+// ── AI Detection Boxes (YOLO-style) ───────────────────────
+let azDetBoxes = [];  // [{x1,y1,x2,y2,label,conf,color}]
+
 function autoCircleFracture(result){
   if(!azCvs||!azImg) return;
-  // Remove previous AI-generated annotations
   azAnns = azAnns.filter(a=>!a._ai);
+  azDetBoxes = [];
 
   if(!result.detected){ azRedraw(); return; }
 
   const W = azCvs.width, H = azCvs.height;
-  let cx, cy, r;
+  let x1,y1,x2,y2;
 
-  // Use Claude bbox if available
   if(result.bbox && Array.isArray(result.bbox) && result.bbox.length===4){
-    const [x1p,y1p,x2p,y2p] = result.bbox;
-    if(x2p > x1p && y2p > y1p){
-      cx = ((x1p+x2p)/2/100)*W;
-      cy = ((y1p+y2p)/2/100)*H;
-      const rw = ((x2p-x1p)/100)*W/2;
-      const rh = ((y2p-y1p)/100)*H/2;
-      r  = Math.max(20, Math.min(Math.max(rw,rh)*1.15, W*0.42));
+    const [a,b,c,d] = result.bbox;
+    if(c>a && d>b){
+      x1=a/100*W; y1=b/100*H; x2=c/100*W; y2=d/100*H;
     }
   }
 
-  // Fallback: top-variance cell in 4×4 grid
-  if(cx==null){
+  // Fallback: top-variance 4×4 cell
+  if(x1==null){
     const f = getFeatures();
     if(!f){ azRedraw(); return; }
     const gridR=4, gridC=4;
     let maxV=-1, maxIdx=0;
     f.localVars.forEach((v,i)=>{ if(v>maxV){maxV=v;maxIdx=i;} });
     const gr=Math.floor(maxIdx/gridC), gc=maxIdx%gridC;
-    cx = (gc+0.5)*(W/gridC);
-    cy = (gr+0.5)*(H/gridR);
-    r  = Math.min(W,H)*0.18;
+    const cw=W/gridC, ch=H/gridR;
+    x1=gc*cw; y1=gr*ch; x2=(gc+1)*cw; y2=(gr+1)*ch;
   }
 
-  // Add red circle — this also feeds into GradCAM boost
+  // Clamp to canvas
+  x1=Math.max(2,x1); y1=Math.max(2,y1);
+  x2=Math.min(W-2,x2); y2=Math.min(H-2,y2);
+
+  const typeName = (AI_LABELS[lang]||AI_LABELS.en).types[result.type]||result.type;
+  azDetBoxes.push({x1,y1,x2,y2, label:typeName, conf:result.confidence, color:'#FF3333'});
+
+  // Also feed bbox center into azAnns for GradCAM boost
+  const cx=(x1+x2)/2, cy=(y1+y2)/2;
+  const r=Math.max(20,Math.min((x2-x1),(y2-y1))*0.6);
   azAnns.push({x:cx, y:cy, r, c:'#FF3333', _ai:true});
 
-  // Recompute GradCAM so it focuses on the circled area
   gcamData = computeGradCAM();
   gcamVisible = true;
   const gcamBtn = document.getElementById('az-gcam-toggle');
   if(gcamBtn) gcamBtn.classList.add('active');
 
   azRedraw();
-  pulseAiCircle(cx, cy, r);
+}
+
+function drawDetBoxes(){
+  if(!azDetBoxes.length || !azCtx2) return;
+  azDetBoxes.forEach(b=>{
+    const {x1,y1,x2,y2,label,conf,color} = b;
+    const bw = x2-x1, bh = y2-y1;
+    // Glow shadow
+    azCtx2.save();
+    azCtx2.shadowColor = color;
+    azCtx2.shadowBlur  = 14;
+    // Box stroke
+    azCtx2.strokeStyle = color;
+    azCtx2.lineWidth   = 2.5;
+    azCtx2.globalAlpha = 0.95;
+    azCtx2.strokeRect(x1,y1,bw,bh);
+    // Corner accents
+    const cs = Math.min(bw,bh)*0.18;
+    azCtx2.lineWidth = 4;
+    [[x1,y1,1,1],[x2,y1,-1,1],[x1,y2,1,-1],[x2,y2,-1,-1]].forEach(([px,py,dx,dy])=>{
+      azCtx2.beginPath();
+      azCtx2.moveTo(px+dx*cs, py);
+      azCtx2.lineTo(px, py);
+      azCtx2.lineTo(px, py+dy*cs);
+      azCtx2.stroke();
+    });
+    azCtx2.restore();
+    // Label background
+    const fontSize = Math.max(11, Math.min(14, bw*0.14));
+    azCtx2.font = `bold ${fontSize}px Inter,sans-serif`;
+    const txt = `${label}  ${conf}%`;
+    const tw  = azCtx2.measureText(txt).width;
+    const th  = fontSize+8;
+    const lx  = x1, ly = y1>th+2 ? y1-th-2 : y1+2;
+    azCtx2.save();
+    azCtx2.globalAlpha = 0.88;
+    azCtx2.fillStyle   = color;
+    azCtx2.beginPath();
+    azCtx2.roundRect ? azCtx2.roundRect(lx,ly,tw+14,th,4)
+                     : azCtx2.rect(lx,ly,tw+14,th);
+    azCtx2.fill();
+    azCtx2.restore();
+    // Label text
+    azCtx2.save();
+    azCtx2.fillStyle   = '#fff';
+    azCtx2.font        = `bold ${fontSize}px Inter,sans-serif`;
+    azCtx2.globalAlpha = 1;
+    azCtx2.fillText(txt, lx+7, ly+th-5);
+    azCtx2.restore();
+  });
 }
 
 function pulseAiCircle(cx, cy, r){
