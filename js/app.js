@@ -1637,18 +1637,17 @@ function computeProbabilities(topFid){
     typeScores.oblique      += ratioD * 5 + ratioH * 2;
     // Greenstick: low-moderate edge, high vertical
     typeScores.greenstick   += (edgeDensity<25?3:0) + ratioV * 4;
-    // Avulsion: localized high variance
-    typeScores.avulsion     += (varDisparity>1500?4:0) + (highVarRegions<3?2:0);
+    // Avulsion: localized high variance + isolated fragment
+    typeScores.avulsion     += (varDisparity>2500?4:0) + (varDisparity>1800&&highVarRegions===1?3:0);
     // Impacted: high density, low dynamic (compressed)
     typeScores.impacted     += (f.dynamicRange<100?3:0) + (stdDev>50?2:0);
     // Pathological: diffuse variation, lower edge density
     typeScores.pathological += (edgeDensity<20?3:0) + (stdDev>40?2:0);
     // Dislocation: spatial separation, moderate-high variance
     typeScores.dislocation  += (varDisparity>800?2:0) + (highVarRegions>3?2:0);
-    // Small hint from user selection, but features decide
-    typeScores[fid] += 2;
+    // No forced bias — features decide winner
   } else {
-    typeScores[fid] += 2;
+    // No X-ray features available, no bias
   }
 
   // Find actual winner from feature scores
@@ -1956,10 +1955,23 @@ async function runAIAnalysis(){
     }
   }
 
-  // Client-side fallback if API failed
+  // Client-side fallback if API failed — show visible warning
   if(!result){
     result=analyzeImagePixels();
     result._fallback=true;
+    // Show warning banner
+    let warn=document.getElementById('az-api-warn');
+    if(!warn){
+      warn=document.createElement('div');
+      warn.id='az-api-warn';
+      warn.style.cssText='margin:8px 0;padding:10px 14px;background:rgba(255,140,0,.12);border:1px solid rgba(255,140,0,.4);border-radius:8px;font-size:12px;color:#FFD600';
+      resultEl.parentNode.insertBefore(warn,resultEl);
+    }
+    const noKey=!getApiKey();
+    warn.innerHTML=noKey
+      ?`⚠ <strong>${lang==='zh'?'未设置 API Key':'No API Key set'}</strong> — ${lang==='zh'?'当前使用本地像素分析（不准确）。点导航栏 🔑 设置 Anthropic API Key 获得真实 AI 结果。':'Using local pixel analysis (inaccurate). Click 🔑 in the nav to set your Anthropic API Key for real AI results.'}`
+      :`⚠ <strong>${lang==='zh'?'API 调用失败':'API call failed'}</strong>${errorMsg?' — '+errorMsg:''} — ${lang==='zh'?'显示的是本地像素分析结果（不准确）':'Showing local pixel analysis (inaccurate)'}`;
+    warn.style.display='block';
     result._error=errorMsg;
   }
 
@@ -2319,7 +2331,7 @@ function analyzeImagePixels(){
     else if(ratioV > 0.50 && edgeDensity < 28)         detectedType='longitudinal';
     else if(highVarRegions >= 5)                        detectedType='comminuted';
     else if(lapMean > 22)                               detectedType='hairline';
-    else if(varDisparity > 2000 && highVarRegions < 4) detectedType='avulsion';
+    else if(varDisparity > 2800 && highVarRegions === 1) detectedType='avulsion';
     else if(dynamicRange < 95)                          detectedType='impacted';
     else if(ratioV > 0.40 && ratioD < 0.25)            detectedType='greenstick';
     else                                                detectedType='oblique';
