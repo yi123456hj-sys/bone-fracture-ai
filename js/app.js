@@ -1860,6 +1860,20 @@ function showApiKeyModal(onSave){
 }
 
 async function callAnthropicDirect(imageB64){
+  // Try backend proxy first (Vercel deployment)
+  try{
+    const proxyResp=await fetch('/api/analyze',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({imageData:imageB64,mimeType:'image/jpeg'}),
+      signal:AbortSignal.timeout(35000)
+    });
+    if(proxyResp.ok){
+      const proxyData=await proxyResp.json();
+      if(proxyData&&!proxyData.error) return proxyData;
+    }
+  }catch(e){/* fall through to direct API */}
+
   const apiKey=getApiKey();
   if(!apiKey) return null;
 
