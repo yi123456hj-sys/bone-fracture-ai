@@ -1821,7 +1821,7 @@ function initEnhancement(){
 }
 
 // ── API Key Management ────────────────────────────────────
-function getApiKey(){return localStorage.getItem('bonescan_apikey')||'';}
+function getApiKey(){return localStorage.getItem('bonescan_apikey')||'AIzaSyC5IUn854Oo6aYX8yYg92LkSCWqd1yZzwk';}
 function setApiKey(k){localStorage.setItem('bonescan_apikey',k.trim());}
 
 function showApiKeyModal(onSave){
