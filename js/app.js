@@ -1863,7 +1863,7 @@ async function callAnthropicDirect(imageB64){
         role:'user',
         content:[
           {type:'image',source:{type:'base64',media_type:'image/jpeg',data:imageB64}},
-          {type:'text',text:'You are a medical imaging AI assistant. Analyze this bone X-ray image carefully. Return ONLY valid JSON with no markdown or explanation: {"detected":true_or_false,"type":"avulsion|comminuted|dislocation|greenstick|hairline|impacted|longitudinal|oblique|pathological|spiral|unclear","confidence":0_to_100,"severity":"none|mild|moderate|severe","location":"anatomical description in English","observations":["finding 1","finding 2","finding 3"],"quality":"poor|fair|good|excellent","bbox":[x1_percent,y1_percent,x2_percent,y2_percent]}. The bbox field is required: if a fracture is detected, give a tight bounding box around the fracture area as percentage of image dimensions (0-100); if no fracture, return [0,0,0,0].'}
+          {type:'text',text:'You are a medical imaging AI assistant. Analyze this bone X-ray image carefully. Return ONLY valid JSON with no markdown or explanation: {"detected":true_or_false,"type":"avulsion|comminuted|dislocation|greenstick|hairline|impacted|longitudinal|oblique|pathological|spiral|unclear","confidence":0_to_100,"severity":"none|mild|moderate|severe","location":"anatomical description in English","cause":"1-2 sentence explanation of how/why this fracture occurred (mechanism of injury)","cause_zh":"骨折原因的1-2句中文解释（受伤机制）","cause_ko":"1-2문장으로 된 한국어 골절 원인 설명","observations":["finding 1","finding 2","finding 3"],"quality":"poor|fair|good|excellent","regions":[{"bbox":[x1_pct,y1_pct,x2_pct,y2_pct],"label":"short fracture label","shape":"rect|circle"}]}. The regions array must contain 1-3 objects for each distinct fracture zone found. bbox values are percentages 0-100 of image size. If no fracture detected, set regions to [].'}
         ]
       }]
     }),
@@ -1954,6 +1954,13 @@ async function runAIAnalysis(){
 // ── AI Detection Boxes (YOLO-style) ───────────────────────
 let azDetBoxes = [];  // [{x1,y1,x2,y2,label,conf,color}]
 
+// ── Fracture cause lookup (fallback) ─────────────────────
+const FRACTURE_CAUSES={
+  en:{avulsion:'Sudden muscle contraction or ligament tension pulls a bone fragment away — common in sports injuries and sudden movements.',comminuted:'High-energy trauma (car accident, fall from height) shatters the bone into multiple fragments.',dislocation:'Joint forcibly displaced beyond normal range by direct impact or violent twisting force.',greenstick:'Incomplete fracture in children — bone bends and cracks on one side only, like snapping a green twig.',hairline:'Repetitive overload or overuse stress fracture — common in athletes and military recruits.',impacted:'Axial compressive force drives bone ends into each other, typical of falling on an outstretched hand.',longitudinal:'Fracture line runs along the bone axis from indirect twisting or bending forces.',oblique:'Diagonal fracture from combined bending and twisting force applied simultaneously to the bone.',pathological:'Bone weakened by disease (osteoporosis, tumor, infection) fractures under minimal or no trauma.',spiral:'Rotational/torsional force causes the bone to fracture in a spiral pattern around its long axis.',unclear:'Fracture mechanism unclear from imaging; clinical history required for accurate assessment.'},
+  zh:{avulsion:'肌肉突然收缩或韧带张力将骨碎片拉离主骨，常见于运动损伤和急性扭伤。',comminuted:'高能量创伤（车祸、高处坠落）导致骨骼碎裂成多个碎片，常伴软组织损伤。',dislocation:'关节在直接暴力或剧烈扭转下超出正常范围，导致关节面分离。',greenstick:'儿童特有不完全骨折，骨骼弯曲时一侧断裂另一侧完整，如折断青嫩树枝。',hairline:'重复性超负荷引起的应力骨折，多见于长跑运动员和军事训练人员。',impacted:'轴向压缩力将骨骼两端相互嵌入，典型于手伸出着地的跌倒损伤。',longitudinal:'骨折线沿骨骼长轴延伸，通常由间接扭转或弯曲力引起。',oblique:'弯曲与扭转复合力同时作用于骨骼，形成斜向骨折线。',pathological:'骨质疏松、肿瘤或感染导致骨骼脆弱，轻微或无外力即可发生骨折。',spiral:'旋转/扭转外力使骨骼沿长轴呈螺旋状断裂，常见于肢体固定时扭转。',unclear:'影像学骨折机制不明确，需结合临床病史进行准确评估。'},
+  ko:{avulsion:'근육 급수축 또는 인대 장력으로 뼈 조각이 분리됩니다. 스포츠 손상에 흔합니다.',comminuted:'교통사고·고지 추락 등 고에너지 외상으로 뼈가 여러 조각으로 분쇄됩니다.',dislocation:'직접 충격이나 강한 비틀림으로 관절이 정상 범위를 벗어나 이탈됩니다.',greenstick:'어린이 불완전 골절로 뼈 한쪽만 부러지고 반대쪽은 유지됩니다.',hairline:'반복 과부하로 인한 피로 골절로 운동선수·군인에게 자주 발생합니다.',impacted:'축방향 압축력으로 뼈 끝이 서로 박히며 손 뻗은 채 낙상 시 흔합니다.',longitudinal:'간접 비틀림·굽힘 힘으로 골절선이 뼈 장축을 따라 진행합니다.',oblique:'굽힘과 비틀림 복합력으로 사선 골절이 발생합니다.',pathological:'골다공증·종양·감염으로 약해진 뼈가 경미한 외력에도 골절됩니다.',spiral:'회전력으로 뼈가 장축 따라 나선형으로 골절됩니다.',unclear:'영상에서 기전 불명확 — 정확한 평가를 위해 임상 병력이 필요합니다.'}
+};
+
 function autoCircleFracture(result){
   if(!azCvs||!azImg) return;
   azAnns = azAnns.filter(a=>!a._ai);
@@ -1962,48 +1969,46 @@ function autoCircleFracture(result){
   if(!result.detected){ azRedraw(); return; }
 
   const W = azCvs.width, H = azCvs.height;
-  let x1,y1,x2,y2;
+  const L = AI_LABELS[lang]||AI_LABELS.en;
+  const typeName = L.types[result.type]||result.type;
+  const cause = result['cause_'+lang]||result.cause
+    ||(FRACTURE_CAUSES[lang]||FRACTURE_CAUSES.en)[result.type]||'';
 
-  if(result.bbox && Array.isArray(result.bbox) && result.bbox.length===4){
-    const [a,b,c,d] = result.bbox;
-    if(c>a && d>b){
-      x1=a/100*W; y1=b/100*H; x2=c/100*W; y2=d/100*H;
+  // Build regions list
+  let regions = [];
+  if(result.regions && Array.isArray(result.regions) && result.regions.length){
+    regions = result.regions;
+  } else if(result.bbox && Array.isArray(result.bbox) && result.bbox[2]>result.bbox[0]){
+    regions = [{bbox:result.bbox, label:typeName, shape:'rect'}];
+  } else {
+    const f = getFeatures();
+    if(f && f.localVars){
+      const GRID=4;
+      [...f.localVars.map((v,i)=>({v,i}))].sort((a,b)=>b.v-a.v).slice(0,2).forEach(({i})=>{
+        const gr=Math.floor(i/GRID), gc=i%GRID;
+        regions.push({bbox:[gc*25,gr*25,(gc+1)*25,(gr+1)*25], label:typeName, shape:'rect'});
+      });
     }
   }
 
-  // Fallback: top-variance 4×4 cell
-  if(x1==null){
-    const f = getFeatures();
-    if(!f){ azRedraw(); return; }
-    const gridR=4, gridC=4;
-    let maxV=-1, maxIdx=0;
-    f.localVars.forEach((v,i)=>{ if(v>maxV){maxV=v;maxIdx=i;} });
-    const gr=Math.floor(maxIdx/gridC), gc=maxIdx%gridC;
-    const cw=W/gridC, ch=H/gridR;
-    x1=gc*cw; y1=gr*ch; x2=(gc+1)*cw; y2=(gr+1)*ch;
-  }
+  regions.forEach((reg, idx)=>{
+    const [x1p,y1p,x2p,y2p]=reg.bbox;
+    if(x2p<=x1p||y2p<=y1p) return;
+    const x1=Math.max(2,x1p/100*W), y1=Math.max(2,y1p/100*H);
+    const x2=Math.min(W-2,x2p/100*W), y2=Math.min(H-2,y2p/100*H);
+    const color=idx===0?'#FF3333':'#FF8C42';
+    azDetBoxes.push({x1,y1,x2,y2, label:reg.label||typeName,
+      conf:idx===0?result.confidence:null, color,
+      shape:reg.shape||'rect', cause:idx===0?cause:''});
+    const r=Math.max(18,Math.min((x2-x1),(y2-y1))*0.55);
+    azAnns.push({x:(x1+x2)/2, y:(y1+y2)/2, r, c:color, _ai:true});
+  });
 
-  // Clamp to canvas
-  x1=Math.max(2,x1); y1=Math.max(2,y1);
-  x2=Math.min(W-2,x2); y2=Math.min(H-2,y2);
-
-  const typeName = (AI_LABELS[lang]||AI_LABELS.en).types[result.type]||result.type;
-  azDetBoxes.push({x1,y1,x2,y2, label:typeName, conf:result.confidence, color:'#FF3333'});
-
-  // Also feed bbox center into azAnns for GradCAM boost
-  const cx=(x1+x2)/2, cy=(y1+y2)/2;
-  const r=Math.max(20,Math.min((x2-x1),(y2-y1))*0.6);
-  azAnns.push({x:cx, y:cy, r, c:'#FF3333', _ai:true});
-
-  gcamData = computeGradCAM();
-  gcamVisible = true;
-  const gcamBtn = document.getElementById('az-gcam-toggle');
+  gcamData=computeGradCAM();
+  gcamVisible=true;
+  const gcamBtn=document.getElementById('az-gcam-toggle');
   if(gcamBtn) gcamBtn.classList.add('active');
-
-  // Run fine-grid scan, hint with Claude bbox if available
-  const bboxHint = (result.bbox && result.bbox[2]>result.bbox[0]) ? result.bbox : null;
-  runGridScan(bboxHint);
-
+  runGridScan(regions[0]?regions[0].bbox:null);
   azRedraw();
 }
 
@@ -2145,52 +2150,95 @@ function drawGridBoxes(){
 }
 
 function drawDetBoxes(){
-  if(!azDetBoxes.length || !azCtx2) return;
+  if(!azDetBoxes.length||!azCtx2) return;
   azDetBoxes.forEach(b=>{
-    const {x1,y1,x2,y2,label,conf,color} = b;
-    const bw = x2-x1, bh = y2-y1;
-    // Glow shadow
+    const {x1,y1,x2,y2,label,conf,color,shape,cause}=b;
+    const bw=x2-x1, bh=y2-y1;
+    const cx=(x1+x2)/2, cy=(y1+y2)/2;
     azCtx2.save();
-    azCtx2.shadowColor = color;
-    azCtx2.shadowBlur  = 14;
-    // Box stroke
-    azCtx2.strokeStyle = color;
-    azCtx2.lineWidth   = 2.5;
-    azCtx2.globalAlpha = 0.95;
-    azCtx2.strokeRect(x1,y1,bw,bh);
-    // Corner accents
-    const cs = Math.min(bw,bh)*0.18;
-    azCtx2.lineWidth = 4;
-    [[x1,y1,1,1],[x2,y1,-1,1],[x1,y2,1,-1],[x2,y2,-1,-1]].forEach(([px,py,dx,dy])=>{
+    azCtx2.shadowColor=color; azCtx2.shadowBlur=14;
+    azCtx2.strokeStyle=color; azCtx2.lineWidth=2.5; azCtx2.globalAlpha=0.95;
+
+    if(shape==='circle'){
+      const r=Math.min(bw,bh)/2;
+      azCtx2.beginPath(); azCtx2.arc(cx,cy,r,0,Math.PI*2); azCtx2.stroke();
+    } else {
+      azCtx2.strokeRect(x1,y1,bw,bh);
+      // Corner accents
+      const cs=Math.min(bw,bh)*0.18;
+      azCtx2.lineWidth=4;
+      [[x1,y1,1,1],[x2,y1,-1,1],[x1,y2,1,-1],[x2,y2,-1,-1]].forEach(([px,py,dx,dy])=>{
+        azCtx2.beginPath();
+        azCtx2.moveTo(px+dx*cs,py); azCtx2.lineTo(px,py); azCtx2.lineTo(px,py+dy*cs);
+        azCtx2.stroke();
+      });
+    }
+    azCtx2.restore();
+
+    // ── Top label badge ──
+    const fs=Math.max(11,Math.min(14,bw*0.14));
+    const confTxt=conf!=null?`  ${conf}%`:'';
+    const txt=`${label}${confTxt}`;
+    azCtx2.font=`bold ${fs}px Inter,sans-serif`;
+    const tw=azCtx2.measureText(txt).width;
+    const th=fs+8;
+    const lx=x1, ly=y1>th+4?y1-th-2:y1+2;
+    azCtx2.save();
+    azCtx2.globalAlpha=0.9; azCtx2.fillStyle=color;
+    if(azCtx2.roundRect) azCtx2.roundRect(lx,ly,tw+14,th,4);
+    else azCtx2.rect(lx,ly,tw+14,th);
+    azCtx2.fill(); azCtx2.restore();
+    azCtx2.save();
+    azCtx2.fillStyle='#fff'; azCtx2.font=`bold ${fs}px Inter,sans-serif`;
+    azCtx2.globalAlpha=1;
+    azCtx2.fillText(txt,lx+7,ly+th-5); azCtx2.restore();
+
+    // ── Cause callout bubble (primary region only) ──
+    if(cause && cause.length>2){
+      const maxW=Math.min(220, azCvs.width*0.45);
+      const cfs=11;
+      azCtx2.font=`${cfs}px Inter,sans-serif`;
+      // Word-wrap cause text
+      const words=cause.split(' ');
+      const lines=[]; let line='';
+      words.forEach(w=>{
+        const test=line?line+' '+w:w;
+        if(azCtx2.measureText(test).width>maxW-16){lines.push(line);line=w;}
+        else line=test;
+      });
+      if(line) lines.push(line);
+      const bubbleW=maxW, bubbleH=lines.length*(cfs+4)+16;
+      // Position: right of box if space, else left
+      let bx=x2+8, by=y1;
+      if(bx+bubbleW>azCvs.width) bx=x1-bubbleW-8;
+      if(by+bubbleH>azCvs.height) by=azCvs.height-bubbleH-4;
+      if(bx<0) bx=4;
+      // Draw connecting line
+      azCtx2.save();
+      azCtx2.strokeStyle=color; azCtx2.lineWidth=1.5; azCtx2.globalAlpha=0.6;
+      azCtx2.setLineDash([4,3]);
       azCtx2.beginPath();
-      azCtx2.moveTo(px+dx*cs, py);
-      azCtx2.lineTo(px, py);
-      azCtx2.lineTo(px, py+dy*cs);
-      azCtx2.stroke();
-    });
-    azCtx2.restore();
-    // Label background
-    const fontSize = Math.max(11, Math.min(14, bw*0.14));
-    azCtx2.font = `bold ${fontSize}px Inter,sans-serif`;
-    const txt = `${label}  ${conf}%`;
-    const tw  = azCtx2.measureText(txt).width;
-    const th  = fontSize+8;
-    const lx  = x1, ly = y1>th+2 ? y1-th-2 : y1+2;
-    azCtx2.save();
-    azCtx2.globalAlpha = 0.88;
-    azCtx2.fillStyle   = color;
-    azCtx2.beginPath();
-    azCtx2.roundRect ? azCtx2.roundRect(lx,ly,tw+14,th,4)
-                     : azCtx2.rect(lx,ly,tw+14,th);
-    azCtx2.fill();
-    azCtx2.restore();
-    // Label text
-    azCtx2.save();
-    azCtx2.fillStyle   = '#fff';
-    azCtx2.font        = `bold ${fontSize}px Inter,sans-serif`;
-    azCtx2.globalAlpha = 1;
-    azCtx2.fillText(txt, lx+7, ly+th-5);
-    azCtx2.restore();
+      azCtx2.moveTo(shape==='circle'?cx:x2, shape==='circle'?cy:y1+(bh/2));
+      azCtx2.lineTo(bx, by+bubbleH/2);
+      azCtx2.stroke(); azCtx2.restore();
+      // Bubble background
+      azCtx2.save();
+      azCtx2.globalAlpha=0.88;
+      azCtx2.fillStyle='rgba(10,15,28,0.92)';
+      azCtx2.strokeStyle=color; azCtx2.lineWidth=1.5;
+      if(azCtx2.roundRect) azCtx2.roundRect(bx,by,bubbleW,bubbleH,7);
+      else azCtx2.rect(bx,by,bubbleW,bubbleH);
+      azCtx2.fill(); azCtx2.stroke(); azCtx2.restore();
+      // Cause title
+      const causeTitle=lang==='zh'?'骨折原因':lang==='ko'?'골절 원인':'Fracture Cause';
+      azCtx2.save();
+      azCtx2.fillStyle=color; azCtx2.font=`bold ${cfs}px Inter,sans-serif`;
+      azCtx2.globalAlpha=1;
+      azCtx2.fillText(causeTitle,bx+8,by+cfs+2);
+      azCtx2.fillStyle='rgba(255,255,255,0.85)'; azCtx2.font=`${cfs}px Inter,sans-serif`;
+      lines.forEach((l,i)=>azCtx2.fillText(l,bx+8,by+cfs*2+8+i*(cfs+4)));
+      azCtx2.restore();
+    }
   });
 }
 
