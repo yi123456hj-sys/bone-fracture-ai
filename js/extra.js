@@ -44,7 +44,7 @@
 })();
 
 /* ──────────────────────────────────────────────────
-   AUTO DETECT — highlight suspicious regions
+   AUTO DETECT — Gemini AI fracture detection
 ────────────────────────────────────────────────── */
 (function initAutoDetect(){
   const upload = document.getElementById('autodet-upload');
@@ -64,7 +64,7 @@
         canvasWrap.style.display='block';
         resultEl.style.display='block';
         upload.style.display='none';
-        runAutoDetect(img, canvas, resultEl);
+        runAutoDetect(img, canvas, resultEl, ev.target.result);
       };
       img.src=ev.target.result;
     };
@@ -72,70 +72,89 @@
   });
 })();
 
-function runAutoDetect(img, canvas, resultEl){
-  const W=Math.min(512,img.naturalWidth);
-  const H=Math.min(512,img.naturalHeight);
+const FRAC_NAMES_ZH={avulsion:'撕脱骨折',comminuted:'粉碎骨折',dislocation:'骨折脱位',greenstick:'青枝骨折',hairline:'发际线骨折',impacted:'嵌插骨折',longitudinal:'纵向骨折',oblique:'斜形骨折',pathological:'病理骨折',spiral:'螺旋骨折',unclear:'不明确'};
+
+async function runAutoDetect(img, canvas, resultEl, dataUrl){
+  const W=Math.min(800,img.naturalWidth);
+  const H=Math.round(W*img.naturalHeight/img.naturalWidth);
   canvas.width=W; canvas.height=H;
   const ctx=canvas.getContext('2d');
   ctx.drawImage(img,0,0,W,H);
-  const data=ctx.getImageData(0,0,W,H);
-  const px=data.data;
 
-  // Grayscale + luminance
-  const lum=new Float32Array(W*H);
-  for(let i=0;i<W*H;i++) lum[i]=px[i*4]*0.299+px[i*4+1]*0.587+px[i*4+2]*0.114;
+  resultEl.innerHTML='<div style="color:var(--teal);padding:12px">🔍 AI 正在分析骨折区域…</div>';
 
-  // Local variance in 16x16 blocks
-  const bSize=16, bCols=Math.floor(W/bSize), bRows=Math.floor(H/bSize);
-  const blockVars=[];
-  for(let br=0;br<bRows;br++) for(let bc=0;bc<bCols;bc++){
-    let s=0,sq=0,n=0;
-    for(let y=br*bSize;y<(br+1)*bSize&&y<H;y++)
-      for(let x=bc*bSize;x<(bc+1)*bSize&&x<W;x++){
-        const v=lum[y*W+x]; s+=v; sq+=v*v; n++;
-      }
-    const m=s/n; blockVars.push({r:br,c:bc,v:sq/n-m*m,m});
-  }
+  try{
+    const hiCvs=document.createElement('canvas');
+    hiCvs.width=Math.max(W,1024); hiCvs.height=Math.round(Math.max(W,1024)*H/W);
+    hiCvs.getContext('2d').drawImage(img,0,0,hiCvs.width,hiCvs.height);
+    const b64=hiCvs.toDataURL('image/jpeg',.92).split(',')[1];
+    const apiKey=typeof getApiKey==='function'?getApiKey():'AIzaSyC5IUn854Oo6aYX8yYg92LkSCWqd1yZzwk';
 
-  // Laplacian per block
-  const lapMap=new Float32Array(bRows*bCols);
-  blockVars.forEach((b,i)=>{
-    let lap=0,n=0;
-    for(let y=b.r*bSize+1;y<(b.r+1)*bSize-1&&y<H-1;y++)
-      for(let x=b.c*bSize+1;x<(b.c+1)*bSize-1&&x<W-1;x++){
-        lap+=Math.abs(-lum[(y-1)*W+x]-lum[(y+1)*W+x]-lum[y*W+x-1]-lum[y*W+x+1]+4*lum[y*W+x]);
-        n++;
-      }
-    lapMap[i]=n>0?lap/n:0;
-  });
+    const prompt=`You are an expert radiologist. Analyze this bone X-ray and identify ALL fracture locations with precise bounding boxes.
 
-  // Score each block
-  const scores=blockVars.map((b,i)=>({...b, score: b.v*0.6 + lapMap[i]*2}));
-  const maxScore=Math.max(...scores.map(s=>s.score));
-  const threshold=maxScore*0.55;
+Return ONLY valid JSON, no markdown:
+{"detected":boolean,"type":"avulsion|comminuted|dislocation|greenstick|hairline|impacted|longitudinal|oblique|pathological|spiral|unclear","confidence":integer,"severity":"none|mild|moderate|severe","location":"anatomical location in Chinese","cause_zh":"1-2句骨折原因（中文）","regions":[{"bbox":[x1_percent,y1_percent,x2_percent,y2_percent],"label":"骨折类型标签"}]}
 
-  // Draw overlay
-  let highCount=0,medCount=0;
-  scores.forEach(b=>{
-    const ratio=b.score/maxScore;
-    if(ratio>0.55){
-      const color=ratio>0.80?'rgba(239,68,68,0.45)':ratio>0.65?'rgba(249,115,22,0.35)':'rgba(234,179,8,0.28)';
-      ctx.fillStyle=color;
-      ctx.fillRect(b.c*bSize, b.r*bSize, bSize, bSize);
-      if(ratio>0.80){ ctx.strokeStyle='#EF4444'; ctx.lineWidth=1.5; ctx.strokeRect(b.c*bSize,b.r*bSize,bSize,bSize); highCount++; }
-      else if(ratio>0.65) medCount++;
+Rules:
+- bbox values are percentages 0-100 of image dimensions
+- Each bbox must tightly surround the actual fracture line or displaced bone
+- If no fracture: detected=false, regions=[]
+- Be precise and honest about confidence`;
+
+    const resp=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{inline_data:{mime_type:'image/jpeg',data:b64}},{text:prompt}]}],generationConfig:{temperature:0.1,maxOutputTokens:1024}}),
+      signal:AbortSignal.timeout(30000)
+    });
+    const data=await resp.json();
+    const raw=data.candidates[0].content.parts[0].text.replace(/^```json?\s*/,'').replace(/\s*```$/,'').trim();
+    const result=JSON.parse(raw);
+
+    // Redraw image clean
+    ctx.drawImage(img,0,0,W,H);
+
+    if(result.detected && result.regions && result.regions.length){
+      result.regions.forEach((reg,i)=>{
+        const [x1p,y1p,x2p,y2p]=reg.bbox;
+        const x1=x1p/100*W, y1=y1p/100*H, x2=x2p/100*W, y2=y2p/100*H;
+        const bw=x2-x1, bh=y2-y1;
+        const color=i===0?'#FF3333':'#FF8C42';
+
+        // Draw box
+        ctx.strokeStyle=color; ctx.lineWidth=2.5;
+        ctx.strokeRect(x1,y1,bw,bh);
+
+        // Corner accents
+        const cs=Math.min(14,bw*0.25,bh*0.25);
+        ctx.lineWidth=3;
+        [[x1,y1,1,1],[x2,y1,-1,1],[x1,y2,1,-1],[x2,y2,-1,-1]].forEach(([cx,cy,dx,dy])=>{
+          ctx.beginPath(); ctx.moveTo(cx+dx*cs,cy); ctx.lineTo(cx,cy); ctx.lineTo(cx,cy+dy*cs); ctx.stroke();
+        });
+
+        // Label
+        const typeName=FRAC_NAMES_ZH[result.type]||result.type;
+        const label=reg.label||typeName;
+        ctx.font='bold 12px Inter,sans-serif';
+        const tw=ctx.measureText(label).width;
+        ctx.fillStyle=color; ctx.fillRect(x1,y1-20,tw+10,20);
+        ctx.fillStyle='#fff'; ctx.fillText(label,x1+5,y1-5);
+      });
+
+      const typeName=FRAC_NAMES_ZH[result.type]||result.type;
+      resultEl.innerHTML=`
+        <div style="font-weight:700;font-size:16px;color:#FF3333;margin-bottom:8px">⚠ 检测到骨折</div>
+        <div style="margin-bottom:6px">骨折类型：<strong style="color:var(--teal)">${typeName}</strong> &nbsp; 置信度：<strong>${result.confidence}%</strong></div>
+        <div style="margin-bottom:6px">严重程度：${result.severity==='severe'?'重度':result.severity==='moderate'?'中度':result.severity==='mild'?'轻度':'无'} &nbsp; 位置：${result.location||'—'}</div>
+        ${result.cause_zh?`<div style="margin-top:8px;font-size:12px;color:var(--text3);line-height:1.5">💡 ${result.cause_zh}</div>`:''}
+        <div style="margin-top:8px;font-size:10px;color:var(--text4)">⚠ AI辅助参考，以临床诊断为准。</div>`;
+    } else {
+      resultEl.innerHTML=`<div style="font-weight:700;color:#10B981;margin-bottom:8px">✅ 未发现明显骨折</div><div style="font-size:12px;color:var(--text3)">置信度：${result.confidence}%</div><div style="margin-top:4px;font-size:10px;color:var(--text4)">⚠ AI辅助参考，以临床诊断为准。</div>`;
     }
-  });
-
-  // Result text
-  const detected = highCount>0||medCount>2;
-  resultEl.innerHTML=`
-    <div style="font-weight:700;color:${detected?'#EF4444':'#10B981'};margin-bottom:8px">
-      ${detected?'⚠ 检测到异常区域 Anomaly Detected':'✅ 未发现明显异常 No Significant Anomaly'}
-    </div>
-    <div>🔴 高风险区域: <strong>${highCount}</strong> 块 &nbsp; 🟠 中风险区域: <strong>${medCount}</strong> 块</div>
-    <div style="margin-top:6px;font-size:10px;color:var(--text4)">红框=高风险区域（需重点关注）· Red boxes = high-risk regions requiring attention</div>
-    <div style="margin-top:4px;font-size:10px;color:var(--text4)">⚠ AI辅助参考，以临床诊断为准。For reference only.</div>`;
+  } catch(err){
+    ctx.drawImage(img,0,0,W,H);
+    resultEl.innerHTML=`<div style="color:#F97316">分析失败：${err.message}</div>`;
+  }
 }
 
 /* ──────────────────────────────────────────────────
