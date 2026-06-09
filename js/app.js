@@ -1861,7 +1861,7 @@ async function callAnthropicDirect(imageB64){
         role:'user',
         content:[
           {type:'image',source:{type:'base64',media_type:'image/jpeg',data:imageB64}},
-          {type:'text',text:'You are a medical imaging AI assistant. Analyze this bone X-ray image carefully. Return ONLY valid JSON with no markdown or explanation: {"detected":true_or_false,"type":"avulsion|comminuted|dislocation|greenstick|hairline|impacted|longitudinal|oblique|pathological|spiral|unclear","confidence":0_to_100,"severity":"none|mild|moderate|severe","location":"anatomical description in English","observations":["finding 1","finding 2","finding 3"],"quality":"poor|fair|good|excellent"}'}
+          {type:'text',text:'You are a medical imaging AI assistant. Analyze this bone X-ray image carefully. Return ONLY valid JSON with no markdown or explanation: {"detected":true_or_false,"type":"avulsion|comminuted|dislocation|greenstick|hairline|impacted|longitudinal|oblique|pathological|spiral|unclear","confidence":0_to_100,"severity":"none|mild|moderate|severe","location":"anatomical description in English","observations":["finding 1","finding 2","finding 3"],"quality":"poor|fair|good|excellent","bbox":[x1_percent,y1_percent,x2_percent,y2_percent]}. The bbox field is required: if a fracture is detected, give a tight bounding box around the fracture area as percentage of image dimensions (0-100); if no fracture, return [0,0,0,0].'}
         ]
       }]
     }),
@@ -1946,6 +1946,72 @@ async function runAIAnalysis(){
   label.textContent=lang==='zh'?'AI 智能分析':lang==='ko'?'AI 스마트 분석':'AI Smart Analyze';
 
   renderAIResult(result, L, resultEl);
+  autoCircleFracture(result);
+}
+
+// ── Auto-circle fracture region on canvas ─────────────────
+function autoCircleFracture(result){
+  if(!azCvs||!azImg) return;
+  // Remove previous AI-generated annotations (marked with _ai flag)
+  azAnns = azAnns.filter(a=>!a._ai);
+
+  if(!result.detected) { azRedraw(); return; }
+
+  const W = azCvs.width, H = azCvs.height;
+
+  // If Claude returned a bbox [x1%,y1%,x2%,y2%]
+  if(result.bbox && Array.isArray(result.bbox) && result.bbox.length===4){
+    const [x1p,y1p,x2p,y2p] = result.bbox;
+    if(x2p > x1p && y2p > y1p){
+      const cx = ((x1p+x2p)/2/100)*W;
+      const cy = ((y1p+y2p)/2/100)*H;
+      const rw = ((x2p-x1p)/100)*W/2;
+      const rh = ((y2p-y1p)/100)*H/2;
+      const r  = Math.max(20, Math.min(Math.max(rw,rh)*1.1, W*0.45));
+      azAnns.push({x:cx, y:cy, r, c:'#FFD600', _ai:true});
+      azRedraw();
+      // Animate pulsing ring to draw attention
+      pulseAiCircle(cx, cy, r);
+      return;
+    }
+  }
+
+  // Fallback: use local variance grid to find hotspot
+  const f = getFeatures();
+  if(!f) { azRedraw(); return; }
+  const {localVars} = f;
+  const gridR=4, gridC=4;
+  let maxV=-1, maxIdx=0;
+  localVars.forEach((v,i)=>{ if(v>maxV){maxV=v;maxIdx=i;} });
+  const gr=Math.floor(maxIdx/gridC), gc=maxIdx%gridC;
+  const cx = (gc+0.5)*(W/gridC);
+  const cy = (gr+0.5)*(H/gridR);
+  const r  = Math.min(W,H)*0.18;
+  azAnns.push({x:cx, y:cy, r, c:'#FFD600', _ai:true});
+  azRedraw();
+  pulseAiCircle(cx, cy, r);
+}
+
+function pulseAiCircle(cx, cy, r){
+  if(!azCtx2) return;
+  let scale=1, dir=1, frames=0;
+  const pulse=()=>{
+    if(frames++>40) return;
+    azRedraw();
+    const s = 1 + Math.sin(frames*0.25)*0.12;
+    azCtx2.save();
+    azCtx2.beginPath();
+    azCtx2.arc(cx, cy, r*s, 0, Math.PI*2);
+    azCtx2.strokeStyle='#FFD600';
+    azCtx2.lineWidth=3;
+    azCtx2.globalAlpha=0.9-frames*0.015;
+    azCtx2.shadowColor='#FFD600';
+    azCtx2.shadowBlur=20;
+    azCtx2.stroke();
+    azCtx2.restore();
+    requestAnimationFrame(pulse);
+  };
+  requestAnimationFrame(pulse);
 }
 
 function analyzeImagePixels(){
@@ -2061,6 +2127,17 @@ function analyzeImagePixels(){
     `동적 범위 ${dynamicRange} (평균 ${mean.toFixed(0)}, σ=${stdDev.toFixed(1)}), 이미지 품질 ${qualMap[qualIdx]}`
   ];
 
+  // ── Bbox from top variance region (4×4 grid) ─────────────
+  let bbox = [0,0,0,0];
+  if(hasFracture && f.localVars){
+    const gridR=4, gridC=4;
+    let maxV=-1, maxIdx=0;
+    f.localVars.forEach((v,i)=>{ if(v>maxV){maxV=v;maxIdx=i;} });
+    const gr=Math.floor(maxIdx/gridC), gc=maxIdx%gridC;
+    const cellW=100/gridC, cellH=100/gridR;
+    bbox=[gc*cellW, gr*cellH, (gc+1)*cellW, (gr+1)*cellH];
+  }
+
   return{
     detected: hasFracture,
     type:     detectedType,
@@ -2071,6 +2148,7 @@ function analyzeImagePixels(){
     observations_zh: obZh,
     observations_ko: obKo,
     quality: qualMap[qualIdx],
+    bbox,
     _fallback: true
   };
 }
@@ -2082,7 +2160,8 @@ function renderAIResult(r, L, el){
   const qualName=L.qual[r.quality]||r.quality;
   const obs=r['observations_'+lang]||r.observations||[];
   const badgeColor=detected?'rgba(231,76,60,.15)':'rgba(0,229,200,.12)';
-  const badgeText=detected?'⚠ '+L.detected:'✓ '+L.none;
+  const autoTag=detected?`<span style="font-size:11px;background:rgba(255,214,0,.15);color:#FFD600;border:1px solid rgba(255,214,0,.3);border-radius:4px;padding:2px 7px;margin-left:8px">${lang==='zh'?'🎯 已自动圈出':lang==='ko'?'🎯 자동 표시됨':'🎯 Auto-circled'}</span>`:'';
+  const badgeText=(detected?'⚠ '+L.detected:'✓ '+L.none)+autoTag;
   const badgeBorder=detected?'rgba(231,76,60,.4)':'rgba(0,229,200,.35)';
   const badgeTxt=detected?'#ff6b6b':'#00E5C8';
   const confColor=r.confidence>75?'#00E676':r.confidence>50?'#FFD600':'#FF8C42';
