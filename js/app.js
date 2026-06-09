@@ -1665,6 +1665,11 @@ function computeProbabilities(topFid){
 // ── Run Predict ───────────────────────────────────────────
 function runPredict(){
   if(!azImg)return;
+  // Route through AI analysis for real results
+  runAIAnalysis();
+}
+function runPredictLegacy(){
+  if(!azImg)return;
   startScanBeam();
   playScanSnd();
   const btn=document.getElementById('az-predict-btn');
