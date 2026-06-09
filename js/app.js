@@ -997,6 +997,8 @@ function initAnalyze(){
 
   // AI analyze button
   document.getElementById('az-ai-btn').addEventListener('click',runAIAnalysis);
+  const apikeyNavBtn=document.getElementById('nav-apikey-btn');
+  if(apikeyNavBtn) apikeyNavBtn.addEventListener('click',()=>showApiKeyModal(()=>{}));
 
   // Predict button
   document.getElementById('az-predict-btn').addEventListener('click',runPredict);
@@ -1795,6 +1797,78 @@ function initEnhancement(){
   });
 }
 
+// ── API Key Management ────────────────────────────────────
+function getApiKey(){return localStorage.getItem('bonescan_apikey')||'';}
+function setApiKey(k){localStorage.setItem('bonescan_apikey',k.trim());}
+
+function showApiKeyModal(onSave){
+  const existing=getApiKey();
+  const overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:9999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)';
+  overlay.innerHTML=`
+  <div style="background:#0d1117;border:1px solid rgba(0,180,255,.3);border-radius:16px;padding:32px;width:min(420px,90vw);font-family:Inter,sans-serif">
+    <div style="font-size:20px;font-weight:700;color:#fff;margin-bottom:8px">🔑 Anthropic API Key</div>
+    <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:20px">${lang==='zh'?'请输入您的 Anthropic API Key，仅存储在本地浏览器中，不上传到任何服务器。':lang==='ko'?'Anthropic API 키를 입력하세요. 로컬 브라우저에만 저장되며 서버로 전송되지 않습니다.':'Enter your Anthropic API key. It is stored only in your browser and never sent to any server.'}</div>
+    <input id="apikey-input" type="password" placeholder="sk-ant-..." value="${existing}"
+      style="width:100%;box-sizing:border-box;background:#161b22;border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:12px 14px;color:#fff;font-size:14px;outline:none;margin-bottom:6px">
+    <div style="font-size:11px;color:rgba(255,255,255,.3);margin-bottom:20px">${lang==='zh'?'在 console.anthropic.com 获取 API Key':'Get your key at console.anthropic.com'}</div>
+    <div style="display:flex;gap:10px">
+      <button id="apikey-save" style="flex:1;background:linear-gradient(135deg,#00B4FF,#00E5C8);border:none;border-radius:8px;padding:12px;color:#000;font-weight:700;font-size:14px;cursor:pointer">
+        ${lang==='zh'?'保存并分析':lang==='ko'?'저장 후 분석':'Save & Analyze'}
+      </button>
+      <button id="apikey-cancel" style="flex:0 0 80px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:12px;color:rgba(255,255,255,.6);font-size:14px;cursor:pointer">
+        ${lang==='zh'?'取消':lang==='ko'?'취소':'Cancel'}
+      </button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+  overlay.querySelector('#apikey-input').focus();
+  overlay.querySelector('#apikey-save').onclick=()=>{
+    const k=overlay.querySelector('#apikey-input').value.trim();
+    if(!k.startsWith('sk-')){
+      overlay.querySelector('#apikey-input').style.border='1px solid #ff6b6b';
+      return;
+    }
+    setApiKey(k);
+    document.body.removeChild(overlay);
+    if(onSave) onSave();
+  };
+  overlay.querySelector('#apikey-cancel').onclick=()=>document.body.removeChild(overlay);
+}
+
+async function callAnthropicDirect(imageB64){
+  const apiKey=getApiKey();
+  if(!apiKey) return null;
+  const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'x-api-key':apiKey,
+      'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-access':'true'
+    },
+    body:JSON.stringify({
+      model:'claude-haiku-4-5-20251001',
+      max_tokens:600,
+      messages:[{
+        role:'user',
+        content:[
+          {type:'image',source:{type:'base64',media_type:'image/jpeg',data:imageB64}},
+          {type:'text',text:'You are a medical imaging AI assistant. Analyze this bone X-ray image carefully. Return ONLY valid JSON with no markdown or explanation: {"detected":true_or_false,"type":"avulsion|comminuted|dislocation|greenstick|hairline|impacted|longitudinal|oblique|pathological|spiral|unclear","confidence":0_to_100,"severity":"none|mild|moderate|severe","location":"anatomical description in English","observations":["finding 1","finding 2","finding 3"],"quality":"poor|fair|good|excellent"}'}
+        ]
+      }]
+    }),
+    signal:AbortSignal.timeout(30000)
+  });
+  if(!resp.ok){
+    const err=await resp.json().catch(()=>({}));
+    throw new Error(err.error?.message||`HTTP ${resp.status}`);
+  }
+  const data=await resp.json();
+  const raw=data.content[0].text.replace(/^```json?\s*/,'').replace(/\s*```$/,'').trim();
+  return JSON.parse(raw);
+}
+
 // ── AI Analysis ───────────────────────────────────────────
 const AI_LABELS={
   en:{detected:'Fracture Detected',none:'No Fracture Detected',confidence:'Confidence',type:'Detected Type',severity:'Severity',location:'Location',obs:'Key Observations',quality:'Image Quality',
@@ -1820,27 +1894,44 @@ async function runAIAnalysis(){
   const resultEl=document.getElementById('az-ai-result');
   const L=AI_LABELS[lang]||AI_LABELS.en;
 
+  // If no API key, show modal first
+  if(!getApiKey()){
+    showApiKeyModal(()=>runAIAnalysis());
+    return;
+  }
+
   btn.disabled=true;
   spinner.style.display='inline-block';
   icon.style.display='none';
   label.textContent=lang==='zh'?'AI 分析中…':lang==='ko'?'AI 분석 중…':'AI Analyzing…';
   resultEl.style.display='none';
 
+  const b64=azCvs.toDataURL('image/jpeg',.85).split(',')[1];
   let result=null;
-  try{
-    // Try Vercel serverless endpoint
-    const b64=azCvs.toDataURL('image/jpeg',.85).split(',')[1];
-    const resp=await fetch('/api/analyze',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({imageData:b64,mimeType:'image/jpeg'}),
-      signal:AbortSignal.timeout(15000)
-    });
-    if(resp.ok) result=await resp.json();
-  }catch(_){}
+  let errorMsg=null;
 
-  // Client-side fallback pixel analysis
-  if(!result) result=analyzeImagePixels();
+  try{
+    result=await callAnthropicDirect(b64);
+  }catch(e){
+    errorMsg=e.message;
+    // If auth error, clear key and prompt again
+    if(e.message&&(e.message.includes('401')||e.message.toLowerCase().includes('auth')||e.message.toLowerCase().includes('api_key'))){
+      localStorage.removeItem('bonescan_apikey');
+      btn.disabled=false;
+      spinner.style.display='none';
+      icon.style.display='inline';
+      label.textContent=lang==='zh'?'AI 智能分析':lang==='ko'?'AI 스마트 분석':'AI Smart Analyze';
+      showApiKeyModal(()=>runAIAnalysis());
+      return;
+    }
+  }
+
+  // Client-side fallback if API failed
+  if(!result){
+    result=analyzeImagePixels();
+    result._fallback=true;
+    result._error=errorMsg;
+  }
 
   btn.disabled=false;
   spinner.style.display='none';
@@ -1991,12 +2082,17 @@ function renderAIResult(r, L, el){
   const badgeBorder=detected?'rgba(231,76,60,.4)':'rgba(0,229,200,.35)';
   const badgeTxt=detected?'#ff6b6b':'#00E5C8';
   const confColor=r.confidence>75?'#00E676':r.confidence>50?'#FFD600':'#FF8C42';
-  const fallbackNote=r._fallback?(lang==='zh'?' (本地像素分析)':lang==='ko'?' (로컬 픽셀 분석)':' (client-side analysis)'):'';
+  const isReal=!r._fallback;
+  const sourceNote=isReal
+    ?(lang==='zh'?' · Claude AI':lang==='ko'?' · Claude AI':' · Claude AI')
+    :(lang==='zh'?' (本地像素分析)':lang==='ko'?' (로컬 픽셀 분석)':' (client-side fallback)');
+  const errorNote=r._error?`<div style="font-size:11px;color:#FF8C42;margin-top:4px">⚠ ${r._error}</div>`:'';
+  const settingsLink=`<button onclick="showApiKeyModal(()=>{})" style="background:none;border:none;color:rgba(0,180,255,.7);font-size:11px;cursor:pointer;padding:0;text-decoration:underline">${lang==='zh'?'更换 API Key':lang==='ko'?'API Key 변경':'Change API Key'}</button>`;
 
   el.style.display='block';
   el.innerHTML=`
 <div class="ai-rh">
-  <div class="ai-rh-title">🤖 BoneScan AI${fallbackNote}</div>
+  <div class="ai-rh-title">🤖 BoneScan AI<span style="font-size:11px;font-weight:400;color:rgba(255,255,255,.4)">${sourceNote}</span></div>
   <div class="ai-badge" style="background:${badgeColor};color:${badgeTxt};border:1px solid ${badgeBorder}">${badgeText}</div>
 </div>
 <div class="ai-rb">
@@ -2012,6 +2108,8 @@ function renderAIResult(r, L, el){
     <div class="ai-cell"><div class="ai-cell-key">${L.quality}</div><div class="ai-cell-val">${qualName}</div></div>
   </div>
   <div><div class="ai-cell-key" style="margin-bottom:7px">${L.obs}</div><div class="ai-obs">${obs.map(o=>`<div class="ai-obs-item">${o}</div>`).join('')}</div></div>
+  ${errorNote}
+  <div style="margin-top:8px">${isReal?settingsLink:''}</div>
 </div>`;
 
   // Animate confidence bar
