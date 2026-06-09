@@ -1862,22 +1862,8 @@ function showApiKeyModal(onSave){
 async function callAnthropicDirect(imageB64){
   const apiKey=getApiKey();
   if(!apiKey) return null;
-  const resp=await fetch('https://api.anthropic.com/v1/messages',{
-    method:'POST',
-    headers:{
-      'Content-Type':'application/json',
-      'x-api-key':apiKey,
-      'anthropic-version':'2023-06-01',
-      'anthropic-dangerous-direct-browser-access':'true'
-    },
-    body:JSON.stringify({
-      model:'claude-sonnet-4-6',
-      max_tokens:1024,
-      messages:[{
-        role:'user',
-        content:[
-          {type:'image',source:{type:'base64',media_type:'image/jpeg',data:imageB64}},
-          {type:'text',text:`You are a highly experienced radiologist AI specializing in bone fracture diagnosis. Analyze this X-ray image with maximum precision.
+
+  const prompt=`You are a highly experienced radiologist AI specializing in bone fracture diagnosis. Analyze this X-ray image with maximum precision.
 
 Step 1 — Image validation: Is this a bone X-ray? If not, set detected=false.
 Step 2 — Fracture detection: Carefully scan every bone for cortical breaks, fracture lines, bone discontinuity, displacement, angulation, or abnormal density changes.
@@ -1891,9 +1877,49 @@ Critical rules:
 - regions: 1–3 entries, each bbox MUST tightly surround visible fracture area (percentages 0–100)
 - confidence: be honest — only >85 if fracture is clearly visible
 - If no fracture found: detected=false, regions=[], confidence=integer showing certainty of no-fracture
-- observations must be specific radiological findings, not generic statements`}
-        ]
-      }]
+- observations must be specific radiological findings, not generic statements`;
+
+  // Detect API type: Gemini (AIza...) vs Anthropic (sk-ant-...)
+  const isGemini = apiKey.startsWith('AIza');
+
+  if(isGemini){
+    const resp=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        contents:[{parts:[
+          {inline_data:{mime_type:'image/jpeg',data:imageB64}},
+          {text:prompt}
+        ]}],
+        generationConfig:{temperature:0.1,maxOutputTokens:1024}
+      }),
+      signal:AbortSignal.timeout(30000)
+    });
+    if(!resp.ok){
+      const err=await resp.json().catch(()=>({}));
+      throw new Error(err.error?.message||`HTTP ${resp.status}`);
+    }
+    const data=await resp.json();
+    const raw=data.candidates[0].content.parts[0].text.replace(/^```json?\s*/,'').replace(/\s*```$/,'').trim();
+    return JSON.parse(raw);
+  }
+
+  // Anthropic API
+  const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'x-api-key':apiKey,
+      'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-access':'true'
+    },
+    body:JSON.stringify({
+      model:'claude-sonnet-4-6',
+      max_tokens:1024,
+      messages:[{role:'user',content:[
+        {type:'image',source:{type:'base64',media_type:'image/jpeg',data:imageB64}},
+        {type:'text',text:prompt}
+      ]}]
     }),
     signal:AbortSignal.timeout(30000)
   });
