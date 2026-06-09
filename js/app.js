@@ -1049,6 +1049,8 @@ function showWorkspace(img){
   bindAzCvs();
   updateAzDesc();
   ws.scrollIntoView({behavior:'smooth',block:'start'});
+  // Auto-trigger AI analysis if API key already saved
+  if(getApiKey()) setTimeout(()=>runAIAnalysis(), 600);
 }
 
 function azRedraw(){
@@ -1863,7 +1865,16 @@ async function callAnthropicDirect(imageB64){
         role:'user',
         content:[
           {type:'image',source:{type:'base64',media_type:'image/jpeg',data:imageB64}},
-          {type:'text',text:'You are a medical imaging AI assistant. Analyze this bone X-ray image carefully. Return ONLY valid JSON with no markdown or explanation: {"detected":true_or_false,"type":"avulsion|comminuted|dislocation|greenstick|hairline|impacted|longitudinal|oblique|pathological|spiral|unclear","confidence":0_to_100,"severity":"none|mild|moderate|severe","location":"anatomical description in English","cause":"1-2 sentence explanation of how/why this fracture occurred (mechanism of injury)","cause_zh":"骨折原因的1-2句中文解释（受伤机制）","cause_ko":"1-2문장으로 된 한국어 골절 원인 설명","observations":["finding 1","finding 2","finding 3"],"quality":"poor|fair|good|excellent","regions":[{"bbox":[x1_pct,y1_pct,x2_pct,y2_pct],"label":"short fracture label","shape":"rect|circle"}]}. The regions array must contain 1-3 objects for each distinct fracture zone found. bbox values are percentages 0-100 of image size. If no fracture detected, set regions to [].'}
+          {type:'text',text:`You are an expert radiologist AI. Analyze this bone X-ray image with high precision. Follow these steps:
+1. Determine if this is actually an X-ray image of bone(s).
+2. Look carefully for any fracture lines, cortical breaks, bone discontinuity, abnormal density, or displacement.
+3. Identify the specific fracture type based on the fracture line pattern.
+4. Locate the exact fracture zone(s) in the image.
+
+Return ONLY a single valid JSON object with NO markdown, NO explanation, NO extra text:
+{"detected":boolean,"type":"avulsion|comminuted|dislocation|greenstick|hairline|impacted|longitudinal|oblique|pathological|spiral|unclear","confidence":integer_0_to_100,"severity":"none|mild|moderate|severe","location":"specific anatomical location in English (e.g. distal radius, 5th metatarsal)","cause":"1-2 sentence injury mechanism in English","cause_zh":"1-2句中文骨折原因","cause_ko":"1-2문장 한국어 골절 원인","observations":["specific radiological finding 1","specific finding 2","specific finding 3"],"quality":"poor|fair|good|excellent","regions":[{"bbox":[x1_percent,y1_percent,x2_percent,y2_percent],"label":"fracture label","shape":"rect"}]}
+
+Rules: regions must have 1-3 entries covering each fracture zone (bbox as % of image 0-100). If no fracture: detected=false, regions=[], type="unclear". Be precise with bbox — it must tightly surround the actual fracture area visible in the image.`}
         ]
       }]
     }),
